@@ -4,13 +4,10 @@ import ProductCard from '@/components/productCard/ProductCard';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
 
-interface ProductPageProps {
-  params: { productId: string };
-}
-
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ productId: string }> }): Promise<Metadata> {
+  const { productId } = await params;
   const products: Product[] = productsData[0].products;
-  const product = products.find((p) => p.id === params.productId);
+  const product = products.find((p) => p.id === productId);
   if (!product) return { title: 'Товар не найден' };
   return {
     title: product.seo?.title || product.name,
@@ -18,9 +15,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function Page({ params }: { params: Promise<{ productId: string }> }) {
+  const { productId } = await params;
   const products: Product[] = productsData[0].products;
-  const product = products.find((p) => p.id === params.productId);
+  const product = products.find((p) => p.id === productId);
 
   if (!product) {
     return <div>Товар не найден</div>;
