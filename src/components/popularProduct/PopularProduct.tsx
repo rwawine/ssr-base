@@ -1,18 +1,17 @@
-import React from 'react'
-import productsData from '@/data/data.json';
+import React from 'react';
 import ProductCard from '@/components/productCard/ProductCard';
 import { Product } from '@/types/product';
 
 interface PopularProductProps {
-  category?: string; // Например, 'Диван' или 'Кровать'
+  products: Product[];
+  category?: string;
   minPrice?: number;
   maxPrice?: number;
   minRating?: number;
 }
 
-export default function PopularProduct({ category, minPrice, maxPrice, minRating = 4.5 }: PopularProductProps) {
-  const products: Product[] = productsData[0].products;
-  const filteredProducts = products.filter((product: any) => {
+export default function PopularProduct({ products, category, minPrice, maxPrice, minRating = 4.5 }: PopularProductProps) {
+  const filteredProducts = products.filter((product) => {
     const byCategory = category ? product.category?.name === category : true;
     const byMinPrice = minPrice !== undefined ? product.price.current >= minPrice : true;
     const byMaxPrice = maxPrice !== undefined ? product.price.current <= maxPrice : true;
@@ -21,7 +20,7 @@ export default function PopularProduct({ category, minPrice, maxPrice, minRating
   });
 
   if (filteredProducts.length === 0) {
-    return <div>Нет товаров по выбранным критериям</div>;
+    return <div>Нет популярных товаров</div>;
   }
 
   return (

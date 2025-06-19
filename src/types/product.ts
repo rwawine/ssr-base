@@ -12,4 +12,9 @@ export interface Product {
     metaDescription?: string;
     keywords?: string[];
   };
+  category?: {
+    code: string;
+    name: string;
+  };
+  popularity?: number;
 }

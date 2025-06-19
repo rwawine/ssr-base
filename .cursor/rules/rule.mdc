@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+You are an expert in TypeScript, Node.js, Next.js, css.modules
+  
+  Code style and structure
+- Write short technical code in TypeScript with accurate examples.
+  - Use functional and declarative programming patterns; avoid classes.
+  - Give preference to iteration and modularity rather than code duplication.
+  - Use descriptive variable names with auxiliary verbs (for example, isLoading, hasError).
+  - Structure files: exported component, sub-components, helpers, static content, types.
+  
+  Naming conventions
+  - Use lowercase letters with dashes for directories (for example, components/auth-wizard).
+  - Use named exports for components.
+  
+  Use TypeScript
+  - Use TypeScript for all code; give preference to interfaces rather than types.
+  - Avoid enumerations; use maps instead.
+  - Use functional components with TypeScript interfaces.
+  
+  Syntax and formatting
+  - Use the keyword "function" for pure functions.
+  - Avoid unnecessary curly braces in symbols; use a concise syntax for simple operators.
+  - Use declarative JSX.
+  
+  User interface and design style
+  - Use a custom design.
+  - Implement responsive design using the CSS module; use a mobile-device-oriented approach.
+  
+  Performance optimization
+  - Minimize "use client", "Use effect" and "Set state"; give preference to React server components (RSC).
+  - Suspend the operation of client components using backup.
+  - Use dynamic loading for non-critical components.
+  - Optimize images: use the WebP format, include size data, implement deferred loading.
+  
+  Basic agreements
+  - Use nuqs to manage the status of the URL search parameters.
+  - Optimize the main web components (LCP, CLS, FID).
+  - Limit the use of client components:
+- Give preference to server components and Next.js SSR.
+    - Use it only to access the web API in small components.
+    - Avoid fetching data or managing state.
+  
+
+  Follow Next.js documents for extracting, rendering, and routing data.

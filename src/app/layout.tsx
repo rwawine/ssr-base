@@ -29,12 +29,6 @@ export const metadata: Metadata = {
     locale: "ru_RU",
     type: "website"
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Dilavia — Мебель для вашего дома",
-    description: "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
-    site: "@dilavia_by"
-  },
   icons: {
     icon: "/favicon.ico"
   },
@@ -44,7 +38,8 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://dilavia.by/"
-  }
+  },
+  metadataBase: new URL('https://dilavia.by/')
 };
 
 export default function RootLayout({
