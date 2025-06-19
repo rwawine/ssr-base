@@ -3,6 +3,7 @@ import productsData from '@/data/data.json';
 import ProductCard from '@/components/productCard/ProductCard';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: Promise<{ productId: string }> }): Promise<Metadata> {
   const { productId } = await params;
@@ -21,7 +22,7 @@ export default async function Page({ params }: { params: Promise<{ productId: st
   const product = products.find((p) => p.id === productId);
 
   if (!product) {
-    return <div>Товар не найден</div>;
+    notFound();
   }
 
   return (
