@@ -10,6 +10,7 @@
     width: 100%;
     height: 100%;
     overflow: visible;
+    position: relative;
 }
 
 .swiperSlide {
@@ -169,4 +170,68 @@
     100% {
         background-position: -200% 0;
     }
+}
+
+.swiperNavigation {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    padding: 8px 10px;
+    backdrop-filter: blur(2px);
+}
+
+.prevBtn,
+.nextBtn {
+    background: rgba(0,0,0,0.3);
+    color: #d1d1d6;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
+}
+
+.prevBtn:hover,
+.nextBtn:hover {
+    background: rgba(255,255,255,0.55);
+    color: #fff;
+}
+
+.prevBtn:active,
+.nextBtn:active {
+    background: rgba(255,255,255,0.7);
+}
+
+.prevBtn:focus,
+.nextBtn:focus {
+    outline: 1px solid white;
+    outline-offset: 1px;
+}
+
+.progressBar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    background: #ffcc00;
+    opacity: 0.7;
+    width: 0;
+    animation: progressBarAnim linear 10s forwards;
+    z-index: 2;
+}
+
+@keyframes progressBarAnim {
+    from { width: 0; }
+    to { width: 100%; }
 }
