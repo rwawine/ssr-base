@@ -1,6 +1,7 @@
 import React from 'react';
-import ProductCard from '@/components/productCard/ProductCard';
+import ProductCardHover from '@/components/productCard/ProductCardHover';
 import { Product } from '@/types/product';
+import styles from './PopularProduct.module.css';
 
 interface PopularProductProps {
   products: Product[];
@@ -26,10 +27,10 @@ export default function PopularProduct({ products, category, minPrice, maxPrice,
   return (
     <div>
       <h2>Популярные товары</h2>
-      <ul>
+      <ul className={styles.popularProductList}>
         {filteredProducts.map((product) => (
           <li key={product.id}>
-            <ProductCard product={product} />
+            <ProductCardHover product={product} />
           </li>
         ))}
       </ul>

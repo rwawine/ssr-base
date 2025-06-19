@@ -17,4 +17,19 @@ export interface Product {
     name: string;
   };
   popularity?: number;
+  images?: string[];
+  dimensions?: Dimension[];
+}
+
+export interface Dimension {
+  width: number;
+  length: number;
+  height?: number | null;
+  price: number;
+  additionalOptions?: AdditionalOption[];
+}
+
+export interface AdditionalOption {
+  name: string;
+  price: number;
 }

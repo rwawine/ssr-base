@@ -1,7 +1,7 @@
 import React from 'react'
 import { promises as fs } from 'fs';
 import path from 'path';
-import ProductCard from '@/components/productCard/ProductCard';
+import ProductCardHover from '@/components/productCard/ProductCardHover';
 import { notFound } from 'next/navigation';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
@@ -44,10 +44,10 @@ export default async function CatalogPage() {
   return (
     <div className={styles.container}>
       <h1>Каталог товаров</h1>
-      <ul>
+      <ul className={styles.catalogList}>
         {products.map((product) => (
           <li key={product.slug}>
-            <ProductCard product={product} />
+            <ProductCardHover product={product} />
           </li>
         ))}
       </ul>
