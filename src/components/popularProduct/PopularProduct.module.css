@@ -1,10 +1,264 @@
-.popularProductList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 10px;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 10px;
-    padding: 0;
-    list-style: none;
+.section {
+  padding: 40px 0;
+}
+
+.container {
+  max-width: 1660px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #23272f;
+  margin: 0 0 24px 0;
+  text-align: left;
+  letter-spacing: -0.02em;
+}
+
+.emptyMessage {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin: 40px 0;
+}
+
+.description {
+    line-height: 1.5;
+    max-width: 1200px;
+    font-size: 18px;
+
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin-top: 0;
+  padding: 0;
+}
+
+.gridItem {
+  transition: transform 0.18s;
+}
+
+.gridItem:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+.slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.slider::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.slider::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.slider::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.slide {
+  flex: 0 0 auto;
+  width: 360px;
+  scroll-snap-align: start;
+  transition: transform 0.2s;
+}
+
+.slide:hover {
+  transform: translateY(-4px);
+}
+
+.sliderWrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrowBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.18s, background 0.18s;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrowBtn:hover {
+  opacity: 1;
+  background: #f1f5f9;
+}
+
+.arrowBtn.left {
+  left: 0;
+}
+
+.arrowBtn.right {
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 40px 0;
+  }
+  
+  .container {
+    padding: 0 15px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin: 0 0 30px 0;
+  }
+  
+  .sliderContainer {
+    border-radius: 12px;
+    padding: 15px 0;
+  }
+  
+  .slider {
+    gap: 15px;
+    padding: 0 15px;
+  }
+  
+  .slide {
+    width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.75rem;
+    margin: 0 0 25px 0;
+  }
+  
+  .slide {
+    width: 260px;
+  }
+}
+
+.gridSlider {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  align-items: stretch;
+  justify-items: stretch;
+  min-height: 1px;
+  overflow: visible !important;
+}
+
+@media (max-width: 1024px) {
+  .gridSlider {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .gridSlider {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.arrowGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.sliderWrapTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.sliderWrapTitle .arrowBtn.left {
+  margin-right: 8px;
+}
+
+.sliderWrapTitle .arrowBtn.right {
+  margin-left: 8px;
+}
+
+.arrowBtnInline {
+  position: static;
+  top: auto;
+  left: auto;
+  right: auto;
+  transform: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  margin: 0 2px;
+  border-radius: 50%;
+  transition: background 0.18s;
+}
+.arrowBtnInline:hover {
+  background: #f1f1f1;
+}
+
+.arrowBtnInline:disabled,
+.arrowBtnInline[aria-disabled='true'] {
+  opacity: 0.3;
+  pointer-events: none;
+  background: none;
+}
+.arrowBtnInline:disabled svg path,
+.arrowBtnInline[aria-disabled='true'] svg path {
+  fill: #bdbdbd;
+}
+
+.gridSlider.swiper:not(.swiper-initialized) {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
 }

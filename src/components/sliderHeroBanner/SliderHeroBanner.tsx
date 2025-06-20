@@ -95,22 +95,17 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
         if (!firstSlideLoaded || slides.length <= 1) return;
         intervalRef.current && clearInterval(intervalRef.current);
         intervalRef.current = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % slides.length);
+            next();
         }, AUTOPLAY_DELAY);
         return () => {
             intervalRef.current && clearInterval(intervalRef.current);
         };
-    }, [firstSlideLoaded, slides.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [firstSlideLoaded, slides.length, current]);
 
-    const goTo = (idx: number) => {
-        setCurrent(idx);
-    };
-    const prev = () => {
-        setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-    };
-    const next = () => {
-        setCurrent((prev) => (prev + 1) % slides.length);
-    };
+    const goTo = (idx: number) => setCurrent(idx);
+    const prev = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+    const next = () => setCurrent((prev) => (prev + 1) % slides.length);
 
     // Touch events
     const handleTouchStart = (e: React.TouchEvent) => {
@@ -189,11 +184,29 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
                                 {optimizedSlides[current].buttonText}
                             </Link>
                         </div>
-                        {/* Прогресс-бар с анимацией */}
-                        {slides.length > 1 && (
-                            <div key={current} className={styles.progressBar} />
-                        )}
                     </div>
+                    {/* Кастомные буллеты */}
+                    {slides.length > 1 && (
+                        <div className={styles.bullets}>
+                            {slides.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    className={styles.bullet}
+                                    onClick={() => goTo(idx)}
+                                    aria-label={`Перейти к слайду ${idx + 1}`}
+                                    type="button"
+                                >
+                                    <div
+                                        className={[
+                                            styles.bulletBar,
+                                            idx === current ? styles.bulletBarActive : ''
+                                        ].join(' ')}
+                                        style={idx === current ? { animationDuration: `${AUTOPLAY_DELAY / 1000}s` } : {}}
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                    )}
                     {/* Навигация */}
                     {slides.length > 1 && (
                         <div className={styles.swiperNavigation}>

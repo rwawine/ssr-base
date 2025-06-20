@@ -1,7 +1,7 @@
 import React from 'react'
 import { promises as fs } from 'fs';
 import path from 'path';
-import ProductCardHover from '@/components/productCard/ProductCardHover';
+import ProductCard from '@/components/productCard/ProductCard';
 import { notFound } from 'next/navigation';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
@@ -47,7 +47,7 @@ export default async function CatalogPage() {
       <ul className={styles.catalogList}>
         {products.map((product) => (
           <li key={product.slug}>
-            <ProductCardHover product={product} />
+            <ProductCard product={product} />
           </li>
         ))}
       </ul>

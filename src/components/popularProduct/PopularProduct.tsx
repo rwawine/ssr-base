@@ -1,7 +1,8 @@
 import React from 'react';
-import ProductCardHover from '@/components/productCard/ProductCardHover';
+import ProductCard from '@/components/productCard/ProductCard';
 import { Product } from '@/types/product';
 import styles from './PopularProduct.module.css';
+import PopularProductSliderWrapper from './PopularProductSliderWrapper';
 
 interface PopularProductProps {
   products: Product[];
@@ -21,19 +22,21 @@ export default function PopularProduct({ products, category, minPrice, maxPrice,
   });
 
   if (filteredProducts.length === 0) {
-    return <div>Нет популярных товаров</div>;
+    return (
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <h2 className={styles.title}>Популярные товары</h2>
+          <p className={styles.emptyMessage}>Нет популярных товаров</p>
+        </div>
+      </section>
+    );
   }
 
   return (
-    <div>
-      <h2>Популярные товары</h2>
-      <ul className={styles.popularProductList}>
-        {filteredProducts.map((product) => (
-          <li key={product.id}>
-            <ProductCardHover product={product} />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <section className={styles.section}>
+      <div className={styles.container}>
+        <PopularProductSliderWrapper products={filteredProducts} />
+      </div>
+    </section>
   );
 }

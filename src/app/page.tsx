@@ -13,15 +13,14 @@ async function getProductsData() {
 }
 
 export default async function Home() {
+  const slides = await fetchHeroSlides();
   const productsData = await getProductsData();
   const products: Product[] = productsData[0].products;
-  const filteredProducts = products.filter((product) => product.category?.name === "Кровать");
-  const slides = await fetchHeroSlides();
 
   return (
     <main className={styles.container}>
       <SliderHeroBanner slides={slides} />
-      <PopularProduct products={filteredProducts} category="Кровать" />
+      <PopularProduct products={products} />
     </main>
   );
 }

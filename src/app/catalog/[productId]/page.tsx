@@ -1,7 +1,7 @@
 import React from 'react'
 import { promises as fs } from 'fs';
 import path from 'path';
-import ProductCardHover from '@/components/productCard/ProductCardHover';
+import ProductCard from '@/components/productCard/ProductCard';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -49,7 +49,7 @@ export default async function Page({ params }: { params: Params }) {
 
   return (
     <div>
-      <ProductCardHover product={product} />
+      <ProductCard product={product} />
     </div>
   );
 }

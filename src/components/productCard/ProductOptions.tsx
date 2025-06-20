@@ -1,73 +1,94 @@
 "use client";
-import * as React from "react";
-import Dropdown from "../UI/Dropdown";
-import { Dimension } from "@/types/product";
+import React, { useState, useRef, useEffect } from "react";
+import { Dimension } from '@/types/product';
+import styles from './ProductCard.module.css';
 
 interface ProductOptionsProps {
-    dimensions?: Dimension[];
-    sizeLabel?: string;
+  dimensions: Dimension[];
 }
 
-export default function ProductOptions({
-    dimensions = [],
-    sizeLabel = "Выбрать размер",
-}: ProductOptionsProps) {
-    const [selectedSize, setSelectedSize] = React.useState<string | undefined>(undefined);
-    const [mechanismChecked, setMechanismChecked] = React.useState(false);
+export default function ProductOptions({ dimensions }: ProductOptionsProps) {
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [open, setOpen] = useState(false);
+  const selectedDimension = dimensions[selectedIdx];
+  const hasLift = selectedDimension?.additionalOptions?.some(opt => opt.name.toLowerCase().includes('подъем'));
+  const liftPrice = selectedDimension?.additionalOptions?.find(opt => opt.name.toLowerCase().includes('подъем'))?.price || 0;
+  const [liftOption, setLiftOption] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Формируем опции для Dropdown размеров с ценой
-    const sizeOptions = dimensions.map((dim) => ({
-        value: `${dim.width}x${dim.length}`,
-        label: `${dim.width}x${dim.length} — ${dim.price} BYN`,
-    }));
+  const displayPrice = selectedDimension ? selectedDimension.price + (liftOption ? liftPrice : 0) : 0;
 
-    // Найти выбранный размер
-    const selectedDimension = dimensions.find(
-        (dim) => `${dim.width}x${dim.length}` === selectedSize
-    );
+  // Закрытие по клику вне
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
 
-    // Проверяем, есть ли подъемный механизм у выбранного размера
-    const mechanismOption = selectedDimension?.additionalOptions?.find(
-        (opt) => opt.name.toLowerCase().includes("подъемный механизм")
-    );
-
-    // Проверяем, есть ли вообще механизм хотя бы у одного размера
-    const hasAnyMechanism = dimensions.some(
-        (dim) =>
-            dim.additionalOptions?.some((opt) =>
-                opt.name.toLowerCase().includes("подъемный механизм")
-            )
-    );
-
-    // Сброс механизма при смене размера
-    React.useEffect(() => {
-        setMechanismChecked(false);
-    }, [selectedSize]);
-
-    return (
-        <div>
-            <Dropdown
-                label={sizeLabel}
-                options={sizeOptions}
-                value={selectedSize}
-                onSelect={setSelectedSize}
-            />
-            {hasAnyMechanism && (
-                <label style={{ display: "flex", alignItems: "center", gap: 8, margin: "8px 0" }}>
-                    <input
-                        type="checkbox"
-                        checked={mechanismChecked}
-                        onChange={() => setMechanismChecked((v) => !v)}
-                        disabled={!mechanismOption}
-                    />
-                    Подъемный механизм
-                    {mechanismOption && (
-                        <span style={{ color: "#888" }}>
-                            {` (+${mechanismOption.price} BYN)`}
-                        </span>
-                    )}
-                </label>
-            )}
+  return (
+    <div className={styles.options}>
+      <div className={styles.customSelect} ref={dropdownRef}>
+        <div
+          className={styles.selected}
+          onClick={() => setOpen((v) => !v)}
+          tabIndex={0}
+          role="button"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+        >
+          <span>
+            {selectedDimension ? `${selectedDimension.width}x${selectedDimension.length} см` : 'Выберите размер'}
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="1em"
+            viewBox="0 0 512 512"
+            className={styles.arrow + (open ? ' ' + styles.arrowOpen : '')}
+          >
+            <path
+              d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+            ></path>
+          </svg>
         </div>
-    );
-}
+        <div className={styles.optionsList} style={{ display: open ? 'flex' : 'none' }}>
+          {dimensions.map((dim, idx) => (
+            <div key={idx} className={styles.optionItem} onClick={() => { setSelectedIdx(idx); setOpen(false); setLiftOption(false); }}>
+              {dim.width}x{dim.length} см
+            </div>
+          ))}
+        </div>
+      </div>
+      {hasLift && (
+        <label className={styles.iosCheckbox + ' ' + styles.blue}>
+          <input
+            type="checkbox"
+            checked={liftOption}
+            onChange={() => setLiftOption(v => !v)}
+          />
+          <div className={styles.checkboxWrapper}>
+            <div className={styles.checkboxBg}></div>
+            <svg fill="none" viewBox="0 0 24 24" className={styles.checkboxIcon}>
+              <path
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="3"
+                stroke="currentColor"
+                d="M4 12L10 18L20 6"
+                className={styles.checkPath}
+              ></path>
+            </svg>
+          </div>
+          <span>Подъемный механизм</span>
+        </label>
+      )}
+      <div className={styles.priceRow}>
+        <span className={styles.price}>{displayPrice} BYN</span>
+      </div>
+    </div>
+  );
+} 
