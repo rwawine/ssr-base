@@ -3,6 +3,8 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import { CartProvider } from "@/hooks/CartContext";
+import { FavoritesProvider } from "@/hooks/FavoritesContext";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -50,9 +52,13 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${montserrat.variable}`}>
-        <Header />
-        {children}
-        <Footer />
+        <CartProvider>
+          <FavoritesProvider>
+            <Header />
+            {children}
+            <Footer />
+          </FavoritesProvider>
+        </CartProvider>
       </body>
     </html>
   );

@@ -43,9 +43,43 @@
     font-weight: 600;
 }
 
+/* Стили для бейджей корзины и избранного */
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background-color: #ff6b6b;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header__info_favorite .header__info_link,
+.header__info_cart .header__info_link {
+    position: relative;
+}
+
 @media (max-width: 768.98px) {
     .login_expander__auth {
         font-size: 12px;
+    }
+    
+    .badge {
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+        top: -6px;
+        right: -6px;
     }
 }
 

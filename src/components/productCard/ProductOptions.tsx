@@ -5,18 +5,36 @@ import styles from './ProductCard.module.css';
 
 interface ProductOptionsProps {
   dimensions: Dimension[];
+  onDimensionSelect?: (dimension: Dimension) => void;
+  selectedDimension?: Dimension;
 }
 
-export default function ProductOptions({ dimensions }: ProductOptionsProps) {
+export default function ProductOptions({ 
+  dimensions, 
+  onDimensionSelect, 
+  selectedDimension: externalSelectedDimension 
+}: ProductOptionsProps) {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [open, setOpen] = useState(false);
-  const selectedDimension = dimensions[selectedIdx];
-  const hasLift = selectedDimension?.additionalOptions?.some(opt => opt.name.toLowerCase().includes('подъем'));
-  const liftPrice = selectedDimension?.additionalOptions?.find(opt => opt.name.toLowerCase().includes('подъем'))?.price || 0;
   const [liftOption, setLiftOption] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Используем внешний выбранный размер или внутренний
+  const selectedDimension = externalSelectedDimension || dimensions[selectedIdx];
+  const hasLift = selectedDimension?.additionalOptions?.some(opt => opt.name.toLowerCase().includes('подъем'));
+  const liftPrice = selectedDimension?.additionalOptions?.find(opt => opt.name.toLowerCase().includes('подъем'))?.price || 0;
+
   const displayPrice = selectedDimension ? selectedDimension.price + (liftOption ? liftPrice : 0) : 0;
+
+  // Обновляем внутренний индекс при изменении внешнего выбранного размера
+  useEffect(() => {
+    if (externalSelectedDimension) {
+      const idx = dimensions.findIndex(dim => dim.id === externalSelectedDimension.id);
+      if (idx !== -1) {
+        setSelectedIdx(idx);
+      }
+    }
+  }, [externalSelectedDimension, dimensions]);
 
   // Закрытие по клику вне
   useEffect(() => {
@@ -29,6 +47,17 @@ export default function ProductOptions({ dimensions }: ProductOptionsProps) {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
+
+  const handleDimensionSelect = (dimension: Dimension, idx: number) => {
+    setSelectedIdx(idx);
+    setOpen(false);
+    setLiftOption(false);
+    
+    // Уведомляем родительский компонент о выборе размера
+    if (onDimensionSelect) {
+      onDimensionSelect(dimension);
+    }
+  };
 
   return (
     <div className={styles.options}>
@@ -57,7 +86,11 @@ export default function ProductOptions({ dimensions }: ProductOptionsProps) {
         </div>
         <div className={styles.optionsList} style={{ display: open ? 'flex' : 'none' }}>
           {dimensions.map((dim, idx) => (
-            <div key={idx} className={styles.optionItem} onClick={() => { setSelectedIdx(idx); setOpen(false); setLiftOption(false); }}>
+            <div 
+              key={dim.id || idx} 
+              className={`${styles.optionItem} ${selectedDimension?.id === dim.id ? styles.optionItemSelected : ''}`}
+              onClick={() => handleDimensionSelect(dim, idx)}
+            >
               {dim.width}x{dim.length} см
             </div>
           ))}

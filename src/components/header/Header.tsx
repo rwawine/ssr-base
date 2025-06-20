@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 import Link from 'next/link';
+import { useCart } from '@/hooks/CartContext';
+import { useFavorites } from '@/hooks/FavoritesContext';
 
 // Импорт SVG иконок
 import HeartIcon from './icons/HeartIcon';
@@ -23,6 +25,10 @@ const Header: React.FC<HeaderProps> = ({
         a1: '+375 (29) 801-92-71',
     },
 }) => {
+    // Контексты для корзины и избранного
+    const { cart } = useCart();
+    const { favorites } = useFavorites();
+
     // Состояния для выпадающих меню
     const [isPhoneExpanded, setIsPhoneExpanded] = useState(false);
     const [isMenuExpanded, setIsMenuExpanded] = useState(false);
@@ -147,8 +153,13 @@ const Header: React.FC<HeaderProps> = ({
 
                         {/* Избранное */}
                         <div className={styles.header__info_favorite}>
-                            <Link href="/favorite" className={styles.header__info_link} title="Перейти в избранное">
+                            <Link href="/favorites" className={styles.header__info_link} title="Перейти в избранное">
                                 <HeartIcon />
+                                {favorites.totalItems > 0 && (
+                                    <span className={styles.badge} aria-label={`${favorites.totalItems} товаров в избранном`}>
+                                        {favorites.totalItems > 99 ? '99+' : favorites.totalItems}
+                                    </span>
+                                )}
                             </Link>
                         </div>
 
@@ -156,7 +167,11 @@ const Header: React.FC<HeaderProps> = ({
                         <div className={styles.header__info_cart}>
                             <Link href="/cart" className={styles.header__info_link} title="Перейти в корзину">
                                 <CartIcon />
-
+                                {cart.totalItems > 0 && (
+                                    <span className={styles.badge} aria-label={`${cart.totalItems} товаров в корзине`}>
+                                        {cart.totalItems > 99 ? '99+' : cart.totalItems}
+                                    </span>
+                                )}
                             </Link>
                         </div>
 
