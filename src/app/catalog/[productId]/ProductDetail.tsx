@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Thumbs } from 'swiper/modules';
+import { Navigation, Thumbs, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import 'swiper/css/pagination';
 
 import { Product, Dimension, AdditionalOption } from '@/types/product';
 import { useCart } from '@/hooks/CartContext';
@@ -34,11 +35,24 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('characteristics');
+  const [isMobile, setIsMobile] = useState(false);
 
   const dimensions: Dimension[] = Array.isArray(product?.dimensions) ? product.dimensions.filter(Boolean) : [];
   const [selectedDimension, setSelectedDimension] = useState<Dimension | undefined>(dimensions[0]);
 
   const [selectedAdditionalOptions, setSelectedAdditionalOptions] = useState<AdditionalOption[]>([]);
+
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 767);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleDimensionSelect = (dimension: Dimension) => {
     setSelectedDimension(dimension);
@@ -142,7 +156,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
   return (
     <div className={styles.container}>
-      <nav className={styles.breadcrumbs}>
+      <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
         <Link href="/">Главная</Link> <span>/</span>
         <Link href="/catalog">Каталог</Link>
         {product.category && (
@@ -155,40 +169,67 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
         <div className={styles.leftColumn}>
           <div className={styles.gallery}>
             <Swiper
-              modules={[Navigation, Thumbs]}
+              modules={[Navigation, Thumbs, Pagination]}
               spaceBetween={10}
-              navigation={true}
+              navigation={!isMobile}
+              pagination={isMobile ? { clickable: true } : false}
               thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
               className={styles.mainSwiper}
               loop={true}
+              grabCursor={true}
             >
               {images.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <img src={image} alt={`${product.name} - фото ${index + 1}`} />
+                  <img 
+                    src={image} 
+                    alt={`${product.name} - фото ${index + 1}`}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
-            <Swiper
-              onSwiper={setThumbsSwiper}
-              modules={[Thumbs]}
-              spaceBetween={10}
-              slidesPerView={4}
-              watchSlidesProgress={true}
-              className={styles.thumbsSwiper}
-            >
-              {images.map((image, index) => (
-                <SwiperSlide key={index} className={styles.thumbSlide}>
-                  <img src={image} alt={`${product.name} - миниатюра ${index + 1}`} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            
+            {!isMobile && (
+              <Swiper
+                onSwiper={setThumbsSwiper}
+                modules={[Thumbs]}
+                spaceBetween={10}
+                slidesPerView={4}
+                watchSlidesProgress={true}
+                className={styles.thumbsSwiper}
+                breakpoints={{
+                  480: {
+                    slidesPerView: 4,
+                  },
+                  768: {
+                    slidesPerView: 5,
+                  },
+                  1024: {
+                    slidesPerView: 6,
+                  }
+                }}
+              >
+                {images.map((image, index) => (
+                  <SwiperSlide key={index} className={styles.thumbSlide}>
+                    <img 
+                      src={image} 
+                      alt={`${product.name} - миниатюра ${index + 1}`}
+                      loading="lazy"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
           </div>
 
           <div className={styles.infoSection}>
-            <div className={styles.tabNav}>
+            <div className={styles.tabNav} role="tablist">
               <button
                 className={`${styles.tabButton} ${activeTab === 'characteristics' ? styles.active : ''}`}
                 onClick={() => setActiveTab('characteristics')}
+                role="tab"
+                aria-selected={activeTab === 'characteristics'}
+                aria-controls="characteristics-panel"
               >
                 Характеристики
               </button>
@@ -196,6 +237,9 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
                 <button
                   className={`${styles.tabButton} ${activeTab === 'description' ? styles.active : ''}`}
                   onClick={() => setActiveTab('description')}
+                  role="tab"
+                  aria-selected={activeTab === 'description'}
+                  aria-controls="description-panel"
                 >
                   Описание
                 </button>
@@ -203,7 +247,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
             </div>
 
             {activeTab === 'characteristics' && (
-              <div className={styles.tabContent}>
+              <div className={styles.tabContent} id="characteristics-panel" role="tabpanel">
                 <h2 className={styles.sectionTitle}>Характеристики</h2>
                 <ul className={styles.specList}>
                   {characteristics.map(spec => (
@@ -217,7 +261,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
             )}
 
             {activeTab === 'description' && product.description && (
-              <div className={styles.tabContent}>
+              <div className={styles.tabContent} id="description-panel" role="tabpanel">
                 <h2 className={styles.sectionTitle}>Описание</h2>
                 <p>{product.description}</p>
               </div>
@@ -249,6 +293,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
                 <button
                   className={`${styles.addToCartButton} ${inCart ? styles.inCart : ''}`}
                   onClick={handleCartButtonClick}
+                  aria-label={inCart ? 'Перейти в корзину' : 'Добавить в корзину'}
                 >
                   {inCart ? 'Перейти в корзину' : 'В корзину'}
                 </button>
@@ -258,17 +303,26 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
                 className={styles.favoriteButton}
                 onClick={() => toggleFavorite(product)}
                 aria-label={inFavorites ? 'Удалить из избранного' : 'Добавить в избранное'}
+                aria-pressed={inFavorites}
               >
                 <FavoriteIcon isActive={inFavorites} />
               </button>
             </div>
 
             <div className={styles.infoBlocks}>
-              <div className={styles.infoBlock}>Срок изготовления: 35-50 рабочих дней</div>
-              <div className={styles.infoBlock}>Экспресс-доставка по всей России от 3 дней</div>
-              <div className={styles.infoBlock}>Безопасные виды оплаты и легкий возврат</div>
+              <div className={styles.infoBlock}>
+                <span role="img" aria-label="Время изготовления">⏱️</span>
+                Срок изготовления: 35-50 рабочих дней
+              </div>
+              <div className={styles.infoBlock}>
+                <span role="img" aria-label="Доставка">🚚</span>
+                Экспресс-доставка по всей России от 3 дней
+              </div>
+              <div className={styles.infoBlock}>
+                <span role="img" aria-label="Безопасность">🔒</span>
+                Безопасные виды оплаты и легкий возврат
+              </div>
             </div>
-
           </div>
         </div>
       </div>

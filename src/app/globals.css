@@ -199,9 +199,29 @@ table {
   --dark-text-secondary: #A0A0A0;
   --dark-accent: #007BFF;
   --dark-accent-hover: #0056b3;
+
+  /* Product Detail Page Variables */
+  --container-max-width: 1660px;
+  --header-height: 110px;
+  --border-radius: 8px;
+  --border-radius-large: 12px;
+  --border-radius-xl: 18px;
+  --shadow-light: 0 2px 16px rgba(0, 0, 0, 0.07);
+  --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease;
 }
 
 body {
   background-color: #f6f6f6;
   overflow-x: hidden;
+}
+
+/* Улучшенная доступность - поддержка prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

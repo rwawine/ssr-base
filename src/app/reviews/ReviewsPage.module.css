@@ -1,0 +1,56 @@
+.pageContainer {
+  padding: 110px 20px 40px;
+  background-color: #f7f7f7;
+}
+
+.header {
+  max-width: 800px;
+  margin: 0 auto 40px auto;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.breadcrumbs a {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumbs a:hover {
+  color: #111;
+}
+
+.breadcrumbs p {
+  margin: 0;
+  color: #333;
+}
+
+.mainTitle {
+  font-size: 42px;
+  font-weight: 600;
+  text-align: center;
+  color: #111;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 80px 16px 32px;
+  }
+
+  .header {
+    margin-bottom: 32px;
+  }
+  
+  .mainTitle {
+    font-size: 32px;
+  }
+} 

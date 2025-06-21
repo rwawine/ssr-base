@@ -51,9 +51,9 @@ const Header: React.FC<HeaderProps> = ({
 
     // Примерное содержимое для выпадающего меню навигации
     const navMenuItems = [
-        { title: 'Кровати', url: '/catalog/bed' },
-        { title: 'Диваны', url: '/catalog/sofa' },
-        { title: 'Кресла', url: '/catalog/armchair' },
+        { title: 'Кровати', url: '/catalog?category=bed' },
+        { title: 'Диваны', url: '/catalog?category=sofa' },
+        { title: 'Кресла', url: '/catalog?category=armchair' },
     ];
 
     // Мобильное меню

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import ProductCard from '@/components/productCard/ProductCard';
 import CatalogFilters, { FilterState } from '@/components/catalog/CatalogFilters';
 import FilterToggle from '@/components/catalog/FilterToggle';
@@ -11,11 +11,7 @@ import styles from "./page.module.css";
 interface CatalogClientProps {
   initialProducts: Product[];
   filteredProducts: Product[];
-  currentFilters: {
-    category?: string[];
-    subcategory?: string[];
-    sortBy: string;
-  };
+  currentFilters: FilterState;
 }
 
 export default function CatalogClient({ 
@@ -24,52 +20,50 @@ export default function CatalogClient({
   currentFilters 
 }: CatalogClientProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<FilterState>({
-    category: currentFilters.category,
-    subcategory: currentFilters.subcategory,
-    sortBy: currentFilters.sortBy as FilterState['sortBy'],
-  });
-
   const router = useRouter();
+  const pathname = usePathname();
 
   // Обновление URL при применении фильтров
-  const updateURL = (newFilters: FilterState) => {
+  const handleApplyFilters = (newFilters: FilterState) => {
     const params = new URLSearchParams();
     
+    // Категории
     if (newFilters.category && newFilters.category.length > 0) {
       newFilters.category.forEach(cat => params.append('category', cat));
     }
+    // Подкатегории
     if (newFilters.subcategory && newFilters.subcategory.length > 0) {
       newFilters.subcategory.forEach(sub => params.append('subcategory', sub));
     }
+    // Сортировка
     if (newFilters.sortBy && newFilters.sortBy !== 'name') {
       params.set('sort', newFilters.sortBy);
     }
+    // Цена
+    if (newFilters.priceRange) {
+      params.set('minPrice', newFilters.priceRange[0].toString());
+      params.set('maxPrice', newFilters.priceRange[1].toString());
+    }
 
-    const newURL = params.toString() ? `?${params.toString()}` : '/catalog';
-    router.push(newURL);
-  };
-
-  // Кнопка «Применить»
-  const handleApplyFilters = (filters: FilterState) => {
-    updateURL(filters);
+    router.push(`${pathname}?${params.toString()}`);
     setFiltersOpen(false);
   };
 
   // Кнопка «Сбросить фильтр»
   const handleResetFilters = () => {
-    updateURL({ sortBy: 'name' });
+    router.push(pathname); // Просто перезагружаем страницу без параметров
     setFiltersOpen(false);
   };
 
   const toggleFilters = () => setFiltersOpen(v => !v);
 
-  // Подсчет активных фильтров
-  const activeFiltersCount = [
-    currentFilters.category && currentFilters.category.length > 0,
-    currentFilters.subcategory && currentFilters.subcategory.length > 0,
-    currentFilters.sortBy !== 'name'
-  ].filter(Boolean).length;
+  // Подсчет активных фильтров (теперь проще)
+  const activeFiltersCount = Object.values(currentFilters).filter(value => {
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'object' && value !== null) return true; // для priceRange
+    if (typeof value === 'string') return value !== 'name'; // для sortBy
+    return false;
+  }).length;
 
   // Структурированные данные для SEO
   const structuredData = {
@@ -124,9 +118,7 @@ export default function CatalogClient({
           {/* Фильтры */}
           <CatalogFilters
             products={initialProducts}
-            selectedCategory={pendingFilters.category}
-            selectedSubcategory={pendingFilters.subcategory}
-            initialFilters={pendingFilters}
+            initialFilters={currentFilters}
             isOpen={filtersOpen}
             onApply={handleApplyFilters}
             onReset={handleResetFilters}

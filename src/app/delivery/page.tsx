@@ -1,6 +1,8 @@
-import React from 'react'
-import { notFound } from 'next/navigation';
+import React from 'react';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import styles from './Delivery.module.css';
+import Accordion from '@/components/faq/Accordion';
 
 export const metadata: Metadata = {
   title: 'Доставка и оплата | Dilavia',
@@ -18,8 +20,40 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function page() {
+const faqItems = [
+  {
+    title: 'Как осуществляется доставка?',
+    content: 'Доставка осуществляется в будние дни с 12:00 до 20:00 по Москве и МО (до 50 км от МКАД).\nВ другие регионы доставка силами компании не осуществляется.\nПервые 10 км от МКАД включены в стоимость, далее +70 руб./км.'
+  },
+  {
+    title: 'Какие способы оплаты доступны?',
+    content: 'Мы принимаем оплату наличными при получении, банковской картой на сайте, а также предоставляем возможность покупки в рассрочку. Подробности можно уточнить у наших менеджеров.'
+  },
+  {
+    title: 'Как долго изготавливается мебель?',
+    content: 'Сроки изготовления зависят от конкретной модели и загруженности производства. В среднем, изготовление занимает от 14 до 30 рабочих дней. Точные сроки будут указаны в вашем договоре.'
+  },
+  {
+    title: 'Есть ли гарантия на мебель?',
+    content: 'Да, на всю нашу мебель предоставляется гарантия от производителя. Срок гарантии составляет 18 месяцев со дня покупки. Гарантия распространяется на производственные дефекты.'
+  },
+  {
+    title: 'Можно ли вернуть или обменять мебель?',
+    content: 'Согласно законодательству, качественная мебель обмену и возврату не подлежит. Возврат возможен только в случае обнаружения производственного брака. Пожалуйста, внимательно осматривайте товар при получении.'
+  }
+];
+
+export default function DeliveryPage() {
   return (
-    <div>page</div>
-  )
+    <main className={styles.container}>
+      <div className={styles.breadcrumbs}>
+        <Link href="/">Главная</Link>
+        <span>/</span>
+        <p>Покупателю</p>
+      </div>
+      <h1 className={styles.mainTitle}>Покупателю</h1>
+      <h2 className={styles.sectionTitle}>Часто задаваемые вопросы</h2>
+      <Accordion items={faqItems} />
+    </main>
+  );
 }

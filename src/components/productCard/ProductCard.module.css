@@ -296,3 +296,110 @@
     color: #fff;
     font-weight: 600;
 }
+
+/* Адаптивные стили для ProductOptions */
+@media (max-width: 767px) {
+    .optionGroup {
+        gap: 0.5rem;
+    }
+    
+    .optionLabel {
+        font-size: 0.8rem;
+    }
+    
+    .chiclet {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .dropdownButton {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .dropdownList {
+        max-height: 200px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .dropdownItem,
+    .dropdownItemCheckbox {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .checkbox {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chicletContainer {
+        gap: 0.3rem;
+    }
+    
+    .chiclet {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .dropdownButton {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .dropdownItem,
+    .dropdownItemCheckbox {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .checkbox {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+/* Улучшенная доступность для dropdown */
+.dropdownButton:focus,
+.chiclet:focus {
+    outline: 2px solid var(--divan-text-primary);
+    outline-offset: 2px;
+}
+
+/* Анимация для dropdown */
+.dropdownList {
+    animation: dropdownFadeIn 0.2s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Улучшенная поддержка touch устройств */
+@media (hover: none) and (pointer: coarse) {
+    .chiclet:hover,
+    .dropdownButton:hover,
+    .dropdownItem:hover,
+    .dropdownItemCheckbox:hover {
+        background-color: transparent;
+        border-color: var(--divan-border);
+    }
+    
+    .chiclet:active,
+    .dropdownButton:active,
+    .dropdownItem:active,
+    .dropdownItemCheckbox:active {
+        background-color: var(--divan-accent);
+        transform: scale(0.98);
+    }
+}
