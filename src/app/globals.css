@@ -152,6 +152,53 @@ table {
   --yellow-10: rgba(255, 204, 0, 0.1);
   --yellow-hover: #ffdd4d;
   --red: #ff0000;
+
+  /* Card and Theme Variables */
+  --card-bg: #ffffff;
+  --card-border: #eaeaea;
+  --card-hover-border: #dcdcdc;
+  --image-bg: #f5f5f5;
+  --text-primary: #111111;
+  --text-secondary: #666666;
+  --accent-color: #005fcc;
+  --accent-color-hover: #004c99;
+  --in-cart-bg: #e6f4ea;
+  --in-cart-color: #0f7c41;
+  --shadow-color: rgba(0, 0, 0, 0.06);
+
+  /* Card and Theme Variables (Ozon-inspired) */
+  --oz-bg-primary: #ffffff;
+  --oz-bg-secondary: #f2f3f5;
+  --oz-border-primary: #e5e7eb;
+  --oz-border-secondary: #d1d5db;
+  --oz-text-primary: #0d1217;
+  --oz-text-secondary: #6b7280;
+  --oz-text-tertiary: #9ca3af;
+  --oz-accent-primary: #005bff;
+  --oz-accent-primary-hover: #004AD8;
+  --oz-rating-star: #ffc107;
+  --oz-shadow: rgba(13, 18, 23, 0.04);
+  --oz-shadow-hover: rgba(13, 18, 23, 0.08);
+
+  /* Card and Theme Variables (Divan-inspired) */
+  --divan-bg: #ffffff;
+  --divan-text-primary: #1F2226;
+  --divan-text-secondary: #8A8A8A;
+  --divan-accent: #F5F1EC;
+  --divan-accent-text: #BFB6A8;
+  --divan-border: #E5E5E5;
+  --divan-black-button: #1F2226;
+  --divan-black-button-hover: #4A4C4F;
+
+  /* Card and Theme Variables (Dark Showroom) */
+  --dark-bg-primary: #121212;
+  --dark-bg-secondary: #1E1E1E;
+  --dark-bg-tertiary: #2A2A2A;
+  --dark-border: #3A3A3A;
+  --dark-text-primary: #EAEAEA;
+  --dark-text-secondary: #A0A0A0;
+  --dark-accent: #007BFF;
+  --dark-accent-hover: #0056b3;
 }
 
 body {

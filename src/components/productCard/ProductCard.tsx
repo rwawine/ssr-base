@@ -1,115 +1,153 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import { Product, Dimension } from '@/types/product';
+import { useRouter } from 'next/navigation';
+import { Product, Dimension, AdditionalOption } from '@/types/product';
 import styles from './ProductCard.module.css';
-import ProductOptions from './ProductOptions';
 import { useCart } from '@/hooks/CartContext';
-import { useFavorites } from '@/hooks/FavoritesContext';
+import ProductOptions from './ProductOptions'; 
 
 interface ProductCardProps {
     product: Product;
 }
 
+const ColorSwatch = ({ color }: { color: string }) => (
+    <div className={styles.swatch} style={{ backgroundColor: color }} />
+);
+
+const BestsellerBadge = () => (
+    <div className={styles.bestsellerBadge}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"/>
+        </svg>
+        <span>Лидер продаж</span>
+    </div>
+);
+
 export default function ProductCard({ product }: ProductCardProps) {
-    const { addToCart, isInCart, getItemQuantity } = useCart();
-    const { isInFavorites, toggleFavorite } = useFavorites();
-    const [selectedDimension, setSelectedDimension] = useState<Dimension | undefined>(undefined);
-
-    // Безопасные значения
-    const name = typeof product?.name === 'string' ? product.name : 'Без названия';
-    const description = typeof product?.description === 'string' ? product.description : '';
-    const images = Array.isArray(product?.images) && product.images.length > 0 ? product.images : ['/public/images/no-image.png'];
-    const categoryCode = product?.category?.code || '';
-    const slug = product?.slug || '';
-
-    const isBed = categoryCode === 'bed' && (!name.toLowerCase().includes('детская') || name.toLowerCase().includes('кровать'));
-    const isKidsBed = categoryCode === 'bed' && name.toLowerCase().includes('детская');
-    const showBedOptions = isBed || isKidsBed;
-
-    const dimensions: Dimension[] = Array.isArray(product?.dimensions) ? product.dimensions.filter(Boolean) : [];
-    const minPrice = dimensions.length > 0 ? Math.min(...dimensions.map(d => d?.price ?? Infinity)) : (product?.price?.current ?? 0);
-    const oldPrice = product?.price?.old ?? null;
-
-    // Проверяем, находится ли товар в корзине
-    const inCart = isInCart(product.id, selectedDimension?.id);
-    const cartQuantity = getItemQuantity(product.id, selectedDimension?.id);
+    const { addToCart, isInCart } = useCart();
+    const router = useRouter();
     
-    // Проверяем, находится ли товар в избранном
-    const inFavorites = isInFavorites(product.id);
+    const dimensions: Dimension[] = Array.isArray(product?.dimensions) ? product.dimensions.filter(Boolean) : [];
+    const [selectedDimension, setSelectedDimension] = useState<Dimension | undefined>(dimensions[0]);
+    const [selectedAdditionalOptions, setSelectedAdditionalOptions] = useState<AdditionalOption[]>([]);
+    
+    const name = product?.name || 'Без названия';
+    const images = product?.images?.length ? product.images.slice(0, 3) : ['/images/no-image.png'];
+    const slug = product?.slug || '';
+    const isBestseller = (product?.popularity || 0) > 4.5;
+    
+    const basePrice = selectedDimension?.price ?? product.price?.current ?? 0;
+    const additionalOptionsPrice = selectedAdditionalOptions.reduce((sum, option) => sum + option.price, 0);
+    const currentPrice = basePrice + additionalOptionsPrice;
+    
+    const hasAdditionalOptions = dimensions.some(dim => dim.additionalOptions && dim.additionalOptions.length > 0);
+    const shouldShowOptions = dimensions.length > 1 || hasAdditionalOptions;
 
-    // Обработчик добавления в корзину
-    const handleAddToCart = () => {
-        if (showBedOptions && dimensions.length > 0 && !selectedDimension) {
-            // Если это кровать с размерами, но размер не выбран, показываем уведомление
-            alert('Пожалуйста, выберите размер кровати');
-            return;
-        }
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const imageRef = useRef<HTMLAnchorElement>(null);
+
+    const inCart = isInCart(product.id, selectedDimension?.id, selectedAdditionalOptions);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (images.length <= 1 || !imageRef.current) return;
         
-        addToCart(product, 1, selectedDimension);
+        const rect = imageRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const width = rect.width;
+        
+        const imageIndex = Math.floor((x / width) * images.length);
+        const newIndex = Math.min(Math.max(imageIndex, 0), images.length - 1);
+
+        if (newIndex !== activeImageIndex) {
+            setActiveImageIndex(newIndex);
+        }
     };
 
-    // Обработчик выбора размера
+    const handleMouseLeave = () => {
+        setActiveImageIndex(0);
+    };
+    
     const handleDimensionSelect = (dimension: Dimension) => {
         setSelectedDimension(dimension);
+        setSelectedAdditionalOptions([]);
     };
 
-    // Обработчик переключения избранного
-    const handleToggleFavorite = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleFavorite(product);
+    const handleAdditionalOptionToggle = (option: AdditionalOption) => {
+        setSelectedAdditionalOptions(prev => 
+            prev.some(o => o.name === option.name)
+                ? prev.filter(o => o.name !== option.name)
+                : [...prev, option]
+        );
     };
+
+    const handleCartButtonClick = () => {
+        if (inCart) {
+            router.push('/cart');
+        } else {
+            addToCart(product, 1, selectedDimension, selectedAdditionalOptions);
+        }
+    };
+    
+    const formattedDimensions = selectedDimension ? `${selectedDimension.width}x${selectedDimension.length} см` : '';
 
     return (
         <div className={styles.card}>
-            <Link href={`/catalog/${slug}`} tabIndex={-1} className={styles.imageWrapper} aria-label={`Подробнее о товаре ${name}`}>
-                <img src={images[0]} alt={name} className={styles.image} />
-                <button
-                    type="button"
-                    className={`${styles.favoriteButton} ${inFavorites ? styles.favoriteButtonActive : ''}`}
-                    onClick={handleToggleFavorite}
-                    aria-label={inFavorites ? 'Удалить из избранного' : 'Добавить в избранное'}
-                >
-                    ♥
-                </button>
+            <Link 
+                ref={imageRef}
+                href={`/catalog/${slug}`} 
+                className={styles.imageLink} 
+                onMouseMove={handleMouseMove} 
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className={styles.imageWrapper}>
+                    <img src={images[activeImageIndex]} alt={`${name} - фото ${activeImageIndex + 1}`} className={styles.image} />
+                    {isBestseller && <BestsellerBadge />}
+                    {images.length > 1 && (
+                        <div className={styles.pagination}>
+                            {images.map((_, index) => (
+                                <span key={index} className={`${styles.paginationDot} ${index === activeImageIndex ? styles.paginationDotActive : ''}`} />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </Link>
-            <div className={styles.info}>
-                <Link href={`/catalog/${slug}`} className={styles.titleLink} aria-label={`Подробнее о товаре ${name}`}>
-                    <h3 className={styles.title}>{name}</h3>
-                </Link>
-                {!showBedOptions && (
-                    <div className={styles.priceRow}>
-                        <span className={styles.price}>{minPrice} BYN</span>
-                        {oldPrice && (
-                            <span className={styles.oldPrice}>{oldPrice} BYN</span>
-                        )}
-                    </div>
-                )}
-                {showBedOptions && dimensions.length > 0 ? (
-                    <ProductOptions 
-                        dimensions={dimensions} 
+
+            <div className={styles.cardContent}>
+                <h3 className={styles.title}>
+                    <Link href={`/catalog/${slug}`}>{name}</Link>
+                </h3>
+
+                <div className={styles.priceRow}>
+                    <span className={styles.price}>{currentPrice.toLocaleString('ru-RU')} ₽</span>
+                </div>
+                
+                <div className={styles.detailsRow}>
+                    {formattedDimensions && <span className={styles.dimensions}>{formattedDimensions}</span>}
+                </div>
+
+                {shouldShowOptions && (
+                    <ProductOptions
+                        dimensions={dimensions}
                         onDimensionSelect={handleDimensionSelect}
                         selectedDimension={selectedDimension}
+                        onAdditionalOptionToggle={handleAdditionalOptionToggle}
+                        selectedAdditionalOptions={selectedAdditionalOptions}
                     />
-                ) : showBedOptions && dimensions.length === 0 ? (
-                    <div className={styles.options}>
-                        <div className={styles.label}>Нет доступных размеров</div>
-                    </div>
-                ) : null}
-                <button 
-                    className={`${styles.button} ${inCart ? styles.buttonInCart : ''}`} 
-                    type="button" 
-                    onClick={handleAddToCart}
-                    disabled={showBedOptions && dimensions.length > 0 && !selectedDimension}
-                    aria-label={inCart ? `Товар в корзине (${cartQuantity} шт.)` : 'Добавить в корзину'}
-                >
-                    {inCart ? `В корзине (${cartQuantity})` : 'В корзину'}
-                </button>
-                <Link href={`/catalog/${slug}`} className={styles.detailsButton} aria-label={`Подробнее о товаре ${name}`}>
-                    Подробнее о товаре
-                </Link>
+                )}
+
+                <div className={styles.actions}>
+                    <button 
+                        className={`${styles.addToCartButton} ${inCart ? styles.buttonInCart : ''}`} 
+                        onClick={handleCartButtonClick}
+                    >
+                        {inCart ? 'Перейти в корзину' : 'В корзину'}
+                    </button>
+                    <Link href={`/catalog/${slug}`} className={styles.detailsLink}>
+                        Подробнее о товаре
+                    </Link>
+                </div>
             </div>
         </div>
     );

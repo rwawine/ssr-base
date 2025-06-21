@@ -4,7 +4,7 @@ import path from 'path';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import ProductDetailClient from './ProductDetailClient';
+import ProductDetail from './ProductDetail';
 
 async function getProductsData() {
   const filePath = path.join(process.cwd(), 'src', 'data', 'data.json');
@@ -103,7 +103,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <ProductDetailClient 
+      <ProductDetail 
         product={product} 
         relatedProducts={relatedProducts}
       />

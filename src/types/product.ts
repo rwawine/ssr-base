@@ -33,6 +33,11 @@ export interface Product {
   installmentPlans?: InstallmentPlan[];
   availability?: string;
   manufacturing?: string;
+  configuration?: string;
+  filler?: string;
+  legs?: string;
+  frame?: string;
+  mechanism?: boolean;
 }
 
 export interface Dimension {
@@ -42,6 +47,7 @@ export interface Dimension {
   height?: number | null;
   depth?: number | null;
   price: number;
+  oldPrice?: number;
   additionalOptions?: AdditionalOption[];
 }
 
@@ -49,6 +55,9 @@ export interface AdditionalOption {
   name: string;
   available: boolean;
   price: number;
+  type?: string;
+  color?: string;
+  image?: string;
 }
 
 export interface Material {
