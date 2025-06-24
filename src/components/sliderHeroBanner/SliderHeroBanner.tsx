@@ -173,27 +173,62 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
             <div className={styles.hero}>
                 <div className={styles.swiper}>
                     <div className={styles.swiperSlide}>
-                        <div
-                            className={styles.slide}
-                            style={optimizedSlides[current].optimizedImage ? { backgroundImage: `url(${optimizedSlides[current].optimizedImage})` } : undefined}
-                            onTouchStart={handleTouchStart}
-                            onTouchMove={handleTouchMove}
-                            onTouchEnd={handleTouchEnd}
-                            onMouseDown={handleMouseDown}
-                            onMouseMove={handleMouseMove}
-                            onMouseUp={handleMouseUp}
-                            onMouseLeave={handleMouseUp}
-                            role="button"
-                            tabIndex={0}
-                        >
-                            <div className={styles.content}>
-                                <h2 className={styles.title}>{optimizedSlides[current].title}</h2>
-                                <p className={styles.description}>{optimizedSlides[current].description}</p>
-                                <Link href={optimizedSlides[current].buttonLink} className={styles.button} title={optimizedSlides[current].buttonText}>
-                                    {optimizedSlides[current].buttonText}
-                                </Link>
+                        {current === 0 ? (
+                            <img
+                                src={optimizedSlides[0].optimizedImage}
+                                alt={optimizedSlides[0].title}
+                                className={styles.lcpImage}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }}
+                                fetchPriority="high"
+                                draggable={false}
+                            />
+                        ) : (
+                            <div
+                                className={styles.slide}
+                                style={optimizedSlides[current].optimizedImage ? { backgroundImage: `url(${optimizedSlides[current].optimizedImage})` } : undefined}
+                                onTouchStart={handleTouchStart}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
+                                onMouseDown={handleMouseDown}
+                                onMouseMove={handleMouseMove}
+                                onMouseUp={handleMouseUp}
+                                onMouseLeave={handleMouseUp}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                <div className={styles.content}>
+                                    <h2 className={styles.title}>{optimizedSlides[current].title}</h2>
+                                    <p className={styles.description}>{optimizedSlides[current].description}</p>
+                                    <Link href={optimizedSlides[current].buttonLink} className={styles.button} title={optimizedSlides[current].buttonText}>
+                                        {optimizedSlides[current].buttonText}
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
+                        )}
+                        {/* Контент поверх картинки для первого слайда */}
+                        {current === 0 && (
+                            <div
+                                className={styles.slide}
+                                style={{ position: 'relative', background: 'none' }}
+                                onTouchStart={handleTouchStart}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
+                                onMouseDown={handleMouseDown}
+                                onMouseMove={handleMouseMove}
+                                onMouseUp={handleMouseUp}
+                                onMouseLeave={handleMouseUp}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                <div className={styles.content}>
+                                    <h2 className={styles.title}>{optimizedSlides[0].title}</h2>
+                                    <p className={styles.description}>{optimizedSlides[0].description}</p>
+                                    <Link href={optimizedSlides[0].buttonLink} className={styles.button} title={optimizedSlides[0].buttonText}>
+                                        {optimizedSlides[0].buttonText}
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
                         {/* Кастомные буллеты */}
                         {slides.length > 1 && (
                             <div className={styles.bullets}>
