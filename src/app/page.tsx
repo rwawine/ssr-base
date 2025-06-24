@@ -6,13 +6,13 @@ import { Product } from '@/types/product';
 import SliderHeroBanner from "@/components/sliderHeroBanner/SliderHeroBanner";
 import { fetchHeroSlides } from '@/utils/fetchHeroSlides';
 import { Metadata } from "next";
+import Script from "next/script";
 
 async function getProductsData() {
   const filePath = path.join(process.cwd(), 'src', 'data', 'data.json');
   const fileContents = await fs.readFile(filePath, 'utf-8');
   return JSON.parse(fileContents);
 }
-
 
 export const metadata: Metadata = {
   title: "Dilavia — Мебель для вашего дома | Интернет-магазин dilavia.by",
@@ -54,6 +54,38 @@ export default async function Home() {
 
   return (
     <main className={styles.container}>
+      <Script
+        id="website-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://dilavia.by/",
+            "name": "Dilavia — Мебель для вашего дома",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://dilavia.by/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
+      <Script
+        id="organization-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Dilavia",
+            "url": "https://dilavia.by/",
+            "logo": "https://dilavia.by/favicon.ico"
+          })
+        }}
+      />
       <SliderHeroBanner slides={slides} />
       <PopularProduct products={products} />
     </main>
