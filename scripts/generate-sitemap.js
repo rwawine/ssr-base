@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE_URL = 'https://your-domain.com'; // Замените на ваш домен
+const SITE_URL = 'https://ssr-base.vercel.app'; // Замените на ваш домен
 
 // Основные статические страницы
 const staticPages = [
@@ -18,11 +18,10 @@ const staticPages = [
 // Получаем товары из data.json
 const dataPath = path.join(__dirname, '../src/data/data.json');
 const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-const products = Array.isArray(data.products) ? data.products : [];
+const products = data.flatMap(item => item.products || []);
 
-// Генерируем URL для каждого товара по slug
+// Генерируем URL для каждого товара по slug или id
 const productUrls = products
-  .filter(product => product.slug)
   .map(product => `/catalog/${product.slug}`);
 
 // Собираем все URL
@@ -47,6 +46,11 @@ ${allUrls
 </urlset>
 `;
 
-// Сохраняем sitemap.xml в public/
-fs.writeFileSync(path.join(__dirname, '../public/sitemap.xml'), sitemap, 'utf8');
+// Проверяем и создаём public, если нужно
+const publicDir = path.join(__dirname, '../public');
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+}
+
+fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemap, 'utf8');
 console.log('Sitemap generated!'); 
