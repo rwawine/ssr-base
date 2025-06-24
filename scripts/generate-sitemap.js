@@ -22,6 +22,7 @@ const products = data.flatMap(item => item.products || []);
 
 // Генерируем URL для каждого товара по slug или id
 const productUrls = products
+  .filter(product => product.slug && typeof product.slug === 'string' && product.slug.trim() !== '')
   .map(product => `/catalog/${product.slug}`);
 
 // Собираем все URL
