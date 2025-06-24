@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next';
+import { NextResponse } from 'next/server';
 import allProducts from '@/data/data.json';
 
 // Определим тип для продукта, чтобы TypeScript не ругался
@@ -11,8 +11,9 @@ interface Product {
 // Убедимся, что allProducts.products - это массив
 const products: Product[] = allProducts[0]?.products || [];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export async function GET() {
   const baseUrl = 'https://ssr-base.vercel.app';
+  const now = new Date().toISOString();
 
   // Статические страницы
   const staticRoutes = [
@@ -26,8 +27,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/favorites',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: 'monthly' as const,
+    lastModified: now,
+    changeFrequency: 'monthly',
     priority: route === '/' ? 1.0 : 0.8,
   }));
 
@@ -36,10 +37,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((product) => !!product.slug)
     .map((product) => ({
       url: `${baseUrl}/catalog/${product.slug}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'weekly' as const,
+      lastModified: now,
+      changeFrequency: 'weekly',
       priority: 0.7,
     }));
 
-  return [...staticRoutes, ...productRoutes];
+  const allRoutes = [...staticRoutes, ...productRoutes];
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${allRoutes
+    .map(
+      (route) => `  <url>
+    <loc>${route.url}</loc>
+    <lastmod>${route.lastModified}</lastmod>
+    <changefreq>${route.changeFrequency}</changefreq>
+    <priority>${route.priority}</priority>
+  </url>`
+    )
+    .join('\n')}
+</urlset>`;
+
+  return new NextResponse(xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  });
 } 
