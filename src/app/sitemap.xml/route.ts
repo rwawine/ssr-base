@@ -1,21 +1,17 @@
 import { NextResponse } from 'next/server';
 import allProducts from '@/data/data.json';
 
-// Определим тип для продукта, чтобы TypeScript не ругался
 interface Product {
   id: string;
   slug?: string;
-  // Добавьте другие поля, если они вам нужны, но для sitemap достаточно slug
 }
 
-// Убедимся, что allProducts.products - это массив
 const products: Product[] = allProducts[0]?.products || [];
 
 export async function GET() {
   const baseUrl = 'https://ssr-base.vercel.app';
   const now = new Date().toISOString();
 
-  // Статические страницы
   const staticRoutes = [
     '/',
     '/about',
@@ -32,7 +28,6 @@ export async function GET() {
     priority: route === '/' ? 1.0 : 0.8,
   }));
 
-  // Динамические страницы товаров по slug
   const productRoutes = products
     .filter((product) => !!product.slug)
     .map((product) => ({
