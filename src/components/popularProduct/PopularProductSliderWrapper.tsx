@@ -1,7 +1,13 @@
+"use client";
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Product } from '@/types/product';
 import type { PopularProductSliderProps } from './PopularProductSlider';
-import PopularProductSlider from './PopularProductSlider';
+
+const PopularProductSlider = dynamic<PopularProductSliderProps>(
+  () => import('./PopularProductSlider'),
+  { ssr: false }
+);
 
 interface PopularProductSliderWrapperProps {
   products: Product[];
