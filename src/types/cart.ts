@@ -21,4 +21,8 @@ export interface CartContextType {
   clearCart: () => void;
   isInCart: (productId: string, dimensionId?: string, additionalOptions?: AdditionalOption[]) => boolean;
   getItemQuantity: (productId: string, dimensionId?: string, additionalOptions?: AdditionalOption[]) => number;
+  discount: number;
+  promoCode: string;
+  applyPromo: (code: string) => boolean;
+  resetPromo: () => void;
 } 

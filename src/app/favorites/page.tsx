@@ -5,6 +5,7 @@ import { useFavorites } from '@/hooks/FavoritesContext';
 import Link from 'next/link';
 import ProductCard from '@/components/productCard/ProductCard';
 import styles from './page.module.css';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export default function FavoritesPage() {
   const { favorites, clearFavorites } = useFavorites();
@@ -12,6 +13,13 @@ export default function FavoritesPage() {
   if (favorites.items.length === 0) {
     return (
       <div className={styles.container}>
+        <Breadcrumbs
+          items={[
+            { label: 'Главная', href: '/' },
+            { label: 'Избранное' }
+          ]}
+          className={styles.breadcrumbs}
+        />
         <div className={styles.emptyFavoritesModern}>
           <h1 className={styles.emptyFavoritesTitle}>В избранном пока нет товаров</h1>
           <p className={styles.emptyFavoritesSubtitle}>
@@ -27,6 +35,13 @@ export default function FavoritesPage() {
 
   return (
     <div className={styles.container}>
+      <Breadcrumbs
+        items={[
+          { label: 'Главная', href: '/' },
+          { label: 'Избранное' }
+        ]}
+        className={styles.breadcrumbs}
+      />
       <div className={styles.favoritesHeader}>
         <h1>Избранное</h1>
         <button 

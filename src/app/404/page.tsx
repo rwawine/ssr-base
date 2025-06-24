@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import React from 'react';
 import BackButton from './BackButton';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: '404 — Страница не найдена | Dilavia',
@@ -24,6 +25,12 @@ export default function Page() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
+        <Breadcrumbs
+          items={[
+            { label: 'Главная', href: '/' },
+            { label: '404' }
+          ]}
+        />
         <h1 className={styles.title}>404</h1>
         <h2 className={styles.subtitle}>Страница не найдена</h2>
         <p className={styles.description}>

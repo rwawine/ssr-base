@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import styles from './Delivery.module.css';
 import Accordion from '@/components/faq/Accordion';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'Доставка и оплата | Dilavia',
@@ -46,11 +47,13 @@ const faqItems = [
 export default function DeliveryPage() {
   return (
     <main className={styles.container}>
-      <div className={styles.breadcrumbs}>
-        <Link href="/">Главная</Link>
-        <span>/</span>
-        <p>Покупателю</p>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: 'Главная', href: '/' },
+          { label: 'Покупателю' }
+        ]}
+        className={styles.breadcrumbs}
+      />
       <h1 className={styles.mainTitle}>Покупателю</h1>
       <h2 className={styles.sectionTitle}>Часто задаваемые вопросы</h2>
       <Accordion items={faqItems} />

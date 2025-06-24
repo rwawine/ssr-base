@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import ProductCard from '@/components/productCard/ProductCard';
 import CatalogFilters, { FilterState } from '@/components/catalog/CatalogFilters';
 import FilterToggle from '@/components/catalog/FilterToggle';
 import { Product } from '@/types/product';
 import styles from "./page.module.css";
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 interface CatalogClientProps {
   initialProducts: Product[];
@@ -22,6 +23,27 @@ export default function CatalogClient({
   const [filtersOpen, setFiltersOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [sort, setSort] = useState<'new' | 'cheap' | 'expensive'>('new');
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  // Закрытие дропдауна по клику вне
+  useEffect(() => {
+    if (!sortDropdownOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [sortDropdownOpen]);
+
+  const sortOptions = [
+    { value: 'new', label: 'по новизне' },
+    { value: 'cheap', label: 'сначала дешевле' },
+    { value: 'expensive', label: 'сначала дороже' },
+  ];
 
   // Обновление URL при применении фильтров
   const handleApplyFilters = (newFilters: FilterState) => {
@@ -65,6 +87,14 @@ export default function CatalogClient({
     return false;
   }).length;
 
+  // Сортировка товаров
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sort === 'cheap') return (a.price?.current || 0) - (b.price?.current || 0);
+    if (sort === 'expensive') return (b.price?.current || 0) - (a.price?.current || 0);
+    // По новизне (id по убыванию, если id — число)
+    return (Number(b.id) || 0) - (Number(a.id) || 0);
+  });
+
   // Структурированные данные для SEO
   const structuredData = {
     "@context": "https://schema.org",
@@ -99,6 +129,13 @@ export default function CatalogClient({
       />
 
       <div className={styles.container}>
+        {/* Хлебные крошки */}
+        <Breadcrumbs
+          items={[
+            { label: 'Главная', href: '/' },
+            { label: 'Каталог' }
+          ]}
+        />
         {/* Заголовок и кнопка фильтров */}
         <div className={styles.catalogHeader}>
           <div className={styles.catalogTitle}>
@@ -114,6 +151,49 @@ export default function CatalogClient({
           />
         </div>
 
+        {/* Сортировка */}
+        <div className={styles.sortRow}>
+          {/* Desktop */}
+          <span className={styles.sortLabel + ' ' + styles.sortDesktop}>Отсортировать товары:</span>
+          <div className={styles.sortDesktop}>
+            {sortOptions.map(opt => (
+              <button
+                key={opt.value}
+                className={sort === opt.value ? styles.sortActive : styles.sortBtn}
+                onClick={() => setSort(opt.value as any)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          {/* Mobile dropdown */}
+          <div className={styles.sortMobile} ref={sortRef}>
+            <button
+              className={styles.sortMobileBtn}
+              onClick={() => setSortDropdownOpen(v => !v)}
+              aria-expanded={sortDropdownOpen}
+            >
+              {sortOptions.find(opt => opt.value === sort)?.label}
+              <span className={styles.sortMobileArrow} style={{ marginLeft: 8, display: 'inline-block', transform: sortDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                ▼
+              </span>
+            </button>
+            {sortDropdownOpen && (
+              <div className={styles.sortMobileDropdown}>
+                {sortOptions.map(opt => (
+                  <button
+                    key={opt.value}
+                    className={sort === opt.value ? styles.sortMobileActive : styles.sortMobileOption}
+                    onClick={() => { setSort(opt.value as any); setSortDropdownOpen(false); }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className={styles.catalogContent}>
           {/* Фильтры */}
           <CatalogFilters
@@ -127,7 +207,7 @@ export default function CatalogClient({
 
           {/* Список товаров */}
           <div className={styles.productsSection}>
-            {filteredProducts.length === 0 ? (
+            {sortedProducts.length === 0 ? (
               <div className={styles.noResults}>
                 <h3>Товары не найдены</h3>
                 <p>Попробуйте изменить параметры фильтрации</p>
@@ -140,7 +220,7 @@ export default function CatalogClient({
               </div>
             ) : (
               <div className={styles.productsGrid}>
-                {filteredProducts.map((product) => (
+                {sortedProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>

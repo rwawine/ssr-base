@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import Link from 'next/link';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 import Reviews from '@/components/reviews/Reviews';
 import styles from './ReviewsPage.module.css';
 
@@ -24,12 +24,14 @@ export default function ReviewsPage() {
   return (
     <main className={styles.pageContainer}>
       <div className={styles.header}>
-          <div className={styles.breadcrumbs}>
-              <Link href="/">Главная</Link>
-              <span>/</span>
-              <p>Отзывы</p>
-          </div>
-          <h1 className={styles.mainTitle}>Отзывы и рейтинг</h1>
+        <Breadcrumbs
+          items={[
+            { label: 'Главная', href: '/' },
+            { label: 'Отзывы' }
+          ]}
+          className={styles.breadcrumbs}
+        />
+        <h1 className={styles.mainTitle}>Отзывы и рейтинг</h1>
       </div>
       <Reviews />
     </main>

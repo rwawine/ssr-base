@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo, useState } from 'react';
 import { CartContextType, CartState, CartItem } from '@/types/cart';
 import { Product, Dimension, AdditionalOption } from '@/types/product';
 
@@ -151,6 +151,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 // Провайдер контекста
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, dispatch] = useReducer(cartReducer, initialState);
+  const [promoCode, setPromoCode] = useState<string>('');
+  const [discount, setDiscount] = useState<number>(0);
 
   // Загрузка корзины из localStorage при инициализации
   useEffect(() => {
@@ -200,6 +202,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' });
+    setPromoCode('');
+    setDiscount(0);
   }, []);
 
   const isInCart = useCallback((productId: string, dimensionId?: string, additionalOptions?: AdditionalOption[]): boolean => {
@@ -217,6 +221,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return item?.quantity || 0;
   }, [cart.items]);
 
+  const applyPromo = (code: string) => {
+    if (code.trim().toUpperCase() === 'SALE10') {
+      setPromoCode(code);
+      setDiscount(0.1);
+      return true;
+    }
+    setPromoCode('');
+    setDiscount(0);
+    return false;
+  };
+
+  const resetPromo = () => {
+    setPromoCode('');
+    setDiscount(0);
+  };
+
   // Мемоизированное значение контекста
   const contextValue = useMemo<CartContextType>(() => ({
     cart,
@@ -224,9 +244,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     removeFromCart,
     updateQuantity,
     clearCart,
+    applyPromo,
+    resetPromo,
+    discount,
+    promoCode,
     isInCart,
     getItemQuantity,
-  }), [cart, addToCart, removeFromCart, updateQuantity, clearCart, isInCart, getItemQuantity]);
+  }), [cart, addToCart, removeFromCart, updateQuantity, clearCart, applyPromo, resetPromo, discount, promoCode, isInCart, getItemQuantity]);
 
   return (
     <CartContext.Provider value={contextValue}>

@@ -114,7 +114,7 @@ section {
 body {
   line-height: 1;
   background: none;
-  font-family: var(--font-montserrat), 'Montserrat', Arial, sans-serif;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
 
 ol,

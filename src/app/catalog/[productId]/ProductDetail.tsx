@@ -16,6 +16,7 @@ import { useFavorites } from '@/hooks/FavoritesContext';
 import ProductCard from '@/components/productCard/ProductCard';
 import ProductOptions from '@/components/productCard/ProductOptions';
 import styles from './ProductDetail.module.css';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 interface ProductDetailProps {
   product: Product;
@@ -171,14 +172,15 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
   return (
     <div className={styles.container}>
-      <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
-        <Link href="/">Главная</Link> <span>/</span>
-        <Link href="/catalog">Каталог</Link>
-        {product.category && (
-          <> <span>/</span> <Link href={`/catalog?category=${product.category.code}`}>{product.category.name}</Link> </>
-        )}
-        <span>/</span> <span className={styles.currentPage}>{product.name}</span>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { label: 'Главная', href: '/' },
+          { label: 'Каталог', href: '/catalog' },
+          ...(product.category ? [{ label: product.category.name, href: `/catalog?category=${product.category.code}` }] : []),
+          { label: product.name }
+        ]}
+        className={styles.breadcrumbs}
+      />
 
       <div className={styles.productPage}>
         <div className={styles.leftColumn}>

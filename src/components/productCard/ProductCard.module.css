@@ -4,7 +4,7 @@
     flex-direction: column;
     position: relative;
     border-radius: 12px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Montserrat', Arial, sans-serif;
     color: var(--divan-text-primary);
     height: max-content;
 }
@@ -205,6 +205,7 @@
 }
 
 .dropdownButton {
+    height: 44px;
     width: 100%;
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
@@ -216,7 +217,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 16px;
 }
 
 .dropdownButton:hover {
@@ -262,8 +263,9 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    height: 44px;
     padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
+    font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -314,7 +316,7 @@
 
     .dropdownButton {
         padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
+        font-size: 16px;
     }
 
     .dropdownList {
@@ -326,7 +328,7 @@
     .dropdownItem,
     .dropdownItemCheckbox {
         padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
+        font-size: 16px;
     }
 
     .checkbox {
@@ -347,13 +349,13 @@
 
     .dropdownButton {
         padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-    }
+        font-size: 16px;
+    }   
 
     .dropdownItem,
     .dropdownItemCheckbox {
         padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
+        font-size: 16px;
     }
 
     .checkbox {

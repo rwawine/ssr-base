@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './AboutPage.module.css';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'О компании Dilavia | Производство дизайнерской мебели',
@@ -32,9 +33,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.breadcrumbs}>
-        <Link href="/">Главная</Link> / О компании
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: 'Главная', href: '/' },
+          { label: 'О компании' }
+        ]}
+        className={styles.breadcrumbs}
+      />
       <section className={styles.banner}>
         <Image
           src="/images/sofas.webp"

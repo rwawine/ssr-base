@@ -4,7 +4,8 @@ import allProducts from '@/data/data.json';
 // Определим тип для продукта, чтобы TypeScript не ругался
 interface Product {
   id: string;
-  // Добавьте другие поля, если они вам нужны, но для sitemap достаточно id
+  slug?: string;
+  // Добавьте другие поля, если они вам нужны, но для sitemap достаточно slug
 }
 
 // Убедимся, что allProducts.products - это массив
@@ -30,13 +31,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === '/' ? 1.0 : 0.8,
   }));
 
-  // Динамические страницы товаров
-  const productRoutes = products.map((product) => ({
-    url: `${baseUrl}/catalog/${product.id}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }));
+  // Динамические страницы товаров по slug
+  const productRoutes = products
+    .filter((product) => !!product.slug)
+    .map((product) => ({
+      url: `${baseUrl}/catalog/${product.slug}`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }));
 
   return [...staticRoutes, ...productRoutes];
 } 

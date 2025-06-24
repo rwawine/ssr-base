@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import styles from './ContactsPage.module.css';
 import ContactForm from './ContactForm';
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'Контакты | Dilavia',
@@ -23,9 +24,13 @@ export const metadata: Metadata = {
 export default function ContactsPage() {
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.breadcrumbs}>
-        <Link href="/">Главная</Link> / <span>Контакты</span>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: 'Главная', href: '/' },
+          { label: 'Контакты' }
+        ]}
+        className={styles.breadcrumbs}
+      />
 
       <h1 className={styles.title}>Наши контакты</h1>
 

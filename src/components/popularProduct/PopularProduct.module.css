@@ -134,6 +134,7 @@
   }
   
   .container {
+    overflow: hidden;
     padding: 0 15px;
   }
   

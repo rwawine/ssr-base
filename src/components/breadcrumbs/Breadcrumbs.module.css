@@ -1,0 +1,38 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 15px;
+  color: #aaa;
+  padding: 16px 0;
+  gap: 0 4px;
+}
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  gap: 0 4px;
+}
+.breadcrumbs a {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.breadcrumbs a:hover {
+  color: #23272f;
+  text-decoration: underline;
+}
+.separator {
+  margin: 0 6px;
+  color: #ccc;
+  user-select: none;
+}
+.current {
+  color: #23272f;
+  font-weight: 500;
+}
+@media (max-width: 600px) {
+  .breadcrumbs {
+    font-size: 13px;
+    padding: 10px 0;
+  }
+} 
