@@ -245,7 +245,7 @@ export default function CatalogFilters({
           {/* Section: Price */}
           <div className={styles.filterSection}>
             <div className={styles.sectionHeader} onClick={() => toggleSection('price')}>
-              <span>Цена, ₽</span>
+              <span>Цена, BYN</span>
               <ChevronIcon isOpen={openSections.includes('price')} />
             </div>
             {openSections.includes('price') && (

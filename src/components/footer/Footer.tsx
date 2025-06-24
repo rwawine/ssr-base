@@ -104,6 +104,23 @@ export default async function Footer() {
               </div>
             </div>
           </div>
+
+          {/* Блок: Разделы сайта для быстрых ссылок */}
+          <div className={styles.column}>
+            <h3 className={styles.title}>Разделы сайта</h3>
+            <nav aria-label="Разделы сайта">
+              <ul className={styles.linksGroup}>
+                <li><a href="/" className={styles.link}>Главная</a></li>
+                <li><a href="/catalog" className={styles.link}>Каталог</a></li>
+                <li><a href="/delivery" className={styles.link}>Доставка и оплата</a></li>
+                <li><a href="/reviews" className={styles.link}>Отзывы</a></li>
+                <li><a href="/about" className={styles.link}>О компании</a></li>
+                <li><a href="/contacts" className={styles.link}>Контакты</a></li>
+                <li><a href="/favorites" className={styles.link}>Избранное</a></li>
+                <li><a href="/cart" className={styles.link}>Корзина</a></li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </footer>

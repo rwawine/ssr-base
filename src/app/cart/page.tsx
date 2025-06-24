@@ -7,6 +7,7 @@ import styles from './page.module.css';
 import { AdditionalOption } from '@/types/product';
 import { useRouter } from 'next/navigation';
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
+import CheckoutForm from './CheckoutForm';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -16,6 +17,7 @@ export default function CartPage() {
   const [promoApplied, setPromoApplied] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const formRef = React.useRef<any>(null);
 
   const handleQuantityChange = (productId: string, dimensionId: string | undefined, newQuantity: number, additionalOptions?: AdditionalOption[]) => {
     updateQuantity(productId, newQuantity, dimensionId, additionalOptions);
@@ -47,11 +49,13 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.push('/cart/checkout');
-    }, 500);
+    if (formRef.current && typeof formRef.current.submitForm === 'function') {
+      formRef.current.submitForm();
+    } else if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const phoneInput = formRef.current.querySelector('input[name="phone"]') as HTMLInputElement;
+      if (phoneInput) setTimeout(() => phoneInput.focus(), 400);
+    }
   };
 
   const totalWithDiscount = Math.round(cart.totalPrice * (1 - discount));
@@ -76,12 +80,14 @@ export default function CartPage() {
     <div className={styles.container}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: '/' },
+          { label: 'Главная', href: 'https://dilavia.by/' },
           { label: 'Корзина' }
         ]}
       />
-      <h1 className={styles.cartTitle}>Корзина</h1>
-      <button className={styles.clearCartBtn} onClick={handleClearCart}>Очистить корзину</button>
+     <div className={styles.cartHeader}>
+     <h1 className={styles.cartTitle}>Корзина</h1>
+     <button className={styles.clearCartBtn} onClick={handleClearCart}>Очистить корзину</button>
+     </div>
       <div className={styles.cartGrid}>
         <div className={styles.cartItemsSection}>
           {cart.items.map((item, index) => (
@@ -97,9 +103,9 @@ export default function CartPage() {
                   <span className={styles.cartProductName}>{item.product.name}</span>
                 </div>
                 <div className={styles.cartProductPriceRow}>
-                  <span className={styles.cartProductPrice}>{(item.selectedDimension?.price || item.product.price?.current).toLocaleString('ru-RU')} ₽</span>
+                  <span className={styles.cartProductPrice}>{(item.selectedDimension?.price || item.product.price?.current).toLocaleString('ru-RU')} BYN</span>
                   {item.product.price?.old && (
-                    <span className={styles.cartProductOldPrice}>{item.product.price.old.toLocaleString('ru-RU')} ₽</span>
+                    <span className={styles.cartProductOldPrice}>{item.product.price.old.toLocaleString('ru-RU')} BYN</span>
                   )}
                 </div>
                 {item.selectedDimension && (
@@ -141,6 +147,7 @@ export default function CartPage() {
               </div>
             </div>
           ))}
+          <CheckoutForm ref={formRef} />
         </div>
         <aside className={styles.cartSummarySection}>
           <div className={styles.cartSummaryBox}>
@@ -150,13 +157,10 @@ export default function CartPage() {
               <span>{cart.totalItems} шт.</span>
             </div>
             <div className={styles.cartSummaryTotalLabel}>Итого</div>
-            <div className={styles.cartSummaryTotalValue}>{totalWithDiscount.toLocaleString('ru-RU')} ₽</div>
+            <div className={styles.cartSummaryTotalValue}>{totalWithDiscount.toLocaleString('ru-RU')} BYN</div>
             {discount > 0 && (
-              <div className={styles.cartSummaryDiscount}>Скидка по промокоду: -{Math.round(cart.totalPrice * discount).toLocaleString('ru-RU')} ₽</div>
+              <div className={styles.cartSummaryDiscount}>Скидка по промокоду: -{Math.round(cart.totalPrice * discount).toLocaleString('ru-RU')} BYN</div>
             )}
-            <button className={styles.cartCheckoutBtn} onClick={handleCheckout} disabled={loading}>
-              {loading ? 'Загрузка...' : 'Перейти к оформлению'}
-            </button>
             <div className={styles.cartPromoBlock}>
               <div className={styles.cartPromoLabel}>У меня есть промокод</div>
               <div className={styles.cartPromoInputRow}>
@@ -166,6 +170,14 @@ export default function CartPage() {
               {promoError && <div className={styles.cartPromoError}>{promoError}</div>}
               {promoApplied && <div className={styles.cartPromoSuccess}>Промокод применён!</div>}
             </div>
+            <button
+              className={styles.cartCheckoutBtn}
+              onClick={handleCheckout}
+              aria-label="Перейти к оформлению заказа"
+              disabled={cart.items.length === 0}
+            >
+              Оформить заказ
+            </button>
           </div>
         </aside>
       </div>

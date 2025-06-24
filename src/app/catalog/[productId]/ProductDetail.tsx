@@ -155,7 +155,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
     { icon: '⭐', text: '5.0 Отзывы покупателей' },
     { icon: '🛡️', text: 'Наличие сертификатов качества' },
     { icon: '📅', text: '1 год Гарантия на товар' },
-    { icon: '💰', text: `Выгода до ${(product.price.old && product.price.current) ? (product.price.old - product.price.current).toLocaleString('ru-RU') : 'N/A'} ₽` },
+    { icon: '💰', text: `Выгода до ${(product.price.old && product.price.current) ? (product.price.old - product.price.current).toLocaleString('ru-RU') : 'N/A'} BYN` },
   ];
 
   // Функции для кастомной навигации
@@ -174,8 +174,8 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
     <div className={styles.container}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: '/' },
-          { label: 'Каталог', href: '/catalog' },
+          { label: 'Главная', href: 'https://dilavia.by/' },
+          { label: 'Каталог', href: 'https://dilavia.by/catalog' },
           ...(product.category ? [{ label: product.category.name, href: `/catalog?category=${product.category.code}` }] : []),
           { label: product.name }
         ]}
@@ -334,8 +334,8 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
             <h1 className={styles.title}>{product.name}</h1>
 
             <div className={styles.priceRow}>
-              <span className={styles.price}>{currentPrice.toLocaleString('ru-RU')} ₽</span>
-              {oldPrice && <span className={styles.oldPrice}>{oldPrice.toLocaleString('ru-RU')} ₽</span>}
+              <span className={styles.price}>{currentPrice.toLocaleString('ru-RU')} BYN</span>
+              {oldPrice && <span className={styles.oldPrice}>{oldPrice.toLocaleString('ru-RU')} BYN</span>}
             </div>
 
             <div className={styles.optionsSection}>

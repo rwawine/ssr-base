@@ -49,7 +49,7 @@ export default function DeliveryPage() {
     <main className={styles.container}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: '/' },
+          { label: 'Главная', href: 'https://dilavia.by/' },
           { label: 'Покупателю' }
         ]}
         className={styles.breadcrumbs}

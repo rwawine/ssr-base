@@ -98,7 +98,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </h3>
 
                 <div className={styles.priceRow}>
-                    <span className={styles.price}>{currentPrice.toLocaleString('ru-RU')} ₽</span>
+                    <span className={styles.price}>{currentPrice.toLocaleString('ru-RU')} BYN</span>
                 </div>
                 
                 <div className={styles.detailsRow}>

@@ -27,7 +27,7 @@ export default function Page() {
       <div className={styles.content}>
         <Breadcrumbs
           items={[
-            { label: 'Главная', href: '/' },
+            { label: 'Главная', href: 'https://dilavia.by/' },
             { label: '404' }
           ]}
         />

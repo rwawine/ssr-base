@@ -15,7 +15,7 @@ export default function FavoritesPage() {
       <div className={styles.container}>
         <Breadcrumbs
           items={[
-            { label: 'Главная', href: '/' },
+            { label: 'Главная', href: 'https://dilavia.by/' },
             { label: 'Избранное' }
           ]}
           className={styles.breadcrumbs}
@@ -37,7 +37,7 @@ export default function FavoritesPage() {
     <div className={styles.container}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: '/' },
+          { label: 'Главная', href: 'https://dilavia.by/' },
           { label: 'Избранное' }
         ]}
         className={styles.breadcrumbs}

@@ -35,7 +35,7 @@ export default function AboutPage() {
     <div className={styles.pageContainer}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: '/' },
+          { label: 'Главная', href: 'https://dilavia.by/' },
           { label: 'О компании' }
         ]}
         className={styles.breadcrumbs}

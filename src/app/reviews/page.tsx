@@ -26,7 +26,7 @@ export default function ReviewsPage() {
       <div className={styles.header}>
         <Breadcrumbs
           items={[
-            { label: 'Главная', href: '/' },
+            { label: 'Главная', href: 'https://dilavia.by/' },
             { label: 'Отзывы' }
           ]}
           className={styles.breadcrumbs}

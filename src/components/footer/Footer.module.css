@@ -21,6 +21,10 @@
     flex-direction: column;
 }
 
+.column:nth-child(5) {
+    display: none;
+}
+
 .title {
     font-family: 'Montserrat', Arial, sans-serif;
     font-size: 18px;

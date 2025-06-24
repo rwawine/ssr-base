@@ -26,7 +26,7 @@ export default function ContactsPage() {
     <div className={styles.pageContainer}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: '/' },
+          { label: 'Главная', href: 'https://dilavia.by/' },
           { label: 'Контакты' }
         ]}
         className={styles.breadcrumbs}

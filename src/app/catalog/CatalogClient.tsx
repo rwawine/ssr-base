@@ -132,7 +132,7 @@ export default function CatalogClient({
         {/* Хлебные крошки */}
         <Breadcrumbs
           items={[
-            { label: 'Главная', href: '/' },
+            { label: 'Главная', href: 'https://dilavia.by/' },
             { label: 'Каталог' }
           ]}
         />
