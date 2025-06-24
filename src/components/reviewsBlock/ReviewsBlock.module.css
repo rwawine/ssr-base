@@ -1,0 +1,44 @@
+.block {
+  width: 100%;
+  padding: 32px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #232323;
+}
+
+.titleWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f3f4f6;
+  color: #222;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  padding: 8px 20px 8px 16px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  box-shadow: 0 1px 4px 0 rgba(60,60,60,0.04);
+}
+.button:hover {
+  background: #e5e7eb;
+  color: #111;
+}
+.button svg {
+  display: block;
+}

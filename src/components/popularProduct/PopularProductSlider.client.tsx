@@ -10,9 +10,11 @@ import styles from './PopularProduct.module.css';
 
 interface PopularProductSliderProps {
   products: Product[];
+  title?: string;
+  description?: string;
 }
 
-export default function PopularProductSlider({ products }: PopularProductSliderProps) {
+export default function PopularProductSlider({ products, title, description }: PopularProductSliderProps) {
   const swiperRef = useRef<any>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -31,8 +33,8 @@ export default function PopularProductSlider({ products }: PopularProductSliderP
     <>
       <div className={styles.titleRow}>
         <div>
-          <h1 className={styles.title}>Диваны в Минске</h1>
-          <div className={styles.description}>В интернет-магазине Dilavia.by представлены только тщательно отобранные модели диванов, мягкой и корпусной мебели. Каждая модель из нашего интернет каталога – это воплощение отличного дизайна, легенда мебельной отрасли.</div>
+          <h1 className={styles.title}>{title || 'Диваны в Минске'}</h1>
+          <div className={styles.description}>{description || 'В интернет-магазине Dilavia.by представлены только тщательно отобранные модели диванов, мягкой и корпусной мебели. Каждая модель из нашего интернет каталога – это воплощение отличного дизайна, легенда мебельной отрасли.'}</div>
         </div>
         <div className={styles.arrowGroup}>
           <button

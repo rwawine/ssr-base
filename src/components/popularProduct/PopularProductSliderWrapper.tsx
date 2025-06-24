@@ -1,9 +1,20 @@
 "use client";
+import React from 'react';
 import dynamic from 'next/dynamic';
 import { Product } from '@/types/product';
+import type { PopularProductSliderProps } from './PopularProductSlider';
 
-const PopularProductSlider = dynamic(() => import('./PopularProductSlider.client'), { ssr: false });
+const PopularProductSlider = dynamic<PopularProductSliderProps>(
+  () => import('./PopularProductSlider'),
+  { ssr: false }
+);
 
-export default function PopularProductSliderWrapper({ products }: { products: Product[] }) {
-  return <PopularProductSlider products={products} />;
+interface PopularProductSliderWrapperProps {
+  products: Product[];
+  title?: string;
+  description?: string;
+}
+
+export default function PopularProductSliderWrapper({ products, title, description }: PopularProductSliderWrapperProps) {
+  return <PopularProductSlider products={products} title={title} description={description} />;
 } 

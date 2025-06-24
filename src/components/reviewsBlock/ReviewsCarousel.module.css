@@ -1,0 +1,173 @@
+.carouselWrapper {
+  width: 100%;
+  padding: 32px 0;
+}
+
+.swiper {
+  width: 100%;
+  overflow: visible;
+}
+
+.slide {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: auto;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px 0 rgba(60,60,60,0.07);
+  padding: 32px 28px 24px 28px;
+  max-width: 340px;
+  width: 100%;
+  min-width: 260px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 32px 0 rgba(60,60,60,0.13);
+}
+
+.quoteMark {
+  font-size: 38px;
+  color: #e5e7eb;
+  font-family: serif;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.text {
+  font-size: 16px;
+  color: #222;
+  margin: 32px 0 6px 0;
+  min-height: 70px;
+  font-weight: 500;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #555;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px 0 rgba(60,60,60,0.07);
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.username {
+  font-size: 0.95rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+.empty {
+  text-align: center;
+  color: #aaa;
+  font-size: 1.1rem;
+  padding: 40px 0;
+}
+
+.fullButton {
+  padding: 7px 18px;
+  color: #444;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: .8;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: transparent;
+  position: relative;
+}
+.fullButton::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #444;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+.fullButton:hover {
+  opacity: 1;
+}
+.fullButton:hover::after {
+  width: 55%;
+}
+
+@media (max-width: 900px) {
+  .card {
+    max-width: 90vw;
+    min-width: 220px;
+    padding: 24px 12px 18px 16px;
+  }
+  .text {
+    font-size: 1rem;
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .carouselWrapper {
+    padding: 16px 0;
+  }
+  .card {
+    max-width: 98vw;
+    min-width: 160px;
+    padding: 16px 6px 12px 10px;
+    border-radius: 14px;
+  }
+  .text {
+    font-size: 0.98rem;
+    min-height: 30px;
+  }
+  .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+}
+
+.clampText {
+  max-height: 160px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  white-space: normal;
+} 

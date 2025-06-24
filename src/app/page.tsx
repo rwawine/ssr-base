@@ -7,6 +7,10 @@ import SliderHeroBanner from "@/components/sliderHeroBanner/SliderHeroBanner";
 import { fetchHeroSlides } from '@/utils/fetchHeroSlides';
 import { Metadata } from "next";
 import Script from "next/script";
+import MarqueeBlockFallback from "@/components/marqueeBlock/MarqueeBlockFallback";
+import BenefitsBlock from "@/components/benefitsBlock/BenefitsBlock";
+import CopirateBlock from "@/components/copirateBlock/CopirateBlock";
+import ReviewsBlock from "@/components/reviewsBlock/ReviewsBlock";
 
 async function getProductsData() {
   const filePath = path.join(process.cwd(), 'src', 'data', 'data.json');
@@ -87,7 +91,16 @@ export default async function Home() {
         }}
       />
       <SliderHeroBanner slides={slides} />
-      <PopularProduct products={products} />
+      <PopularProduct products={products} category={["Диван"]} />
+      <BenefitsBlock />
+      <MarqueeBlockFallback
+        speed={120}
+        pauseOnHover={true}
+        showLoading={true}
+      />
+      <PopularProduct products={products} category={["Кровать"]} minRating={2} title="Кровати в Минске" description="В интернет-магазине Dilavia.by представлены только тщательно отобранные модели кроватей, мягкой и корпусной мебели. Каждая модель из нашего интернет каталога – это воплощение отличного дизайна" />
+      <CopirateBlock />
+      <ReviewsBlock />
     </main>
   );
 }
