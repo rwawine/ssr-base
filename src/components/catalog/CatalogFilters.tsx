@@ -234,6 +234,7 @@ export default function CatalogFilters({
   const maxPercent = getPercent(priceRange[1]);
 
   const selectedCategoryData = categories.filter(cat => (filters.category || []).includes(cat.code));
+  const showSubcategorySection = selectedCategoryData.some(cat => cat.subcategories.length > 1);
 
   return (
     <>
@@ -299,7 +300,7 @@ export default function CatalogFilters({
           </div>
           
           {/* Section: Subcategories */}
-          {selectedCategoryData.length > 0 && (
+          {showSubcategorySection && (
             <div className={styles.filterSection}>
               <div className={styles.sectionHeader} onClick={() => toggleSection('subcategory')}>
                 <span>Подкатегории</span>
@@ -308,12 +309,15 @@ export default function CatalogFilters({
               {openSections.includes('subcategory') && (
                 <div className={styles.sectionContent}>
                   <div className={styles.checkboxList}>
-                    {selectedCategoryData.flatMap(cat => cat.subcategories).map(subcategory => (
-                       <label key={subcategory.code} className={styles.checkboxLabel}>
-                        <input type="checkbox" checked={(filters.subcategory || []).includes(subcategory.code)} onChange={() => handleSubcategoryChange(subcategory.code)} />
-                        <span className={styles.checkboxCustom}></span>
-                        <span>{subcategory.name}</span>
-                      </label>
+                    {selectedCategoryData
+                      .filter(cat => cat.subcategories.length > 1)
+                      .flatMap(cat => cat.subcategories)
+                      .map(subcategory => (
+                        <label key={subcategory.code} className={styles.checkboxLabel}>
+                          <input type="checkbox" checked={(filters.subcategory || []).includes(subcategory.code)} onChange={() => handleSubcategoryChange(subcategory.code)} />
+                          <span className={styles.checkboxCustom}></span>
+                          <span>{subcategory.name}</span>
+                        </label>
                     ))}
                   </div>
                 </div>

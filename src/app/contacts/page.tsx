@@ -5,18 +5,18 @@ import styles from './ContactsPage.module.css';
 import ContactForm from './ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Контакты | Creatica',
-  description: 'Свяжитесь с мебельной фабрикой Creatica. Адрес, телефон, email, график работы и форма обратной связи. Мы всегда готовы ответить на ваши вопросы.',
+  title: 'Контакты | Dilavia',
+  description: 'Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи. Мы всегда готовы ответить на ваши вопросы.',
   openGraph: {
-    title: 'Контакты | Creatica',
-    description: 'Контактная информация для связи с Creatica. Мы производим современную дизайнерскую мебель и готовы к сотрудничеству.',
+    title: 'Контакты | Dilavia',
+    description: 'Контактная информация для связи с Dilavia. Мы производим современную дизайнерскую мебель и готовы к сотрудничеству.',
     url: 'https://dilavia.by/contacts', // Replace with actual URL
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Контакты | Creatica',
-    description: 'Свяжитесь с мебельной фабрикой Creatica. Адрес, телефон, email, график работы и форма обратной связи.',
+    title: 'Контакты | Dilavia',
+    description: 'Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи.',
   },
 };
 
@@ -41,7 +41,7 @@ export default function ContactsPage() {
           </div>
           <div className={styles.infoBlock}>
             <h3>Email</h3>
-            <p><a href="mailto:info@creatica.ru">info@creatica.ru</a></p>
+            <p><a href="mailto:info@Dilavia.ru">info@Dilavia.ru</a></p>
           </div>
           <div className={styles.infoBlock}>
             <h3>График работы</h3>

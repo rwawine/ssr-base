@@ -1,17 +1,24 @@
 import React from 'react';
-import { Suspense } from 'react';
 import CatalogClient from './CatalogClient';
 import { Product } from '@/types/product';
 import { Metadata } from 'next';
 import { FilterState } from '@/components/catalog/CatalogFilters';
 
-// Серверная функция для загрузки данных
+/**
+ * Получить все товары из локального файла данных.
+ * @returns {Product[]} Массив товаров
+ */
 function getProductsFromFile(): Product[] {
   const data = require('@/data/data.json');
   return data[0].products;
 }
 
-// Серверная функция для фильтрации товаров
+/**
+ * Отфильтровать товары по параметрам поиска.
+ * @param {Product[]} products - Все товары
+ * @param {Record<string, string | string[] | undefined>} searchParams - Параметры фильтрации
+ * @returns {Product[]} Отфильтрованные товары
+ */
 function filterProducts(
   products: Product[],
   searchParams: { [key: string]: string | string[] | undefined }
@@ -76,25 +83,32 @@ function filterProducts(
   return results;
 }
 
+/**
+ * Сортировка товаров по выбранному критерию.
+ * @param {Product[]} products - Массив товаров
+ * @param {string} sortBy - Критерий сортировки
+ */
 function sortProducts(products: Product[], sortBy: string) {
-    switch (sortBy) {
-        case 'price-asc':
-          products.sort((a, b) => (a.price?.current || 0) - (b.price?.current || 0));
-          break;
-        case 'price-desc':
-          products.sort((a, b) => (b.price?.current || 0) - (a.price?.current || 0));
-          break;
-        case 'popularity':
-          products.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
-          break;
-        case 'name':
-        default:
-          products.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-      }
+  switch (sortBy) {
+    case 'price-asc':
+      products.sort((a, b) => (a.price?.current || 0) - (b.price?.current || 0));
+      break;
+    case 'price-desc':
+      products.sort((a, b) => (b.price?.current || 0) - (a.price?.current || 0));
+      break;
+    case 'popularity':
+      products.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+      break;
+    case 'name':
+    default:
+      products.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+  }
 }
 
-// Генерация метаданных
+/**
+ * Генерация метаданных для страницы каталога.
+ */
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
   const products = getProductsFromFile();
@@ -142,34 +156,18 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   };
 }
 
-// Компонент загрузки
-function CatalogLoading() {
-  return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      minHeight: '400px',
-      fontSize: '18px',
-      color: '#666'
-    }}>
-      Загрузка каталога...
-    </div>
-  );
-}
-
-// Серверный компонент
+/**
+ * Главная страница каталога. Загружает и фильтрует товары, передаёт их в клиентский компонент.
+ */
 export default async function CatalogPage({ 
   searchParams 
 }: { 
   searchParams: Promise<{ [key: string]: string | string[] | undefined }> 
 }) {
-  // Загружаем и фильтруем данные на сервере
   const resolvedSearchParams = await searchParams;
   const allProducts = getProductsFromFile();
   const filteredProducts = filterProducts(allProducts, resolvedSearchParams);
-  
-  // Извлекаем текущие фильтры из URL
+
   const currentFilters: FilterState = {
     category: resolvedSearchParams.category ? (Array.isArray(resolvedSearchParams.category) ? resolvedSearchParams.category : [resolvedSearchParams.category]) : undefined,
     subcategory: resolvedSearchParams.subcategory ? (Array.isArray(resolvedSearchParams.subcategory) ? resolvedSearchParams.subcategory : [resolvedSearchParams.subcategory]) : undefined,
@@ -180,12 +178,10 @@ export default async function CatalogPage({
   };
 
   return (
-    <Suspense fallback={<CatalogLoading />}>
-      <CatalogClient 
-        initialProducts={allProducts}
-        filteredProducts={filteredProducts}
-        currentFilters={currentFilters}
-      />
-    </Suspense>
+    <CatalogClient 
+      initialProducts={allProducts}
+      filteredProducts={filteredProducts}
+      currentFilters={currentFilters}
+    />
   );
 }

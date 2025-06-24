@@ -214,6 +214,52 @@
     background: #1557b0;
 }
 
+/* --- Современный стиль для пустого избранного --- */
+.emptyFavoritesModern {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 80px 0 60px 0;
+}
+
+.emptyFavoritesTitle {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.emptyFavoritesSubtitle {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 36px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.emptyFavoritesButton {
+    display: block;
+    width: 350px;
+    max-width: 90vw;
+    padding: 16px 0;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin: 0 auto;
+}
+
+.emptyFavoritesButton:hover {
+    background: #333;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 100px 15px 30px;
@@ -239,5 +285,20 @@
     .favoritesGrid {
         grid-template-columns: 1fr;
         gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .emptyFavoritesModern {
+        padding: 40px 0 30px 0;
+        min-height: 220px;
+    }
+    .emptyFavoritesTitle {
+        font-size: 1.4rem;
+    }
+    .emptyFavoritesButton {
+        width: 100%;
+        font-size: 1rem;
+        padding: 14px 0;
     }
 }

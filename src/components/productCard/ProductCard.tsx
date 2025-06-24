@@ -26,7 +26,7 @@ const BestsellerBadge = () => (
 );
 
 export default function ProductCard({ product }: ProductCardProps) {
-    const { addToCart, isInCart } = useCart();
+    const { addToCart, isInCart, getItemQuantity, updateQuantity, removeFromCart } = useCart();
     const router = useRouter();
     
     const dimensions: Dimension[] = Array.isArray(product?.dimensions) ? product.dimensions.filter(Boolean) : [];
@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     const [selectedAdditionalOptions, setSelectedAdditionalOptions] = useState<AdditionalOption[]>([]);
     
     const name = product?.name || 'Без названия';
-    const images = product?.images?.length ? product.images.slice(0, 3) : ['/images/no-image.png'];
+    const images = product?.images?.length ? product.images.slice(0, 1) : ['/images/no-image.png'];
     const slug = product?.slug || '';
     const isBestseller = (product?.popularity || 0) > 4.5;
     
@@ -45,30 +45,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     const hasAdditionalOptions = dimensions.some(dim => dim.additionalOptions && dim.additionalOptions.length > 0);
     const shouldShowOptions = dimensions.length > 1 || hasAdditionalOptions;
 
-    const [activeImageIndex, setActiveImageIndex] = useState(0);
-    const imageRef = useRef<HTMLAnchorElement>(null);
+    // Получаем количество товара в корзине
+    const cartQuantity = getItemQuantity(product.id, selectedDimension?.id, selectedAdditionalOptions);
+    const inCart = cartQuantity > 0;
 
-    const inCart = isInCart(product.id, selectedDimension?.id, selectedAdditionalOptions);
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        if (images.length <= 1 || !imageRef.current) return;
-        
-        const rect = imageRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const width = rect.width;
-        
-        const imageIndex = Math.floor((x / width) * images.length);
-        const newIndex = Math.min(Math.max(imageIndex, 0), images.length - 1);
-
-        if (newIndex !== activeImageIndex) {
-            setActiveImageIndex(newIndex);
-        }
-    };
-
-    const handleMouseLeave = () => {
-        setActiveImageIndex(0);
-    };
-    
     const handleDimensionSelect = (dimension: Dimension) => {
         setSelectedDimension(dimension);
         setSelectedAdditionalOptions([]);
@@ -82,35 +62,33 @@ export default function ProductCard({ product }: ProductCardProps) {
         );
     };
 
-    const handleCartButtonClick = () => {
-        if (inCart) {
-            router.push('/cart');
+    const handleAddToCart = () => {
+        addToCart(product, 1, selectedDimension, selectedAdditionalOptions);
+    };
+
+    const handleIncrease = () => {
+        updateQuantity(product.id, cartQuantity + 1, selectedDimension?.id, selectedAdditionalOptions);
+    };
+
+    const handleDecrease = () => {
+        if (cartQuantity > 1) {
+            updateQuantity(product.id, cartQuantity - 1, selectedDimension?.id, selectedAdditionalOptions);
         } else {
-            addToCart(product, 1, selectedDimension, selectedAdditionalOptions);
+            removeFromCart(product.id, selectedDimension?.id, selectedAdditionalOptions);
         }
     };
-    
+
     const formattedDimensions = selectedDimension ? `${selectedDimension.width}x${selectedDimension.length} см` : '';
 
     return (
         <div className={styles.card}>
             <Link 
-                ref={imageRef}
                 href={`/catalog/${slug}`} 
-                className={styles.imageLink} 
-                onMouseMove={handleMouseMove} 
-                onMouseLeave={handleMouseLeave}
+                className={styles.imageLink}
             >
                 <div className={styles.imageWrapper}>
-                    <img src={images[activeImageIndex]} alt={`${name} - фото ${activeImageIndex + 1}`} className={styles.image} />
+                    <img src={images[0]} alt={`${name} - фото 1`} className={styles.image} />
                     {isBestseller && <BestsellerBadge />}
-                    {images.length > 1 && (
-                        <div className={styles.pagination}>
-                            {images.map((_, index) => (
-                                <span key={index} className={`${styles.paginationDot} ${index === activeImageIndex ? styles.paginationDotActive : ''}`} />
-                            ))}
-                        </div>
-                    )}
                 </div>
             </Link>
 
@@ -138,12 +116,28 @@ export default function ProductCard({ product }: ProductCardProps) {
                 )}
 
                 <div className={styles.actions}>
-                    <button 
-                        className={`${styles.addToCartButton} ${inCart ? styles.buttonInCart : ''}`} 
-                        onClick={handleCartButtonClick}
-                    >
-                        {inCart ? 'Перейти в корзину' : 'В корзину'}
-                    </button>
+                    {!inCart ? (
+                        <button 
+                            className={styles.addToCartButton}
+                            onClick={handleAddToCart}
+                        >
+                            В корзину
+                        </button>
+                    ) : (
+                        <div className={styles.inCartActions}>
+                            <button
+                                className={styles.inCartButton}
+                                onClick={() => router.push('/cart')}
+                            >
+                                В корзине {cartQuantity} шт.
+                            </button>
+                            <div className={styles.cartCounter}>
+                                <button className={styles.counterBtn} onClick={handleDecrease} aria-label="Уменьшить количество">−</button>
+                                <span className={styles.counterValue}>{cartQuantity}</span>
+                                <button className={styles.counterBtn} onClick={handleIncrease} aria-label="Увеличить количество">+</button>
+                            </div>
+                        </div>
+                    )}
                     <Link href={`/catalog/${slug}`} className={styles.detailsLink}>
                         Подробнее о товаре
                     </Link>

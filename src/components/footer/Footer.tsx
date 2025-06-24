@@ -85,9 +85,9 @@ export default async function Footer() {
             <h3 className={styles.title}>Мебель</h3>
             <div className={styles.block}>
               <div className={styles.linksGroup}>
-                <a href="/catalog/sofa" className={styles.link} title="Каталог диванов">Диваны</a>
-                <a href="/catalog/bed" className={styles.link} title="Каталог кроватей">Кровати</a>
-                <a href="/catalog/armchair" className={styles.link} title="Каталог кресел">Кресла</a>
+                <a href="/catalog?category=sofa" className={styles.link} title="Каталог диванов">Диваны</a>
+                <a href="/catalog?category=bed" className={styles.link} title="Каталог кроватей">Кровати</a>
+                <a href="/catalog?category=armchair" className={styles.link} title="Каталог кресел">Кресла</a>
               </div>
             </div>
           </div>

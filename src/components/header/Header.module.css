@@ -61,7 +61,6 @@
     font-weight: 700;
     line-height: 1;
     z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .header__info_favorite .header__info_link,
@@ -382,7 +381,7 @@
 }
 
 .header__info_favorite:hover {
-    background: var(--black);
+    background: #f1f1f1;
 }
 
 .header__info_favorite:hover .header__info_link .icon {
@@ -514,7 +513,7 @@
 
 .expander {
     background: var(--white);
-    border-radius: 24px;
+    border-radius: 16px;
     padding: 16px;
     box-shadow: 0 4px 32px rgba(26, 26, 26, 0.1);
 }
@@ -577,7 +576,7 @@
     padding: 12px 16px;
     color: var(--black);
     text-decoration: none;
-    border-radius: 16px;
+    border-radius: 6px;
     transition: 0.2s ease;
     font-size: 16px;
     font-weight: 500;

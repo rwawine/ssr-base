@@ -12,10 +12,12 @@ export default function FavoritesPage() {
   if (favorites.items.length === 0) {
     return (
       <div className={styles.container}>
-        <div className={styles.emptyFavorites}>
-          <h1>Избранное пусто</h1>
-          <p>Добавьте товары в избранное, чтобы сохранить их для покупки позже</p>
-          <Link href="/catalog" className={styles.continueShopping}>
+        <div className={styles.emptyFavoritesModern}>
+          <h1 className={styles.emptyFavoritesTitle}>В избранном пока нет товаров</h1>
+          <p className={styles.emptyFavoritesSubtitle}>
+            Добавьте товары в избранное, чтобы сохранить их для покупки позже
+          </p>
+          <Link href="/catalog" className={styles.emptyFavoritesButton}>
             Перейти в каталог
           </Link>
         </div>
