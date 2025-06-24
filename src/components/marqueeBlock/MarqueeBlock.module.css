@@ -104,6 +104,7 @@
 
 @media (max-width: 600px) {
   .marqueeContainer {
+    overflow: hidden;
     height: 220px;
   }
   .marqueeWrapper {
