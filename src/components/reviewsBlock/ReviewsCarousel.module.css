@@ -46,6 +46,14 @@
   pointer-events: none;
 }
 
+@media (max-width: 768px) {
+  .quoteMark {
+    font-size: 24px;
+    top: 12px;
+    left: 12px;
+  }
+}
+
 .text {
   font-size: 16px;
   color: #222;

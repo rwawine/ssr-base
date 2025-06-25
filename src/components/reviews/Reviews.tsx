@@ -39,6 +39,11 @@ export default function Reviews() {
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{username?: string, comment?: string, rating?: string}>({});
+  const usernameRef = React.useRef<HTMLInputElement>(null);
+  const commentRef = React.useRef<HTMLTextAreaElement>(null);
+  const ratingRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const commentsRef = collection(db, 'feedbacks');
@@ -55,13 +60,42 @@ export default function Reviews() {
     return () => unsubscribe();
   }, []);
 
+  const validateForm = () => {
+    const errors: {username?: string, comment?: string, rating?: string} = {};
+    // Имя
+    if (!username.trim()) errors.username = 'Введите имя';
+    else if (username.length < 2) errors.username = 'Имя слишком короткое';
+    else if (username.length > 20) errors.username = 'Имя слишком длинное';
+    else if (/https?:\/\//i.test(username)) errors.username = 'Имя не должно содержать ссылок';
+    else if (/[^a-zA-Zа-яА-ЯёЁ0-9 \-]/.test(username)) errors.username = 'Имя содержит недопустимые символы';
+    // Комментарий
+    if (!comment.trim()) errors.comment = 'Введите отзыв';
+    else if (comment.length < 10) errors.comment = 'Отзыв слишком короткий (минимум 10 символов)';
+    else if (comment.length > 500) errors.comment = 'Отзыв слишком длинный (максимум 500 символов)';
+    else if (/https?:\/\//i.test(comment)) errors.comment = 'Отзыв не должен содержать ссылок';
+    // Рейтинг
+    if (rating === 0) errors.rating = 'Поставьте оценку';
+    return errors;
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!username.trim() || !comment.trim() || rating === 0) {
-      alert("Пожалуйста, заполните все поля и выберите рейтинг!");
+    const errors = validateForm();
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      // Фокус только если ошибка есть у поля
+      if (errors.username && usernameRef.current) {
+        usernameRef.current.focus();
+      } else if (errors.comment && commentRef.current) {
+        commentRef.current.focus();
+      } else if (errors.rating && ratingRef.current) {
+        // Только если есть ошибка рейтинга
+        ratingRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
-    
+    setFormError(null);
+    setFieldErrors({});
     setIsSubmitting(true);
     try {
       const commentsRef = collection(db, 'feedbacks');
@@ -76,7 +110,7 @@ export default function Reviews() {
       setRating(0);
     } catch (error) {
       console.error("Ошибка при добавлении отзыва:", error);
-      alert("Ошибка при отправке. Попробуйте ещё раз.");
+      setFormError('Ошибка при отправке. Попробуйте ещё раз.');
     } finally {
       setIsSubmitting(false);
     }
@@ -92,16 +126,31 @@ export default function Reviews() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Ваше имя"
-            required
+            maxLength={20}
+            style={fieldErrors.username ? { borderColor: 'red', background: '#fff6f6' } : {}}
+            ref={usernameRef}
           />
+          {fieldErrors.username && <div style={{ color: 'red', marginBottom: 16 }}>{fieldErrors.username}</div>}
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Ваш отзыв"
-            required
+            maxLength={500}
+            style={fieldErrors.comment ? { borderColor: 'red', background: '#fff6f6' } : {}}
+            ref={commentRef}
           ></textarea>
+          {fieldErrors.comment && <div style={{ color: 'red', marginBottom: 16 }}>{fieldErrors.comment}</div>}
 
-          <StarRating rating={rating} setRating={setRating} />
+          <div
+            style={{ marginBottom: 8 }}
+            tabIndex={-1}
+            ref={ratingRef}
+          >
+            <StarRating rating={rating} setRating={setRating} />
+          </div>
+          {fieldErrors.rating && <div style={{ color: 'red', marginBottom: 16 }}>{fieldErrors.rating}</div>}
+
+          {formError && <div style={{ color: 'red', marginBottom: 12 }}>{formError}</div>}
 
           <button type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Отправка...' : 'Отправить'}

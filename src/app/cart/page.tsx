@@ -63,6 +63,12 @@ export default function CartPage() {
   if (cart.items.length === 0) {
     return (
       <div className={styles.container}>
+        <Breadcrumbs
+          items={[
+            { label: 'Главная', href: 'https://dilavia.by/' },
+            { label: 'Корзина' }
+          ]}
+        />
         <div className={styles.emptyCartModern}>
           <h1 className={styles.emptyCartTitle}>В вашей корзине пока нет товаров</h1>
           <p className={styles.emptyCartSubtitle}>
@@ -114,7 +120,14 @@ export default function CartPage() {
                     <span className={styles.cartProductValue}>{item.selectedDimension.width}см × {item.selectedDimension.length}см{item.selectedDimension.height ? ` × ${item.selectedDimension.height}см` : ''}</span>
                   </div>
                 )}
-                {/* Можно добавить другие параметры */}
+                {item.selectedAdditionalOptions && item.selectedAdditionalOptions.length > 0 && (
+                  <div className={styles.cartProductParam}>
+                    <span>Доп. опции: </span>
+                    <span className={styles.cartProductValue}>
+                      {item.selectedAdditionalOptions.map(opt => `${opt.name}${opt.price ? '' : ''}`).join(', ')}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className={styles.cartProductCounter}>
                 <div className={styles.cartCounterBox}>

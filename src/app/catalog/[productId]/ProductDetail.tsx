@@ -17,6 +17,7 @@ import ProductCard from '@/components/productCard/ProductCard';
 import ProductOptions from '@/components/productCard/ProductOptions';
 import styles from './ProductDetail.module.css';
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
+import productCardStyles from '@/components/productCard/ProductCard.module.css';
 
 interface ProductDetailProps {
   product: Product;
@@ -30,7 +31,7 @@ const FavoriteIcon = ({ isActive }: { isActive: boolean }) => (
 );
 
 export default function ProductDetail({ product, relatedProducts }: ProductDetailProps) {
-  const { addToCart, isInCart } = useCart();
+  const { addToCart, isInCart, getItemQuantity, updateQuantity, removeFromCart } = useCart();
   const { isInFavorites, toggleFavorite } = useFavorites();
   const router = useRouter();
 
@@ -78,7 +79,8 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
   const currentPrice = basePrice + additionalOptionsPrice;
   const oldPrice = selectedDimension?.oldPrice ?? product.price?.old;
 
-  const inCart = isInCart(product.id, selectedDimension?.id, selectedAdditionalOptions);
+  const cartQuantity = getItemQuantity(product.id, selectedDimension?.id, selectedAdditionalOptions);
+  const inCart = cartQuantity > 0;
   const inFavorites = isInFavorites(product.id);
 
   const handleCartButtonClick = () => {
@@ -86,6 +88,18 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
       router.push('/cart');
     } else {
       addToCart(product, 1, selectedDimension, selectedAdditionalOptions);
+    }
+  };
+
+  const handleIncrease = () => {
+    updateQuantity(product.id, cartQuantity + 1, selectedDimension?.id, selectedAdditionalOptions);
+  };
+
+  const handleDecrease = () => {
+    if (cartQuantity > 1) {
+      updateQuantity(product.id, cartQuantity - 1, selectedDimension?.id, selectedAdditionalOptions);
+    } else {
+      removeFromCart(product.id, selectedDimension?.id, selectedAdditionalOptions);
     }
   };
 
@@ -349,15 +363,31 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
             </div>
 
             <div className={styles.actions}>
-              <div className={styles.mainActions}>
-                <button
-                  className={`${styles.addToCartButton} ${inCart ? styles.inCart : ''}`}
-                  onClick={handleCartButtonClick}
-                  aria-label={inCart ? 'Перейти в корзину' : 'Добавить в корзину'}
-                >
-                  {inCart ? 'Перейти в корзину' : 'В корзину'}
-                </button>
-              </div>
+              {!inCart ? (
+                <div className={styles.mainActions}>
+                  <button
+                    className={styles.addToCartButton}
+                    onClick={handleCartButtonClick}
+                    aria-label={inCart ? 'Перейти в корзину' : 'Добавить в корзину'}
+                  >
+                    {inCart ? 'Перейти в корзину' : 'В корзину'}
+                  </button>
+                </div>
+              ) : (
+                <div className={productCardStyles.inCartActions}>
+                  <button
+                    className={productCardStyles.inCartButton}
+                    onClick={() => router.push('/cart')}
+                  >
+                    В корзине {cartQuantity} шт.
+                  </button>
+                  <div className={productCardStyles.cartCounter}>
+                    <button className={productCardStyles.counterBtn} onClick={handleDecrease} aria-label="Уменьшить количество">−</button>
+                    <span className={productCardStyles.counterValue}>{cartQuantity}</span>
+                    <button className={productCardStyles.counterBtn} onClick={handleIncrease} aria-label="Увеличить количество">+</button>
+                  </div>
+                </div>
+              )}
               <button
                 type="button"
                 className={styles.favoriteButton}
@@ -376,7 +406,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
               </div>
               <div className={styles.infoBlock}>
                 <span role="img" aria-label="Доставка">🚚</span>
-                Экспресс-доставка по всей России от 3 дней
+                Экспресс-доставка по всей Беларуси от 3 дней
               </div>
               <div className={styles.infoBlock}>
                 <span role="img" aria-label="Безопасность">🔒</span>

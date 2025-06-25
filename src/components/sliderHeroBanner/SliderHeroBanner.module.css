@@ -44,7 +44,7 @@
 }
 
 .content {
-    max-width: 600px;
+    max-width: 720px;
     margin-left: 5%;
     color: #fff;
     position: relative;
@@ -57,7 +57,7 @@
 .title {
     font-size: 48px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .swiper {
@@ -67,7 +67,7 @@
 .description {
     font-size: 18px;
     line-height: 1.6;
-    margin-bottom: 30px;
+    margin-bottom: 42px;
 }
 
 .button {
@@ -95,7 +95,7 @@
 
     .content {
         margin-left: 5%;
-        max-width: 90%;
+        max-width: 75%;
     }
 
     .title {

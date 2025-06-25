@@ -10,3 +10,9 @@
   max-width: 1660px;
   margin-top: 110px;
 }
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 100px;
+  }
+}
