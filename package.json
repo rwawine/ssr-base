@@ -10,6 +10,7 @@
     "sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
+    "critters": "^0.0.23",
     "firebase": "^11.9.1",
     "framer-motion": "^12.18.1",
     "next": "15.3.4",
