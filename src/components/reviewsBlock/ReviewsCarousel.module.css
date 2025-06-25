@@ -38,7 +38,6 @@
 .quoteMark {
   font-size: 38px;
   color: #e5e7eb;
-  font-family: serif;
   position: absolute;
   top: 24px;
   left: 24px;
@@ -59,7 +58,7 @@
   color: #222;
   margin: 32px 0 6px 0;
   min-height: 70px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -80,7 +79,7 @@
   background: #f3f4f6;
   color: #555;
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +88,7 @@
 
 .name {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #222;
 }
 
@@ -112,7 +111,7 @@
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   opacity: .8;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -150,7 +149,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 400px) {
   .carouselWrapper {
     overflow: hidden;
     padding: 16px 0;

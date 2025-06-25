@@ -7,7 +7,7 @@
   <path d="M8 12h8c2.2 0 4 1.8 4 4s-1.8 4-4 4H8V12z" stroke="white" stroke-width="1" fill="none"/>
   
   <!-- Текст Dilavia -->
-  <text x="50" y="26" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1f2937">Dilavia</text>
+  <text x="50" y="26" font-size="18" font-weight="bold" fill="#1f2937">Dilavia</text>
   
   <!-- Декоративные элементы -->
   <circle cx="12" cy="20" r="1" fill="#4f46e5"/>

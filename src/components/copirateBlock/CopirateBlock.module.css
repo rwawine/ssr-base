@@ -17,9 +17,9 @@
   }
   
   .title {
-    font-family: "Montserrat", sans-serif;
+    font-family: "RG-Standard", sans-serif;
     font-size: 36px;
-    font-weight: 700;
+    font-weight: 400;
     color: #232323;
     margin-bottom: 12px;
   }
@@ -27,8 +27,8 @@
   .description {
     color: #343434;
     font-size: 14.88px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600;
+    font-family: "RG-Standard", sans-serif;
+    font-weight: 400;
     max-width: 450px;
     line-height: 21px;
     word-wrap: break-word;
@@ -113,9 +113,9 @@
     border-radius: 10px;
     background-color: #232323;
     color: #e6e4e0;
-    font-family: "Montserrat", sans-serif;
+    font-family: "RG-Standard", sans-serif;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.3s ease;
     border: none;
@@ -143,9 +143,9 @@
   }
   
   .featureTitle {
-    font-family: "Montserrat", sans-serif;
+    font-family: "RG-Standard", sans-serif;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     color: #232323;
     line-height: 1.4;
   }
@@ -157,8 +157,8 @@
   .featureDescription {
     color: #e6e4e0;
     font-size: 14px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 500;
+    font-family: "RG-Standard", sans-serif;
+    font-weight: 400;
     max-width: 450px;
     line-height: 140%;
     word-wrap: break-word;
@@ -167,8 +167,8 @@
   .backTitle {
     color: #232323;
     font-size: 16px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600;
+    font-family: "RG-Standard", sans-serif;
+    font-weight: 400;
     margin-bottom: 8px;
     max-width: 450px;
     line-height: 21px;

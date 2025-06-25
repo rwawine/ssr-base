@@ -28,7 +28,7 @@
 }
 .current {
   color: #23272f;
-  font-weight: 500;
+  font-weight: 400;
 }
 @media (max-width: 600px) {
   .breadcrumbs {

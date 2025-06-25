@@ -2,7 +2,7 @@
 .header__link,
 .login_expander__auth,
 .login_expander__button {
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .expander__small,
@@ -40,7 +40,7 @@
     background-color: var(--black);
     color: var(--white);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 /* Стили для бейджей корзины и избранного */
@@ -58,7 +58,7 @@
     background-color: #ff6b6b;
     color: white;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1;
     z-index: 10;
 }
@@ -165,7 +165,7 @@
 
 .header__logo {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
 }
 
@@ -201,7 +201,7 @@
 .header__link_text {
     text-decoration: none;
     color: var(--black);
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .header__link_arrow {
@@ -579,7 +579,7 @@
     border-radius: 6px;
     transition: 0.2s ease;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .menu_expander__item:hover {
@@ -688,7 +688,7 @@
 .mobile_menu__link {
     display: block;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--black);
     text-decoration: none;
     padding: 8px 0;

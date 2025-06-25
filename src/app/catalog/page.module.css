@@ -16,7 +16,7 @@
 
 .catalogTitle h1 {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #23272f;
   margin: 0 0 8px 0;
 }
@@ -83,7 +83,7 @@
 
 .noResults h3 {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #23272f;
   margin: 0 0 12px 0;
 }
@@ -101,7 +101,7 @@
   border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -176,7 +176,7 @@
   background: none;
   border: none;
   color: #23272f;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   cursor: pointer;
   border-bottom: 1px solid #23272f;
@@ -190,7 +190,7 @@
   display: none;
   position: relative;
 }
-@media (max-width: 600px) {
+@media (max-width: 400px) {
   .sortDesktop {
     display: none !important;
   }
@@ -213,7 +213,7 @@
   border: none;
   color: #23272f;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -261,7 +261,7 @@
   background: #f0f0f0;
   border: none;
   color: #1a73e8;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 16px;
   text-align: left;
   padding: 10px 16px;

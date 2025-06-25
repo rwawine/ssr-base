@@ -15,7 +15,7 @@
 
 .cartHeader h1 {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #23272f;
   margin: 0;
 }
@@ -27,7 +27,7 @@
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -76,7 +76,7 @@
 
 .itemInfo h3 {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #23272f;
   margin: 0 0 8px 0;
 }
@@ -89,7 +89,7 @@
 
 .price {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #1a73e8;
   margin: 0;
 }
@@ -110,7 +110,7 @@
   background: white;
   border-radius: 6px;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
   display: flex;
@@ -128,14 +128,14 @@
 }
 
 .itemQuantity span {
-  font-weight: 600;
+  font-weight: 400;
   min-width: 30px;
   text-align: center;
 }
 
 .itemTotal {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #23272f;
 }
 
@@ -147,7 +147,7 @@
   color: white;
   border-radius: 50%;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
   display: flex;
@@ -172,7 +172,7 @@
 
 .cartSummary h2 {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #23272f;
   margin: 0 0 20px 0;
 }
@@ -187,7 +187,7 @@
 
 .totalPrice {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #1a73e8;
 }
 
@@ -199,7 +199,7 @@
   border: none;
   border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
   margin-top: 20px;
@@ -216,7 +216,7 @@
 
 .emptyCart h1 {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #23272f;
   margin: 0 0 20px 0;
 }
@@ -235,7 +235,7 @@
   text-decoration: none;
   border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   transition: background 0.2s;
 }
 
@@ -255,7 +255,7 @@
 
 .emptyCartTitle {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #111;
   margin-bottom: 18px;
   text-align: center;
@@ -279,7 +279,7 @@
   text-align: center;
   text-decoration: none;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   border-radius: 6px;
   transition: background 0.2s;
   margin: 0 auto;
@@ -330,7 +330,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 400px) {
   .emptyCartModern {
     padding: 40px 0 30px 0;
     min-height: 220px;
@@ -348,7 +348,7 @@
 /* --- Современный дизайн корзины с товарами --- */
 .cartTitle {
   font-size: 2.8rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 40px;
   text-align: left;
 }
@@ -409,7 +409,7 @@
 }
 .cartProductName {
   font-size: 1.3rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #23272f;
   margin-bottom: 6px;
 }
@@ -440,7 +440,7 @@
 }
 .cartProductPrice {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #111;
 }
 .cartProductOldPrice {
@@ -454,7 +454,7 @@
   margin-bottom: 2px;
 }
 .cartProductValue {
-  font-weight: 500;
+  font-weight: 400;
   color: #23272f;
   margin-left: 4px;
 }
@@ -499,7 +499,7 @@
 }
 .counterValue {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 400;
   min-width: 32px;
   text-align: center;
 }
@@ -521,7 +521,7 @@
 }
 .cartSummaryTitle {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 400;
 }
 .cartSummaryRow {
   display: flex;
@@ -536,7 +536,7 @@
 }
 .cartSummaryTotalValue {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #111;
 }
 .cartCheckoutBtn {
@@ -547,7 +547,7 @@
   border: none;
   border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
   margin-bottom: 10px;
@@ -581,7 +581,7 @@
   border: none;
   border-radius: 6px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -598,7 +598,7 @@
     max-width: 100%;
   }
 }
-@media (max-width: 700px) {
+@media (max-width: 400px) {
   .cartProductRow {
     flex-direction: column;
     align-items: stretch;
@@ -630,7 +630,7 @@
   border-radius: 8px;
   padding: 10px 18px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
@@ -667,7 +667,7 @@
 
 .sectionTitle {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 24px;
   color: #23272f;
 }
@@ -681,7 +681,7 @@
 
 .field label {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
   color: #23272f;
   margin-bottom: 2px;
 }
@@ -738,7 +738,7 @@
   color: #23272f;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.18s;
 }
@@ -772,7 +772,7 @@
   border: none;
   border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 400;
   cursor: pointer;
   margin-top: 10px;
   transition: background 0.18s;
@@ -796,7 +796,7 @@
 }
 .success h2 {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 10px;
 }
 .success p {

@@ -28,9 +28,9 @@
 }
 
 .title {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 18.28px;
+    font-family: 'RG-Standard', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
     line-height: 22px;
     letter-spacing: -0.5px;
     vertical-align: middle;
@@ -39,9 +39,9 @@
 .description {
     color: #b7b7b7;
     font-size: 14px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'RG-Standard', sans-serif;
     margin-top: 12px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 20.8px;
     word-wrap: break-word;
 }

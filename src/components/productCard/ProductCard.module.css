@@ -4,7 +4,7 @@
     flex-direction: column;
     position: relative;
     border-radius: 12px;
-    font-family: 'Montserrat', Arial, sans-serif;
+    font-family: 'RG-Standard', Arial, sans-serif;
     color: var(--divan-text-primary);
     height: max-content;
 }
@@ -39,7 +39,7 @@
     backdrop-filter: blur(4px);
     padding: 0.3rem 0.75rem;
     font-size: 0.8rem;
-    font-weight: 500;
+    font-weight: 400;
     border-radius: 6px;
     z-index: 2;
     display: flex;
@@ -78,7 +78,7 @@
 
 .title {
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 400;
     margin: 0;
 }
 
@@ -106,7 +106,7 @@
 
 .price {
     font-size: 1.3rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .oldPrice {
@@ -130,7 +130,7 @@
     border: none;
     border-radius: 4px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -174,7 +174,7 @@
 
 .optionLabel {
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--divan-text-secondary);
 }
 
@@ -296,7 +296,7 @@
     border-color: var(--divan-black-button);
     background-color: var(--divan-black-button);
     color: #fff;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 /* Адаптивные стили для ProductOptions */
@@ -456,7 +456,7 @@
 
 .counterValue {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 400;
     min-width: 28px;
     text-align: center;
 }
@@ -469,7 +469,7 @@
     border: none;
     border-radius: 4px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
