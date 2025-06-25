@@ -6,7 +6,7 @@ import Link from 'next/link'
 export default function ReviewsBlock() {
   return (
     <div className={styles.block}>
-      <div className={styles.titleWrapper}><h2 className={styles.title}>Отзывы</h2>
+      <div className={styles.titleWrapper}><h2 className={styles.title}>Отзывы наших клиентов</h2>
         <Link href="/reviews" className={styles.button}>
           <span>Все отзывы</span>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
