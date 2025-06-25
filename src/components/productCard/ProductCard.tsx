@@ -87,7 +87,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 className={styles.imageLink}
             >
                 <div className={styles.imageWrapper}>
-                    <img src={images[0]} alt={`${name} - фото 1`} className={styles.image} />
+                    <img loading='lazy' src={images[0]} alt={`${name} - фото 1`} className={styles.image} />
                     {isBestseller && <BestsellerBadge />}
                 </div>
             </Link>
