@@ -3,22 +3,42 @@
     width: 100%;
     height: 600px;
     overflow: visible;
-    padding-bottom: 40px;
 }
 
-.swiper {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
+/* Единый слайдер */
+.sliderContent {
     position: relative;
-}
-
-.swiperSlide {
     width: 100%;
     height: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: pan-y pinch-zoom;
+}
+
+.sliderContent::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.sliderContent:active::after {
+    opacity: 1;
 }
 
 .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     border-radius: 16px;
@@ -26,10 +46,27 @@
     background-position: center;
     display: flex;
     align-items: center;
-    position: relative;
-    transition: none;
+    transition: opacity 0.5s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.slideActive {
     opacity: 1;
-    transform: none;
+    z-index: 2;
+}
+
+.slideHidden {
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Индикатор направления свайпа */
+.slideActive[data-drag-direction="left"] {
+    transform: translateX(-20px);
+}
+
+.slideActive[data-drag-direction="right"] {
+    transform: translateX(20px);
 }
 
 .slide::before {
@@ -49,19 +86,13 @@
     color: #fff;
     position: relative;
     z-index: 1;
-    transition: none;
-    opacity: 1;
-    transform: none;
+    pointer-events: auto;
 }
 
 .title {
     font-size: 48px;
     font-weight: 400;
     margin-bottom: 16px;
-}
-
-.swiper {
-    overflow: visible;
 }
 
 .description {
@@ -86,79 +117,8 @@
     transform: translateY(-2px);
 }
 
-/* Медиа-запросы для адаптивности */
-@media (max-width: 768px) {
-    .hero {
-        height: 500px;
-        padding-bottom: 30px;
-    }
-
-    .content {
-        margin-left: 5%;
-        max-width: 75%;
-    }
-
-    .title {
-        font-size: 36px;
-    }
-
-    .description {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero {
-        height: 400px;
-        padding-bottom: 25px;
-    }
-
-    .title {
-        font-size: 28px;
-    }
-
-    .description {
-        font-size: 14px;
-    }
-
-    .button {
-        padding: 12px 24px;
-    }
-}
-
-.skeletonHero {
-    min-height: 400px;
-    /* или ваша высота */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f3f3f3;
-    border-radius: 24px;
-    overflow: hidden;
-    position: relative;
-}
-
-.skeletonSlide {
-    width: 100%;
-    height: 400px;
-    /* или ваша высота */
-    background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
-    background-size: 200% 100%;
-    animation: skeleton-loading 1s infinite linear;
-    border-radius: 24px;
-}
-
-@keyframes skeleton-loading {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-.swiperNavigation {
+/* Навигация */
+.navigation {
     position: absolute;
     right: 20px;
     bottom: 20px;
@@ -168,6 +128,7 @@
     border-radius: 16px;
     padding: 8px 10px;
     backdrop-filter: blur(2px);
+    z-index: 10;
 }
 
 .prevBtn,
@@ -201,85 +162,178 @@
 
 .prevBtn:focus,
 .nextBtn:focus {
-    outline: 1px solid white;
-    outline-offset: 1px;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }
 
-.progressBarWrapper {
-    width: 100%;
-    height: 8px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 6px;
-    overflow: hidden;
-    position: absolute;
-    left: 0;
-    bottom: -24px;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.progressBar {
-    height: 100%;
-    background: #ffcc00;
-    opacity: 0.95;
-    border-radius: 6px;
-    transition: none;
-    width: 0;
-    animation: progressBarAnim linear 10s forwards;
-}
-
-@keyframes progressBarAnim {
-    from { width: 0; }
-    to { width: 100%; }
-}
-
+/* Буллеты */
 .bullets {
-    display: flex;
-    gap: 12px;
     position: absolute;
+    bottom: 20px;
     left: 50%;
-    bottom: -24px;
     transform: translateX(-50%);
-    z-index: 11;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
 }
 
 .bullet {
-    width: 50px;
-    height: 6px;
-    border-radius: 5px;
-    background: #e0e0e0;
+    background: none;
     border: none;
-    padding: 0;
-    position: relative;
     cursor: pointer;
-    outline: none;
-    box-sizing: border-box;
-    overflow: hidden;
-    transition: background 0.2s;
+    padding: 0;
+    width: 40px;
+    height: 4px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .bulletBar {
-    height: 100%;
-    width: 0;
-    background: #111;
-    border-radius: 5px;
-    transition: none;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 2;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    transition: all 0.3s ease;
 }
 
-.bulletBarActive {
-    animation: bulletBarAnim linear 10s forwards;
+.bulletActive .bulletBar {
+    background: #fff;
+    transform: scaleX(1.2);
+}
+
+.bulletActive .bulletBar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 2px;
+    animation: bulletBarAnim 5s linear;
 }
 
 @keyframes bulletBarAnim {
-    from { width: 0; }
-    to { width: 100%; }
+    0% {
+        transform: scaleX(0);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+/* Медиа запросы */
+@media (max-width: 768px) {
+    .hero {
+        height: 400px;
+    }
+
+    .content {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .title {
+        font-size: 32px;
+    }
+
+    .description {
+        font-size: 16px;
+    }
+
+    .navigation {
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .prevBtn,
+    .nextBtn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.5rem;
+    }
+
+    .bullets {
+        bottom: 10px;
+    }
+
+    .bullet {
+        width: 32px;
+        height: 3px;
+    }
+
+    .bulletBar {
+        height: 3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        height: 300px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .button {
+        padding: 12px 24px;
+    }
+
+    .navigation {
+        right: 5px;
+        bottom: 5px;
+        padding: 6px 8px;
+    }
+
+    .prevBtn,
+    .nextBtn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
+    }
+
+    .bullets {
+        bottom: 5px;
+    }
+
+    .bullet {
+        width: 28px;
+        height: 2px;
+    }
+
+    .bulletBar {
+        height: 2px;
+    }
+}
+
+/* Скелетон для загрузки */
+.skeletonHero {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.skeletonSlide {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }

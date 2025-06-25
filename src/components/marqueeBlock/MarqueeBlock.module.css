@@ -1,12 +1,33 @@
 .marqueeContainer {
   width: 100%;
-  overflow: hidden;
   padding: 0;
+  overflow: hidden;
   position: relative;
   height: 420px;
   display: flex;
-  overflow: visible;
   align-items: center;
+}
+
+/* Белые градиенты по бокам для улучшения UX */
+.marqueeContainer::before,
+.marqueeContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marqueeContainer::before {
+  left: 0;
+  background: linear-gradient(to right, #f6f6f6 0%, rgba(246, 246, 246, 0.8) 50%, rgba(246, 246, 246, 0) 100%);
+}
+
+.marqueeContainer::after {
+  right: 0;
+  background: linear-gradient(to left, #f6f6f6 0%, rgba(246, 246, 246, 0.8) 50%, rgba(246, 246, 246, 0) 100%);
 }
 
 .marqueeWrapper {
@@ -85,6 +106,13 @@
   .marqueeContainer {
     height: 320px;
   }
+  
+  /* Уменьшаем ширину градиентов на планшетах */
+  .marqueeContainer::before,
+  .marqueeContainer::after {
+    width: 60px;
+  }
+  
   .marqueeItem {
     min-width: 220px;
     max-width: 240px;
@@ -107,6 +135,13 @@
     overflow: hidden;
     height: 220px;
   }
+  
+  /* Уменьшаем ширину градиентов на мобильных */
+  .marqueeContainer::before,
+  .marqueeContainer::after {
+    width: 40px;
+  }
+  
   .marqueeWrapper {
     gap: 16px;
     animation-duration: 20s;
