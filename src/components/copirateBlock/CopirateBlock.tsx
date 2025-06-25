@@ -1,7 +1,26 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import styles from './CopirateBlock.module.css'
+import ModalWindow, { ModalContent } from '../modalWindow/ModalWindow'
 
 export default function CopirateBlock() {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+    }
+
+    const modalContent: ModalContent = {
+        type: 'form',
+        title: 'Обсудить проект',
+        buttonText: 'Отправить заявку'
+    }
+
     return (
         <section className={styles.copirate}>
             <div className="container">
@@ -18,6 +37,7 @@ export default function CopirateBlock() {
                         </div>
                         <button
                             className={styles.btn}
+                            onClick={handleOpenModal}
                         >
                             Обсудить проект
                         </button>
@@ -117,6 +137,12 @@ export default function CopirateBlock() {
                     </div>
                 </div>
             </div>
+            
+            <ModalWindow 
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                content={modalContent}
+            />
         </section>
     )
 }

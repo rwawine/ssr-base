@@ -1,5 +1,5 @@
 .container {
-  max-width: 1660px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 0 20px;
   padding-top: 110px;
@@ -8,9 +8,9 @@
 }
 
 .breadcrumbs {
-    align-items: center;
-    justify-content: center;
-    display: flex;
+  align-items: center;
+  justify-content: center;
+  display: flex;
   gap: 8px;
   font-size: 14px;
   color: #888;
@@ -33,11 +33,10 @@
 }
 
 .mainTitle {
-  font-size: 48px;
+  font-size: 2.8rem;
   font-weight: 400;
   text-align: center;
-  margin: 0 auto 40px;
-  color: #111;
+  margin-bottom: 3rem;
 }
 
 .tabs {
@@ -74,10 +73,11 @@
 }
 
 .sectionTitle {
-  font-size: 32px;
+  font-size: 24px;
+  text-align: center;
   font-weight: 400;
   margin-bottom: 40px;
-  color: #111;
+  color: #1e1e1e;
 }
 
 .infoBlock {
@@ -158,9 +158,9 @@
   .subTitle {
     font-size: 22px;
   }
-  
+
   .faqSection {
     margin-top: 60px;
     padding-top: 40px;
   }
-} 
+}

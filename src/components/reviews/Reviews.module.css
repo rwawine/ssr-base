@@ -38,7 +38,7 @@
 .formWrapper form input:focus,
 .formWrapper form textarea:focus {
   outline: none;
-  border-color: #007AFF;
+  border-color: #1e1e1e;
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
@@ -49,7 +49,7 @@
 
 .formWrapper form button {
   width: 100%;
-  background: #007AFF;
+  background: #1e1e1e;
   color: white;
   font-weight: 400;
   cursor: pointer;
@@ -61,8 +61,7 @@
 }
 
 .formWrapper form button:hover {
-  background: #0056b3;
-  transform: translateY(-2px);
+  background: #1e1e1e;
 }
 
 .formWrapper form button:disabled {

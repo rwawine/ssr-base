@@ -38,35 +38,30 @@ export default function ContactsPage() {
         <aside className={styles.contactInfo}>
           <div className={styles.infoBlock}>
             <h3>Адрес</h3>
-            <p>Нижний Новгород, ул. Мебельная, д. 1</p>
+            <p>г. Минск, ул. Железнодорожная, д. 33А, оф. 402, 220089</p>
           </div>
           <div className={styles.infoBlock}>
             <h3>Телефон</h3>
-            <p><a href="tel:+78005553535">+7 (800) 555-35-35</a></p>
+            <p><a href="tel:+375336641830">+375 (33) 664-18-30</a></p>
+            <p><a href="tel:+375298019271">+375 (29) 801-92-71</a></p>
           </div>
           <div className={styles.infoBlock}>
             <h3>Email</h3>
-            <p><a href="mailto:info@Dilavia.ru">info@Dilavia.ru</a></p>
-          </div>
-          <div className={styles.infoBlock}>
-            <h3>График работы</h3>
-            <p>Пн-Пт: 10:00 – 20:00</p>
-            <p>Сб-Вс: 11:00 – 18:00</p>
-          </div>
-          <div className={styles.infoBlock}>
-            <h3>Мы в соцсетях</h3>
-            <div className={styles.socials}>
-              <a href="#" className={styles.socialIcon}>VK</a>
-              <a href="#" className={styles.socialIcon}>TG</a>
-            </div>
+            <p><a href="mailto:information@dilavia.by">information@dilavia.by</a></p>
           </div>
         </aside>
-
         <ContactForm />
       </div>
-      
+
       <div className={styles.mapContainer}>
-        Карта проезда
+        <iframe
+          src="https://yandex.ru/map-widget/v1/?um=constructor%3Acb083bc486aed45f850ece7385add2f7e81cb687e9d55eb869b506291fac6df9&amp;source=constructor"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          title="Карта проезда к мебельной фабрике Dilavia"
+          loading="lazy"
+        />
       </div>
     </div>
   );

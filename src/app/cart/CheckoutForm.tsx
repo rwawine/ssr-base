@@ -2,12 +2,15 @@ import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { useCart } from '@/hooks/CartContext';
 import styles from './page.module.css';
 
-const CheckoutForm = forwardRef<HTMLFormElement, any>((props, ref) => {
-  const { cart, discount, clearCart, resetPromo } = useCart();
+interface CheckoutFormProps {
+  onOrderSuccess?: () => void;
+  onValidationError?: () => void;
+}
+
+const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>((props, ref) => {
   const [form, setForm] = useState({ name: '', phone: '', email: '', address: '', delivery: 'courier', payment: 'cash' });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   // Сохраняем ссылку на форму
   const formElement = React.useRef<HTMLFormElement>(null);
@@ -41,19 +44,24 @@ const CheckoutForm = forwardRef<HTMLFormElement, any>((props, ref) => {
     e.preventDefault();
     const errs = validate();
     setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
+    if (Object.keys(errs).length > 0) {
+      // Если есть ошибки валидации, уведомляем основной компонент
+      if (props.onValidationError) {
+        props.onValidationError();
+      }
+      return;
+    }
+    
+    // Если валидация прошла успешно, устанавливаем состояние загрузки
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setSuccess(true);
-      clearCart();
-      resetPromo();
+      // Вызываем callback для уведомления основного компонента
+      if (props.onOrderSuccess) {
+        props.onOrderSuccess();
+      }
     }, 1200);
   };
-
-  if (success) {
-    return <div className={styles.success}><h2>Спасибо за заказ!</h2><p>Мы свяжемся с вами для подтверждения.</p></div>;
-  }
 
   return (
     <form ref={formElement} className={styles.checkoutSection} onSubmit={handleSubmit} autoComplete="off">

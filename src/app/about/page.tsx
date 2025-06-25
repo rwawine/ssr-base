@@ -40,6 +40,7 @@ export default function AboutPage() {
         ]}
         className={styles.breadcrumbs}
       />
+              <h1 className={styles.title}>О компании «Dilavia»</h1>
       <section className={styles.banner}>
         <Image
           src="/images/sofas.webp"
@@ -51,7 +52,6 @@ export default function AboutPage() {
       </section>
 
       <div className={styles.header}>
-        <h1 className={styles.title}>О компании «Dilavia»</h1>
         <p className={styles.subtitle}>
           Наша компания предлагает вам современную мебель. Мы самостоятельно разрабатываем конструкцию и удобную дизайнерскую мебель, опираясь на тренды индустрии.
         </p>

@@ -7,12 +7,10 @@
 .item {
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s ease;
 }
 
 .item:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .header {
@@ -28,52 +26,29 @@
 }
 
 .title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 400;
   color: #333;
 }
 
 .icon {
-  position: relative;
-  width: 16px;
-  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  font-size: 12px;
+  color: #888;
+  transition: color 0.2s ease;
 }
 
-.icon::before,
-.icon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 2px;
-  background-color: #888;
-  border-radius: 1px;
-  transform: translate(-50%, -50%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.icon::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.iconOpen::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.iconOpen::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
+.header:hover .icon {
+  color: #333;
 }
 
 .content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.contentOpen {
-  max-height: 500px;
+  /* Стили для контента теперь управляются Framer Motion */
 }
 
 .contentInner {
