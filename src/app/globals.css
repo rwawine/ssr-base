@@ -1,7 +1,22 @@
+
 @font-face {
-  font-family: 'RG-Standard';
-  src: url('/fonts/RG-Standard.woff2') format('woff2');
+  font-family: 'LTSuperior';
+  src: url('/fonts/LTSuperior-Regular.woff2') format('woff2');
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LTSuperior';
+  src: url('/fonts/LTSuperior-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LTSuperior';
+  src: url('/fonts/LTSuperior-Semibold.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -122,7 +137,7 @@ section {
 body {
   line-height: 1;
   background: none;
-  font-family: 'RG-Standard', Arial, sans-serif;
+  font-family: 'LTSuperior', Arial, sans-serif;
 }
 
 ol,

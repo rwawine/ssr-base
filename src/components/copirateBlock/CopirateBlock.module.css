@@ -17,9 +17,9 @@
   }
   
   .title {
-    font-family: "RG-Standard", sans-serif;
+    font-family: "LTSuperior", sans-serif;
     font-size: 36px;
-    font-weight: 400;
+    font-weight: 500;
     color: #232323;
     margin-bottom: 12px;
   }
@@ -27,7 +27,7 @@
   .description {
     color: #343434;
     font-size: 14.88px;
-    font-family: "RG-Standard", sans-serif;
+    font-family: "LTSuperior", sans-serif;
     font-weight: 400;
     max-width: 450px;
     line-height: 21px;
@@ -113,7 +113,7 @@
     border-radius: 10px;
     background-color: #232323;
     color: #e6e4e0;
-    font-family: "RG-Standard", sans-serif;
+    font-family: "LTSuperior", sans-serif;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
@@ -143,7 +143,7 @@
   }
   
   .featureTitle {
-    font-family: "RG-Standard", sans-serif;
+    font-family: "LTSuperior", sans-serif;
     font-size: 16px;
     font-weight: 400;
     color: #232323;
@@ -157,7 +157,7 @@
   .featureDescription {
     color: #e6e4e0;
     font-size: 14px;
-    font-family: "RG-Standard", sans-serif;
+    font-family: "LTSuperior", sans-serif;
     font-weight: 400;
     max-width: 450px;
     line-height: 140%;
@@ -167,7 +167,7 @@
   .backTitle {
     color: #232323;
     font-size: 16px;
-    font-family: "RG-Standard", sans-serif;
+    font-family: "LTSuperior", sans-serif;
     font-weight: 400;
     margin-bottom: 8px;
     max-width: 450px;

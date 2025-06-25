@@ -4,7 +4,6 @@
     flex-direction: column;
     position: relative;
     border-radius: 12px;
-    font-family: 'RG-Standard', Arial, sans-serif;
     color: var(--divan-text-primary);
     height: max-content;
 }
@@ -78,13 +77,16 @@
 
 .title {
     font-size: 1.1rem;
-    font-weight: 400;
     margin: 0;
+    text-decoration: none;
+    color: inherit;
 }
 
 .title a {
     text-decoration: none;
     color: inherit;
+    font-family: 'LTSuperior', Arial, sans-serif;
+    font-weight: 500;
 }
 
 .priceRow {

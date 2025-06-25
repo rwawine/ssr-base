@@ -26,11 +26,11 @@
 }
 
 .title {
-    font-family: 'RG-Standard', Arial, sans-serif;
+    font-family: 'LTSuperior', Arial, sans-serif;
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 500;
     color: #232323;
-    margin-bottom: 20px;
+    margin-bottom: 20px;    
 }
 
 .block {
@@ -52,7 +52,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-    font-family: 'RG-Standard', Arial, sans-serif;
+    font-family: 'LTSuperior', Arial, sans-serif;
     font-size: 14px;
     color: #343434;
     font-weight: 400;
@@ -75,7 +75,7 @@
 
 .hours {
     margin-top: 20px;
-    font-family: 'RG-Standard', Arial, sans-serif;
+    font-family: 'LTSuperior', Arial, sans-serif;
     font-size: 14px;
     color: #343434;
     padding-left: 26px;
