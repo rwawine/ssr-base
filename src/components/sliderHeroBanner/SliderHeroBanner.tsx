@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { Slide } from '@/utils/fetchHeroSlides';
-import { getOptimizedImageUrl } from '@/utils/imageOptimization';
+import { getOptimizedImageUrl, preloadCriticalImages } from '@/utils/imageOptimization';
+import { LCPImage } from '@/components/OptimizedImage';
 import styles from './SliderHeroBanner.module.css';
 
 interface SliderHeroBannerProps {
@@ -12,126 +13,129 @@ interface SliderHeroBannerProps {
 
 export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [currentX, setCurrentX] = useState(0);
-    const [autoPlay, setAutoPlay] = useState(true);
-    const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null);
+    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
     const sliderRef = useRef<HTMLDivElement>(null);
+    const autoPlayRef = useRef<NodeJS.Timeout | undefined>(undefined);
+    const isDragging = useRef(false);
+    const startX = useRef(0);
+    const currentX = useRef(0);
 
+    // Предзагружаем критические изображения (первые 2 слайда)
     useEffect(() => {
-        if (!autoPlay) return;
-        
-        const interval = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        if (slides.length > 0 && typeof window !== 'undefined') {
+            const criticalImages = slides.slice(0, 2).map(slide => {
+                const optimizedUrl = getOptimizedImageUrl(slide.image[0], 'hero', {
+                    width: 1440,
+                    height: 600,
+                    quality: 90
+                });
+                return optimizedUrl;
+            });
+            preloadCriticalImages(criticalImages);
+        }
+    }, [slides]);
+
+    // Автопрокрутка
+    useEffect(() => {
+        if (!isAutoPlaying || slides.length <= 1) return;
+
+        autoPlayRef.current = setInterval(() => {
+            setCurrentSlide(prev => (prev + 1) % slides.length);
         }, 5000);
 
-        return () => clearInterval(interval);
-    }, [slides.length, autoPlay]);
+        return () => {
+            if (autoPlayRef.current) {
+                clearInterval(autoPlayRef.current);
+            }
+        };
+    }, [isAutoPlaying, slides.length]);
 
-    const goToSlide = (index: number) => {
-        setCurrentSlide(index);
-    };
-
-    const goToPrev = () => {
-        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    };
-
-    const goToNext = () => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-    };
-
-    // Обработчики для мыши
+    // Обработчики мыши
     const handleMouseDown = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(true);
-        setStartX(e.clientX);
-        setCurrentX(e.clientX);
-        setDragDirection(null);
-        setAutoPlay(false);
+        isDragging.current = true;
+        startX.current = e.clientX;
+        setIsAutoPlaying(false);
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        e.stopPropagation();
-        setCurrentX(e.clientX);
-        
-        const diff = startX - e.clientX;
-        if (Math.abs(diff) > 10) {
-            setDragDirection(diff > 0 ? 'left' : 'right');
-        }
+        if (!isDragging.current) return;
+        currentX.current = e.clientX;
     };
 
-    const handleMouseUp = (e: React.MouseEvent) => {
-        if (!isDragging) return;
-        
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const diff = startX - currentX;
-        const threshold = 50; // Увеличиваем порог для предотвращения случайных срабатываний
-        
+    const handleMouseUp = () => {
+        if (!isDragging.current) return;
+
+        const diff = startX.current - currentX.current;
+        const threshold = 50;
+
         if (Math.abs(diff) > threshold) {
             if (diff > 0) {
-                goToNext();
+                // Свайп влево - следующий слайд
+                setCurrentSlide(prev => (prev + 1) % slides.length);
             } else {
-                goToPrev();
+                // Свайп вправо - предыдущий слайд
+                setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
             }
         }
-        
-        setIsDragging(false);
-        setDragDirection(null);
-        setAutoPlay(true);
+
+        isDragging.current = false;
+        setIsAutoPlaying(true);
     };
 
-    const handleMouseLeave = (e: React.MouseEvent) => {
-        if (isDragging) {
-            e.preventDefault();
-            setIsDragging(false);
-            setDragDirection(null);
-            setAutoPlay(true);
+    const handleMouseLeave = () => {
+        if (isDragging.current) {
+            isDragging.current = false;
+            setIsAutoPlaying(true);
         }
     };
 
-    // Обработчики для сенсорных устройств
+    // Обработчики тач
     const handleTouchStart = (e: React.TouchEvent) => {
-        setIsDragging(true);
-        setStartX(e.touches[0].clientX);
-        setCurrentX(e.touches[0].clientX);
-        setDragDirection(null);
-        setAutoPlay(false);
+        isDragging.current = true;
+        startX.current = e.touches[0].clientX;
+        setIsAutoPlaying(false);
     };
 
     const handleTouchMove = (e: React.TouchEvent) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        setCurrentX(e.touches[0].clientX);
-        
-        const diff = startX - e.touches[0].clientX;
-        if (Math.abs(diff) > 10) {
-            setDragDirection(diff > 0 ? 'left' : 'right');
-        }
+        if (!isDragging.current) return;
+        currentX.current = e.touches[0].clientX;
     };
 
     const handleTouchEnd = () => {
-        if (!isDragging) return;
-        
-        const diff = startX - currentX;
-        const threshold = 50; // Минимальное расстояние для свайпа
-        
+        if (!isDragging.current) return;
+
+        const diff = startX.current - currentX.current;
+        const threshold = 50;
+
         if (Math.abs(diff) > threshold) {
             if (diff > 0) {
-                goToNext();
+                setCurrentSlide(prev => (prev + 1) % slides.length);
             } else {
-                goToPrev();
+                setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
             }
         }
-        
-        setIsDragging(false);
-        setDragDirection(null);
-        setAutoPlay(true);
+
+        isDragging.current = false;
+        setIsAutoPlaying(true);
+    };
+
+    // Навигация
+    const goToSlide = (index: number) => {
+        setCurrentSlide(index);
+        setIsAutoPlaying(false);
+        setTimeout(() => setIsAutoPlaying(true), 3000);
+    };
+
+    const goToPrev = () => {
+        setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
+        setIsAutoPlaying(false);
+        setTimeout(() => setIsAutoPlaying(true), 3000);
+    };
+
+    const goToNext = () => {
+        setCurrentSlide(prev => (prev + 1) % slides.length);
+        setIsAutoPlaying(false);
+        setTimeout(() => setIsAutoPlaying(true), 3000);
     };
 
     if (!slides || slides.length === 0) {
@@ -146,7 +150,7 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
 
     return (
         <div className={styles.hero}>
-            <div 
+            <div
                 ref={sliderRef}
                 className={styles.sliderContent}
                 onMouseDown={handleMouseDown}
@@ -158,16 +162,39 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
                 onTouchEnd={handleTouchEnd}
             >
                 {slides.map((slide, index) => {
-                    const optimizedImageUrl = getOptimizedImageUrl(slide.image[0]);
-                    
+                    const optimizedImageUrl = getOptimizedImageUrl(slide.image[0], 'hero', {
+                        width: 1440,
+                        height: 600,
+                        quality: index === 0 ? 90 : 85 // Первое изображение с максимальным качеством для LCP
+                    });
+
                     return (
                         <div
                             key={slide.id || index}
-                            className={`${styles.slide} ${
-                                index === currentSlide ? styles.slideActive : styles.slideHidden
-                            }`}
-                            style={optimizedImageUrl ? { backgroundImage: `url(${optimizedImageUrl})` } : undefined}
+                            className={`${styles.slide} ${index === currentSlide ? styles.slideActive : styles.slideHidden
+                                }`}
                         >
+                            {/* Используем LCPImage для первого слайда */}
+                            {index === 0 ? (
+                                <LCPImage
+                                    src={optimizedImageUrl}
+                                    alt={slide.title}
+                                    width={1440}
+                                    height={600}
+                                    className={styles.backgroundImage}
+                                    isLCP={true}
+                                    priority={true}
+                                    loading="eager"
+                                    quality={90}
+                                    sizes="100vw"
+                                />
+                            ) : (
+                                <div
+                                    className={styles.backgroundImage}
+                                    style={{ backgroundImage: `url(${optimizedImageUrl})` }}
+                                />
+                            )}
+
                             <div className={styles.content}>
                                 <h2 className={styles.title}>{slide.title}</h2>
                                 <p className={styles.description}>{slide.description}</p>
@@ -181,36 +208,40 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
             </div>
 
             {/* Навигация */}
-            <div className={styles.navigation}>
-                <button 
-                    className={styles.prevBtn} 
-                    onClick={goToPrev}
-                    aria-label="Предыдущий слайд"
-                >
-                    ‹
-                </button>
-                <button 
-                    className={styles.nextBtn} 
-                    onClick={goToNext}
-                    aria-label="Следующий слайд"
-                >
-                    ›
-                </button>
-            </div>
+            {slides.length > 1 && (
+                <div className={styles.navigation}>
+                    <button
+                        className={styles.prevBtn}
+                        onClick={goToPrev}
+                        aria-label="Предыдущий слайд"
+                    >
+                        ‹
+                    </button>
+                    <button
+                        className={styles.nextBtn}
+                        onClick={goToNext}
+                        aria-label="Следующий слайд"
+                    >
+                        ›
+                    </button>
+                </div>
+            )}
 
             {/* Буллеты */}
-            <div className={styles.bullets}>
-                {slides.map((_, index) => (
-                    <button
-                        key={index}
-                        className={`${styles.bullet} ${index === currentSlide ? styles.bulletActive : ''}`}
-                        onClick={() => goToSlide(index)}
-                        aria-label={`Перейти к слайду ${index + 1}`}
-                    >
-                        <div className={styles.bulletBar} />
-                    </button>
-                ))}
-            </div>
+            {slides.length > 1 && (
+                <div className={styles.bullets}>
+                    {slides.map((_, index) => (
+                        <button
+                            key={index}
+                            className={`${styles.bullet} ${index === currentSlide ? styles.bulletActive : ''}`}
+                            onClick={() => goToSlide(index)}
+                            aria-label={`Перейти к слайду ${index + 1}`}
+                        >
+                            <div className={styles.bulletBar} />
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

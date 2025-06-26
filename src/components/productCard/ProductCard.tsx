@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { Product, Dimension, AdditionalOption } from '@/types/product';
 import styles from './ProductCard.module.css';
 import { useCart } from '@/hooks/CartContext';
-import ProductOptions from './ProductOptions'; 
+import ProductOptions from './ProductOptions';
+import { ProductImage } from '@/components/OptimizedImage';
+import { getOptimizedImageUrl } from '@/utils/imageOptimization';
 
 interface ProductCardProps {
     product: Product;
@@ -80,6 +82,17 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     const formattedDimensions = selectedDimension ? `${selectedDimension.width}x${selectedDimension.length} см` : '';
 
+    // Оптимизируем изображение для продукта
+    const optimizedImageUrl = getOptimizedImageUrl(
+        { url: images[0] }, 
+        'product',
+        { 
+            width: 400,
+            height: 300,
+            quality: 80
+        }
+    );
+
     return (
         <div className={styles.card}>
             <Link 
@@ -87,7 +100,17 @@ export default function ProductCard({ product }: ProductCardProps) {
                 className={styles.imageLink}
             >
                 <div className={styles.imageWrapper}>
-                    <img loading='lazy' src={images[0]} alt={`${name} - фото 1`} className={styles.image} />
+                    <ProductImage
+                        src={optimizedImageUrl}
+                        alt={`${name} - фото 1`}
+                        width={400}
+                        height={300}
+                        className={styles.image}
+                        priority={false}
+                        loading="lazy"
+                        quality={80}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                     {isBestseller && <BestsellerBadge />}
                 </div>
             </Link>

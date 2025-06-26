@@ -1,6 +1,7 @@
 .hero {
     position: relative;
     width: 100%;
+    border-radius: 32px;
     height: 600px;
     overflow: visible;
 }
@@ -41,24 +42,34 @@
     left: 0;
     width: 100%;
     height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
     border-radius: 16px;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    transition: opacity 0.5s ease, transform 0.3s ease;
-    pointer-events: none;
+    overflow: hidden;
 }
 
 .slideActive {
     opacity: 1;
-    z-index: 2;
 }
 
 .slideHidden {
     opacity: 0;
-    z-index: 1;
 }
+
+/* Start of Selection */
+.backgroundImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    filter: brightness(0.4);
+}
+/* End of Selection */
 
 /* Индикатор направления свайпа */
 .slideActive[data-drag-direction="left"] {
@@ -81,12 +92,14 @@
 }
 
 .content {
-    max-width: 720px;
-    margin-left: 5%;
-    color: #fff;
     position: relative;
-    z-index: 1;
-    pointer-events: auto;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 60px;
+    color: #fff;
 }
 
 .title {
@@ -102,6 +115,7 @@
 }
 
 .button {
+    width: fit-content;
     display: inline-block;
     padding: 15px 30px;
     background-color: #fff;
@@ -133,7 +147,7 @@
 
 .prevBtn,
 .nextBtn {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     color: #d1d1d6;
     border: none;
     outline: none;
@@ -146,18 +160,18 @@
     font-size: 2rem;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
 }
 
 .prevBtn:hover,
 .nextBtn:hover {
-    background: rgba(255,255,255,0.55);
+    background: rgba(255, 255, 255, 0.55);
     color: #fff;
 }
 
 .prevBtn:active,
 .nextBtn:active {
-    background: rgba(255,255,255,0.7);
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .prevBtn:focus,
@@ -219,6 +233,7 @@
     0% {
         transform: scaleX(0);
     }
+
     100% {
         transform: scaleX(1);
     }
@@ -333,6 +348,7 @@
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
     }

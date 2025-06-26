@@ -1,22 +1,16 @@
-import PopularProduct from "@/components/popularProduct/PopularProduct";
-import styles from "./page.module.css";
-import { promises as fs } from 'fs';
-import path from 'path';
-import { Product } from '@/types/product';
-import SliderHeroBanner from "@/components/sliderHeroBanner/SliderHeroBanner";
+import { Metadata } from 'next';
+import Script from 'next/script';
+import SliderHeroBanner from '@/components/sliderHeroBanner/SliderHeroBanner';
+import PopularProduct from '@/components/popularProduct/PopularProduct';
+import BenefitsBlock from '@/components/benefitsBlock/BenefitsBlock';
+import MarqueeBlockFallback from '@/components/marqueeBlock/MarqueeBlockFallback';
+import ReviewsBlock from '@/components/reviewsBlock/ReviewsBlock';
+import CopirateBlock from '@/components/copirateBlock/CopirateBlock';
 import { fetchHeroSlides } from '@/utils/fetchHeroSlides';
-import { Metadata } from "next";
-import Script from "next/script";
-import MarqueeBlockFallback from "@/components/marqueeBlock/MarqueeBlockFallback";
-import BenefitsBlock from "@/components/benefitsBlock/BenefitsBlock";
-import CopirateBlock from "@/components/copirateBlock/CopirateBlock";
-import ReviewsBlock from "@/components/reviewsBlock/ReviewsBlock";
-
-async function getProductsData() {
-  const filePath = path.join(process.cwd(), 'src', 'data', 'data.json');
-  const fileContents = await fs.readFile(filePath, 'utf-8');
-  return JSON.parse(fileContents);
-}
+import productsData from '@/data/data.json';
+import { Product } from '@/types/product';
+import ResourcePreloader from '@/components/ResourcePreloader';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: "Dilavia — Мебель для вашего дома | Интернет-магазин dilavia.by",
@@ -53,11 +47,26 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const slides = await fetchHeroSlides();
-  const productsData = await getProductsData();
-  const products: Product[] = productsData[0].products;
+  const products: Product[] = productsData[0].products as unknown as Product[];
+
+  // Получаем критические изображения для предзагрузки
+  const criticalImages = slides.slice(0, 2).map(slide => {
+    const imageUrl = slide.image[0]?.url || '';
+    return imageUrl;
+  });
 
   return (
     <main className={styles.container}>
+      {/* Предзагрузка критических ресурсов */}
+      <ResourcePreloader
+        criticalImages={criticalImages}
+        fonts={[
+          '/fonts/LTSuperior-Regular.woff2',
+          '/fonts/LTSuperior-Medium.woff2',
+          '/fonts/LTSuperior-Semibold.woff2'
+        ]}
+      />
+
       <Script
         id="website-schema"
         type="application/ld+json"
@@ -90,6 +99,7 @@ export default async function Home() {
           })
         }}
       />
+      
       <SliderHeroBanner slides={slides} />
       <PopularProduct products={products} category={["Диван"]} />
       <BenefitsBlock />
@@ -98,9 +108,9 @@ export default async function Home() {
         pauseOnHover={true}
         showLoading={true}
       />
-      <PopularProduct products={products} category={["Кровать"]} minRating={2} title="Кровати в Минске" description="В интернет-магазине Dilavia.by представлены только тщательно отобранные модели кроватей, мягкой и корпусной мебели. Каждая модель из нашего интернет каталога – это воплощение отличного дизайна" />
-      <CopirateBlock />
+      <PopularProduct products={products} category={["Кровать"]} minRating={0}/>
       <ReviewsBlock />
+      <CopirateBlock />
     </main>
   );
 }
