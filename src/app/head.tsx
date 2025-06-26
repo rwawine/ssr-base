@@ -3,8 +3,6 @@ import React from "react";
 export default function Head() {
   return (
     <>
-      {/* Верификация Яндекса */}
-      <meta name="yandex-verification" content="example-verification-code" />
       {/* Organization schema.org */}
       <script
         type="application/ld+json"

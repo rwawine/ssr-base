@@ -114,6 +114,8 @@ video {
   font: inherit;
   vertical-align: baseline;
   background: none;
+  font-family: 'LTSuperior', sans-serif;
+  font-weight: 400;
   box-shadow: none;
   box-sizing: border-box;
   color: inherit;
@@ -141,8 +143,10 @@ section {
 body {
   line-height: 1;
   background: none;
-  font-family: 'LTSuperior' !important;
-  font-weight: 400 !important;
+  font-family: 'LTSuperior', sans-serif;
+  font-weight: 400;
+  background-color: #f6f6f6;
+  overflow-x: hidden;
 }
 
 ol,
@@ -237,11 +241,6 @@ table {
   --shadow-light: 0 2px 16px rgba(0, 0, 0, 0.07);
   --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.1);
   --transition: all 0.2s ease;
-}
-
-body {
-  background-color: #f6f6f6;
-  overflow-x: hidden;
 }
 
 /* Улучшенная доступность - поддержка prefers-reduced-motion */
