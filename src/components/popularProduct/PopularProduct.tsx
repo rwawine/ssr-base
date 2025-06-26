@@ -2,7 +2,7 @@ import React from 'react';
 import ProductCard from '@/components/productCard/ProductCard';
 import { Product } from '@/types/product';
 import styles from './PopularProduct.module.css';
-import PopularProductSliderWrapper from './PopularProductSliderWrapper';
+import PopularProductSliderSSR from './PopularProductSliderSSR';
 
 interface PopularProductProps {
   products: Product[];
@@ -54,7 +54,7 @@ export default function PopularProduct({ products, category, minPrice, maxPrice,
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <PopularProductSliderWrapper products={filteredProducts} title={title} description={description} />
+        <PopularProductSliderSSR products={filteredProducts} title={title} description={description} />
       </div>
     </section>
   );

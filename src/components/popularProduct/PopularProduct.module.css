@@ -294,3 +294,23 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
+
+.gridSliderFallback {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .gridSliderFallback {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .gridSliderFallback {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
