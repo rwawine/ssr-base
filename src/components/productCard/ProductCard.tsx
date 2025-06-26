@@ -162,7 +162,7 @@ export function ProductCard({ product, priority }: ProductCardProps) {
         </h3>
 
         <div className={styles.priceRow}>
-          <span className={styles.price}>{formatPrice(currentPrice)}</span>
+          <span className={styles.price}>от {formatPrice(currentPrice)}</span>
         </div>
 
         <div className={styles.detailsRow}>
