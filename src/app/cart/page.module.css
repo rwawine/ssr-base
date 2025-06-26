@@ -1104,4 +1104,15 @@
 
 .orderDetails .orderTotal:first-of-type .orderTotalLabel {
   /* ваши стили */
+}
+
+.fabricBadge {
+  background: #4ecdc4;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+  display: inline-block;
 } 

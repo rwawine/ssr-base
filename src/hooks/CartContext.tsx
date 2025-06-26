@@ -9,8 +9,14 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { CartContextType, CartState, CartItem } from "@/types/cart";
+import {
+  CartContextType,
+  CartState,
+  CartItem,
+  FabricCartItem,
+} from "@/types/cart";
 import { Product, Dimension, AdditionalOption } from "@/types/product";
+import { FabricCollection, FabricVariant } from "@/types/fabric";
 import { useLocalStorage } from "./useLocalStorage";
 import { formatPrice } from "@/lib/utils";
 
@@ -31,11 +37,29 @@ type CartAction =
       };
     }
   | {
+      type: "ADD_FABRIC_ITEM";
+      payload: {
+        fabric: {
+          collection: FabricCollection;
+          variant: FabricVariant;
+          categorySlug: string;
+          collectionSlug: string;
+        };
+        quantity: number;
+      };
+    }
+  | {
       type: "REMOVE_ITEM";
       payload: {
         productId: string;
         dimensionId?: string;
         additionalOptions?: AdditionalOption[];
+      };
+    }
+  | {
+      type: "REMOVE_FABRIC_ITEM";
+      payload: {
+        fabricId: string;
       };
     }
   | {
@@ -47,13 +71,20 @@ type CartAction =
         additionalOptions?: AdditionalOption[];
       };
     }
+  | {
+      type: "UPDATE_FABRIC_QUANTITY";
+      payload: {
+        fabricId: string;
+        quantity: number;
+      };
+    }
   | { type: "CLEAR_CART" }
   | { type: "LOAD_CART"; payload: CartState };
 
 // Начальное состояние
 const initialState: CartState = {
   items: [],
-  totalItems: 0,
+  fabricItems: [],
   totalPrice: 0,
 };
 
@@ -75,6 +106,15 @@ const getItemKey = (
     : `${productId}-${optionsKey}`;
 };
 
+// Функция для получения уникального ключа ткани
+const getFabricKey = (
+  categorySlug: string,
+  collectionSlug: string,
+  variantId: number,
+): string => {
+  return `fabric-${categorySlug}-${collectionSlug}-${variantId}`;
+};
+
 // Функция для вычисления цены товара с учетом дополнительных опций
 const calculateItemPrice = (
   product: Product,
@@ -90,7 +130,8 @@ const calculateItemPrice = (
 
   // Добавляем стоимость дополнительных опций
   const additionalOptionsPrice =
-    additionalOptions?.reduce((sum, option) => sum + option.price, 0) || 0;
+    additionalOptions?.reduce((sum, option) => sum + (option.price || 0), 0) ||
+    0;
 
   return basePrice + additionalOptionsPrice;
 };
@@ -131,13 +172,20 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         const newItem: CartItem = {
           product,
           quantity: Math.min(quantity, MAX_QUANTITY),
-          selectedDimension: dimension,
+          selectedDimension: dimension
+            ? {
+                id: dimension.id,
+                width: dimension.width,
+                length: dimension.length,
+                height: dimension.height || undefined,
+                price: dimension.price,
+              }
+            : undefined,
           selectedAdditionalOptions: additionalOptions,
         };
         newItems = [...state.items, newItem];
       }
 
-      const totalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
       const totalPrice = newItems.reduce(
         (sum, item) =>
           sum +
@@ -150,7 +198,51 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         0,
       );
 
-      return { items: newItems, totalItems, totalPrice };
+      return { ...state, items: newItems, totalPrice };
+    }
+
+    case "ADD_FABRIC_ITEM": {
+      const { fabric, quantity } = action.payload;
+      const fabricKey = getFabricKey(
+        fabric.categorySlug,
+        fabric.collectionSlug,
+        fabric.variant.id,
+      );
+
+      const existingFabricIndex = (state.fabricItems || []).findIndex(
+        (item) =>
+          getFabricKey(
+            item.fabric.categorySlug,
+            item.fabric.collectionSlug,
+            item.fabric.variant.id,
+          ) === fabricKey,
+      );
+
+      let newFabricItems: FabricCartItem[];
+
+      if (existingFabricIndex >= 0) {
+        // Обновляем существующую ткань
+        newFabricItems = [...(state.fabricItems || [])];
+        const newQuantity = Math.min(
+          newFabricItems[existingFabricIndex].quantity + quantity,
+          MAX_QUANTITY,
+        );
+        newFabricItems[existingFabricIndex] = {
+          ...newFabricItems[existingFabricIndex],
+          quantity: newQuantity,
+        };
+      } else {
+        // Добавляем новую ткань
+        const newFabricItem: FabricCartItem = {
+          fabric,
+          quantity: Math.min(quantity, MAX_QUANTITY),
+          price: 0, // Ткани бесплатные
+        };
+        newFabricItems = [...(state.fabricItems || []), newFabricItem];
+      }
+
+      // Цена остается той же, так как ткани бесплатные
+      return { ...state, fabricItems: newFabricItems };
     }
 
     case "REMOVE_ITEM": {
@@ -166,7 +258,6 @@ function cartReducer(state: CartState, action: CartAction): CartState {
           ) !== itemKey,
       );
 
-      const totalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
       const totalPrice = newItems.reduce(
         (sum, item) =>
           sum +
@@ -179,7 +270,20 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         0,
       );
 
-      return { items: newItems, totalItems, totalPrice };
+      return { ...state, items: newItems, totalPrice };
+    }
+
+    case "REMOVE_FABRIC_ITEM": {
+      const { fabricId } = action.payload;
+      const newFabricItems = (state.fabricItems || []).filter(
+        (item) =>
+          getFabricKey(
+            item.fabric.categorySlug,
+            item.fabric.collectionSlug,
+            item.fabric.variant.id,
+          ) !== fabricId,
+      );
+      return { ...state, fabricItems: newFabricItems };
     }
 
     case "UPDATE_QUANTITY": {
@@ -208,7 +312,6 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         return item;
       });
 
-      const totalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
       const totalPrice = newItems.reduce(
         (sum, item) =>
           sum +
@@ -221,7 +324,34 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         0,
       );
 
-      return { items: newItems, totalItems, totalPrice };
+      return { ...state, items: newItems, totalPrice };
+    }
+
+    case "UPDATE_FABRIC_QUANTITY": {
+      const { fabricId, quantity } = action.payload;
+
+      if (quantity < MIN_QUANTITY) {
+        // Если количество меньше минимального, удаляем ткань
+        return cartReducer(state, {
+          type: "REMOVE_FABRIC_ITEM",
+          payload: { fabricId },
+        });
+      }
+
+      const newFabricItems = (state.fabricItems || []).map((item) => {
+        if (
+          getFabricKey(
+            item.fabric.categorySlug,
+            item.fabric.collectionSlug,
+            item.fabric.variant.id,
+          ) === fabricId
+        ) {
+          return { ...item, quantity: Math.min(quantity, MAX_QUANTITY) };
+        }
+        return item;
+      });
+
+      return { ...state, fabricItems: newFabricItems };
     }
 
     case "CLEAR_CART":
@@ -240,30 +370,70 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 // Провайдер контекста
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useLocalStorage<CartState>(
-    CART_STORAGE_KEY,
-    initialState,
-  );
-  const [promoCode, setPromoCode] = useState<string>("");
-  const [discount, setDiscount] = useState<number>(0);
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Загрузка корзины из localStorage
+  const [savedCart] = useLocalStorage(CART_STORAGE_KEY, initialState);
+
+  useEffect(() => {
+    if (savedCart && Object.keys(savedCart).length > 0) {
+      dispatch({ type: "LOAD_CART", payload: savedCart });
+    }
+    setIsHydrated(true);
+  }, [savedCart]);
+
+  // Сохранение корзины в localStorage
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+    }
+  }, [state, isHydrated]);
 
   // Функции для работы с корзиной
   const addToCart = useCallback(
     (
       product: Product,
       quantity: number = 1,
-      dimension?: Dimension,
+      dimensionId?: string,
       additionalOptions?: AdditionalOption[],
     ) => {
-      setCart((prevCart) => {
-        const action: CartAction = {
-          type: "ADD_ITEM",
-          payload: { product, quantity, dimension, additionalOptions },
-        };
-        return cartReducer(prevCart, action);
+      const dimension = dimensionId
+        ? product.dimensions?.find((d) => d.id === dimensionId)
+        : undefined;
+
+      dispatch({
+        type: "ADD_ITEM",
+        payload: {
+          product,
+          quantity,
+          dimension,
+          additionalOptions,
+        },
       });
     },
-    [setCart],
+    [],
+  );
+
+  const addFabricToCart = useCallback(
+    (
+      fabric: {
+        collection: FabricCollection;
+        variant: FabricVariant;
+        categorySlug: string;
+        collectionSlug: string;
+      },
+      quantity: number = 1,
+    ) => {
+      dispatch({
+        type: "ADD_FABRIC_ITEM",
+        payload: {
+          fabric,
+          quantity,
+        },
+      });
+    },
+    [],
   );
 
   const removeFromCart = useCallback(
@@ -272,16 +442,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       dimensionId?: string,
       additionalOptions?: AdditionalOption[],
     ) => {
-      setCart((prevCart) => {
-        const action: CartAction = {
-          type: "REMOVE_ITEM",
-          payload: { productId, dimensionId, additionalOptions },
-        };
-        return cartReducer(prevCart, action);
+      dispatch({
+        type: "REMOVE_ITEM",
+        payload: {
+          productId,
+          dimensionId,
+          additionalOptions,
+        },
       });
     },
-    [setCart],
+    [],
   );
+
+  const removeFabricFromCart = useCallback((fabricId: string) => {
+    dispatch({
+      type: "REMOVE_FABRIC_ITEM",
+      payload: { fabricId },
+    });
+  }, []);
 
   const updateQuantity = useCallback(
     (
@@ -290,90 +468,83 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       dimensionId?: string,
       additionalOptions?: AdditionalOption[],
     ) => {
-      setCart((prevCart) => {
-        const action: CartAction = {
-          type: "UPDATE_QUANTITY",
-          payload: { productId, quantity, dimensionId, additionalOptions },
-        };
-        return cartReducer(prevCart, action);
+      dispatch({
+        type: "UPDATE_QUANTITY",
+        payload: {
+          productId,
+          quantity,
+          dimensionId,
+          additionalOptions,
+        },
       });
     },
-    [setCart],
+    [],
+  );
+
+  const updateFabricQuantity = useCallback(
+    (fabricId: string, quantity: number) => {
+      dispatch({
+        type: "UPDATE_FABRIC_QUANTITY",
+        payload: { fabricId, quantity },
+      });
+    },
+    [],
   );
 
   const clearCart = useCallback(() => {
-    setCart(initialState);
-  }, [setCart]);
+    dispatch({ type: "CLEAR_CART" });
+  }, []);
 
-  // Мемоизированные значения
-  const cartValue = useMemo(
-    () => ({
-      ...cart,
-      promoCode,
-      discount,
-      formattedTotalPrice: formatPrice(cart.totalPrice || 0),
-      formattedDiscountedPrice: formatPrice(
-        Math.max(0, (cart.totalPrice || 0) - discount),
-      ),
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-      isInCart: (
-        productId: string,
-        dimensionId?: string,
-        additionalOptions?: AdditionalOption[],
-      ): boolean => {
-        const itemKey = getItemKey(productId, dimensionId, additionalOptions);
-        return cart.items.some(
-          (item) =>
-            getItemKey(
-              item.product.id,
-              item.selectedDimension?.id,
-              item.selectedAdditionalOptions,
-            ) === itemKey,
-        );
-      },
-      applyPromo: (code: string) => {
-        setPromoCode(code);
-        // Здесь будет логика применения промокода
-        setDiscount(100); // Пример скидки
-      },
-      resetPromo: () => {
-        setPromoCode("");
-        setDiscount(0);
-      },
-      isCartEmpty: cart.items.length === 0,
-      getItemQuantity: (
-        productId: string,
-        dimensionId?: string,
-        additionalOptions?: AdditionalOption[],
-      ) => {
-        const itemKey = getItemKey(productId, dimensionId, additionalOptions);
-        const item = cart.items.find(
-          (item) =>
-            getItemKey(
-              item.product.id,
-              item.selectedDimension?.id,
-              item.selectedAdditionalOptions,
-            ) === itemKey,
-        );
-        return item?.quantity || 0;
-      },
-    }),
-    [
-      cart,
-      promoCode,
-      discount,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-    ],
-  );
+  // Вычисляемые значения
+  const totalItems = useMemo(() => {
+    const productItems =
+      state.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    const fabricItems =
+      state.fabricItems?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    return productItems + fabricItems;
+  }, [state.items, state.fabricItems]);
+
+  const getItemQuantity = (
+    productId: string,
+    dimensionId?: string,
+    additionalOptions?: any[],
+  ): number => {
+    const item = state.items.find(
+      (item) =>
+        item.product.id === productId &&
+        item.selectedDimension?.id === dimensionId &&
+        JSON.stringify(item.selectedAdditionalOptions) ===
+          JSON.stringify(additionalOptions),
+    );
+    return item?.quantity || 0;
+  };
+
+  const isInCart = (
+    productId: string,
+    dimensionId?: string,
+    additionalOptions?: any[],
+  ): boolean => {
+    return getItemQuantity(productId, dimensionId, additionalOptions) > 0;
+  };
+
+  const contextValue: CartContextType = {
+    items: state.items,
+    fabricItems: state.fabricItems,
+    totalPrice: state.totalPrice,
+    addToCart,
+    addFabricToCart,
+    removeFromCart,
+    removeFabricFromCart,
+    updateQuantity,
+    updateFabricQuantity,
+    clearCart,
+    totalItems,
+    getItemQuantity,
+    isInCart,
+  };
 
   return (
-    <CartContext.Provider value={cartValue}>{children}</CartContext.Provider>
+    <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
   );
 }
 

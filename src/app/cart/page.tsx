@@ -11,8 +11,16 @@ import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import CheckoutForm from "./CheckoutForm";
 
 export default function CartPage() {
-  const { items, totalPrice, removeFromCart, updateQuantity, clearCart } =
-    useCart();
+  const {
+    items,
+    fabricItems,
+    totalPrice,
+    removeFromCart,
+    updateQuantity,
+    removeFabricFromCart,
+    updateFabricQuantity,
+    clearCart,
+  } = useCart();
   const router = useRouter();
   const [promo, setPromo] = useState("");
   const [promoError, setPromoError] = useState("");
@@ -74,6 +82,17 @@ export default function CartPage() {
     removeFromCart(productId, dimensionId, additionalOptions);
   };
 
+  const handleFabricQuantityChange = (
+    fabricId: string,
+    newQuantity: number,
+  ) => {
+    updateFabricQuantity(fabricId, newQuantity);
+  };
+
+  const handleRemoveFabricItem = (fabricId: string) => {
+    removeFabricFromCart(fabricId);
+  };
+
   const handleClearCart = () => {
     if (window.confirm("Вы уверены, что хотите очистить корзину?")) {
       clearCart();
@@ -116,7 +135,7 @@ export default function CartPage() {
 
   const handleOrderSuccess = () => {
     setLoading(true);
-    setOrderItems(items);
+    setOrderItems([...items, ...fabricItems]);
     setOrderTotal(Math.round((totalPrice || 0) * (1 - discount)));
     setOrderDiscount(discount);
     setOrderDiscountValue(Math.round((totalPrice || 0) * discount));
@@ -142,6 +161,7 @@ export default function CartPage() {
   }, []);
 
   const totalWithDiscount = Math.round((totalPrice || 0) * (1 - discount));
+  const totalItemsCount = items.length + fabricItems.length;
 
   if (!isHydrated) {
     return (
@@ -175,27 +195,35 @@ export default function CartPage() {
             <h2 className={styles.orderDetailsTitle}>Состав заказа:</h2>
             <div className={styles.orderItems}>
               {orderItems.length > 0 ? (
-                orderItems.map((item: CartItem, index: number) => (
+                orderItems.map((item: any, index: number) => (
                   <div key={index} className={styles.orderItem}>
                     <div className={styles.orderItemImage}>
                       <img
                         src={
-                          item.product.images?.[0] ||
+                          item.product?.images?.[0] ||
+                          item.fabric?.variant.image ||
                           "/public/images/no-image.png"
                         }
-                        alt={item.product.name}
+                        alt={
+                          item.product?.name ||
+                          `${item.fabric?.collection.nameLoc} - ${item.fabric?.variant.color.name}`
+                        }
                       />
                     </div>
                     <div className={styles.orderItemInfo}>
                       <div className={styles.orderItemName}>
-                        {item.product.name}{" "}
-                        <span style={{ color: "#888", fontSize: "0.95em" }}>
-                          {" "}
-                          {item.product.id}
-                        </span>
+                        {item.product?.name ||
+                          `${item.fabric?.collection.nameLoc} - ${item.fabric?.variant.color.name}`}
+                        {item.product?.id && (
+                          <span style={{ color: "#888", fontSize: "0.95em" }}>
+                            {" "}
+                            {item.product.id}
+                          </span>
+                        )}
                       </div>
                       <div className={styles.orderItemQuantity}>
-                        Количество: {item.quantity} шт.
+                        Количество: {item.quantity}{" "}
+                        {item.product ? "шт." : "м²"}
                       </div>
                       {item.selectedDimension && (
                         <div className={styles.orderItemDimension}>
@@ -220,11 +248,13 @@ export default function CartPage() {
                           </div>
                         )}
                       <div className={styles.orderItemPrice}>
-                        {(
-                          item.selectedDimension?.price ||
-                          item.product.price?.current
-                        ).toLocaleString("ru-RU")}{" "}
-                        BYN
+                        {item.product
+                          ? (
+                              item.selectedDimension?.price ||
+                              item.product.price?.current
+                            ).toLocaleString("ru-RU")
+                          : "Бесплатно"}{" "}
+                        {item.product ? "BYN" : ""}
                       </div>
                     </div>
                   </div>
@@ -280,7 +310,7 @@ export default function CartPage() {
     );
   }
 
-  if (items.length === 0) {
+  if (totalItemsCount === 0) {
     return (
       <div className={styles.container}>
         <Breadcrumbs
@@ -321,6 +351,7 @@ export default function CartPage() {
       </div>
       <div className={styles.cartGrid}>
         <div className={styles.cartItemsSection}>
+          {/* Товары */}
           {items.map((item: CartItem, index: number) => (
             <div
               key={`${item.product.id}-${item.selectedDimension?.id || "default"}-${index}`}
@@ -432,6 +463,61 @@ export default function CartPage() {
               </div>
             </div>
           ))}
+
+          {/* Ткани */}
+          {fabricItems.map((item, index) => (
+            <div
+              key={`fabric-${item.fabric.categorySlug}-${item.fabric.collectionSlug}-${item.fabric.variant.id}-${index}`}
+              className={styles.cartProductRow}
+            >
+              <div className={styles.cartProductImage}>
+                <img
+                  src={item.fabric.variant.image}
+                  alt={`${item.fabric.collection.nameLoc} - ${item.fabric.variant.color.name}`}
+                />
+              </div>
+              <div className={styles.cartProductInfo}>
+                <div className={styles.cartProductHeader}>
+                  <span className={styles.cartProductName}>
+                    {item.fabric.collection.nameLoc} -{" "}
+                    {item.fabric.variant.color.name}
+                  </span>
+                </div>
+                <div className={styles.cartProductPriceRow}>
+                  <span className={styles.cartProductPrice}>Бесплатно</span>
+                </div>
+                <div className={styles.cartProductParam}>
+                  <span>Тип: </span>
+                  <span className={styles.cartProductValue}>
+                    {item.fabric.collection.technicalSpecifications.fabricType}
+                  </span>
+                </div>
+                <div className={styles.cartProductParam}>
+                  <span>Состав: </span>
+                  <span className={styles.cartProductValue}>
+                    {
+                      item.fabric.collection.technicalSpecifications
+                        .compositionLoc
+                    }
+                  </span>
+                </div>
+              </div>
+              <div className={styles.cartProductCounter}>
+                <button
+                  onClick={() =>
+                    handleRemoveFabricItem(
+                      `fabric-${item.fabric.categorySlug}-${item.fabric.collectionSlug}-${item.fabric.variant.id}`,
+                    )
+                  }
+                  className={styles.cartRemoveBtn}
+                  aria-label="Удалить ткань из корзины"
+                >
+                  Удалить <span className={styles.cartRemoveIcon}>×</span>
+                </button>
+              </div>
+            </div>
+          ))}
+
           <CheckoutForm
             ref={formRef}
             onOrderSuccess={handleOrderSuccess}
@@ -443,7 +529,7 @@ export default function CartPage() {
             <h2 className={styles.cartSummaryTitle}>Ваша корзина</h2>
             <div className={styles.cartSummaryRow}>
               <span>Кол-во товаров</span>
-              <span>{items.length} шт.</span>
+              <span>{totalItemsCount} шт.</span>
             </div>
             <div className={styles.cartSummaryTotalLabel}>Итого</div>
             <div className={styles.cartSummaryTotalValue}>
@@ -490,7 +576,7 @@ export default function CartPage() {
               className={styles.cartCheckoutBtn}
               onClick={handleCheckout}
               aria-label="Перейти к оформлению заказа"
-              disabled={items.length === 0 || loading}
+              disabled={totalItemsCount === 0 || loading}
             >
               {loading ? "Оформляем заказ..." : "Оформить заказ"}
             </button>

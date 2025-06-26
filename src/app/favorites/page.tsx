@@ -4,13 +4,25 @@ import React from "react";
 import { useFavorites } from "@/hooks/FavoritesContext";
 import Link from "next/link";
 import { ProductCard } from "@/components/productCard/ProductCard";
+import { FabricCard } from "@/components/fabric-card/FabricCard";
 import styles from "./page.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 export default function FavoritesPage() {
-  const { favorites, clearFavorites } = useFavorites();
+  const { items, fabricItems, clearFavorites } = useFavorites();
 
-  if (favorites.items.length === 0) {
+  // Фильтруем невалидные записи тканей
+  const validFabricItems = fabricItems.filter(
+    (item) =>
+      item.fabric.categorySlug &&
+      item.fabric.collectionSlug &&
+      item.fabric.categorySlug !== "undefined" &&
+      item.fabric.collectionSlug !== "undefined",
+  );
+
+  const totalItemsCount = items.length + validFabricItems.length;
+
+  if (totalItemsCount === 0) {
     return (
       <div className={styles.container}>
         <Breadcrumbs
@@ -56,8 +68,19 @@ export default function FavoritesPage() {
       </div>
 
       <div className={styles.favoritesGrid}>
-        {favorites.items.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {/* Товары */}
+        {items.map((item) => (
+          <ProductCard key={item.product.id} product={item.product} />
+        ))}
+
+        {/* Ткани */}
+        {validFabricItems.map((item) => (
+          <FabricCard
+            key={`fabric-${item.fabric.categorySlug}-${item.fabric.collectionSlug}-${item.fabric.variant.id}`}
+            collection={item.fabric.collection}
+            materialSlug={item.fabric.collectionSlug}
+            categorySlug={item.fabric.categorySlug}
+          />
         ))}
       </div>
     </div>

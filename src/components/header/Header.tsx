@@ -27,7 +27,12 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   // Контексты для корзины и избранного
   const { items: cartItems, totalItems: cartTotalItems } = useCart();
-  const { favorites } = useFavorites();
+  const { items: favoritesItems, fabricItems: favoritesFabricItems } =
+    useFavorites();
+
+  // Вычисляем общее количество товаров в избранном
+  const favoritesTotalItems =
+    (favoritesItems?.length || 0) + (favoritesFabricItems?.length || 0);
 
   // Состояния для выпадающих меню
   const [isPhoneExpanded, setIsPhoneExpanded] = useState(false);
@@ -66,6 +71,7 @@ const Header: React.FC<HeaderProps> = ({
   const mobileMenuItems = [
     { title: "Главная", url: "/" },
     { title: "Каталог", url: "/catalog", items: navMenuItems },
+    { title: "Ткани", url: "/fabrics" },
     { title: "Доставка и оплата", url: "/delivery" },
     // { title: 'Ткани', url: '/fabric' },
     { title: "Отзывы", url: "/reviews" },
@@ -142,12 +148,18 @@ const Header: React.FC<HeaderProps> = ({
             </div>
             <Link
               className={styles.header__link}
+              href="/fabrics"
+              title="Перейти в раздел тканей"
+            >
+              Ткани
+            </Link>
+            <Link
+              className={styles.header__link}
               href="/delivery"
               title="Информация о доставке и оплате"
             >
               Доставка и оплата
             </Link>
-            {/* <Link className={styles.header__link} href="/fabric">Ткани</Link> */}
             <Link
               className={styles.header__link}
               href="/reviews"
@@ -227,12 +239,12 @@ const Header: React.FC<HeaderProps> = ({
                 title="Перейти в избранное"
               >
                 <HeartIcon />
-                {isHydrated && favorites.totalItems > 0 && (
+                {isHydrated && favoritesTotalItems > 0 && (
                   <span
                     className={styles.badge}
-                    aria-label={`${favorites.totalItems} товаров в избранном`}
+                    aria-label={`${favoritesTotalItems} товаров в избранном`}
                   >
-                    {favorites.totalItems > 99 ? "99+" : favorites.totalItems}
+                    {favoritesTotalItems > 99 ? "99+" : favoritesTotalItems}
                   </span>
                 )}
               </Link>

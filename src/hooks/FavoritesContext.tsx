@@ -7,9 +7,17 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useState,
 } from "react";
-import { FavoritesContextType, FavoritesState } from "@/types/favorites";
+import {
+  FavoritesContextType,
+  FavoritesState,
+  FavoritesItem,
+  FabricFavoritesItem,
+} from "@/types/favorites";
 import { Product } from "@/types/product";
+import { FabricCollection, FabricVariant } from "@/types/fabric";
+import { useLocalStorage } from "./useLocalStorage";
 
 // Константы
 const FAVORITES_STORAGE_KEY = "ssr-favorites";
@@ -17,14 +25,33 @@ const FAVORITES_STORAGE_KEY = "ssr-favorites";
 // Типы действий
 type FavoritesAction =
   | { type: "ADD_ITEM"; payload: Product }
+  | {
+      type: "ADD_FABRIC_ITEM";
+      payload: {
+        collection: FabricCollection;
+        variant: FabricVariant;
+        categorySlug: string;
+        collectionSlug: string;
+      };
+    }
   | { type: "REMOVE_ITEM"; payload: string }
+  | { type: "REMOVE_FABRIC_ITEM"; payload: string }
   | { type: "CLEAR_FAVORITES" }
   | { type: "LOAD_FAVORITES"; payload: FavoritesState };
 
 // Начальное состояние
 const initialState: FavoritesState = {
   items: [],
-  totalItems: 0,
+  fabricItems: [],
+};
+
+// Функция для получения уникального ключа ткани
+const getFabricKey = (
+  categorySlug: string,
+  collectionSlug: string,
+  variantId: number,
+): string => {
+  return `fabric-${categorySlug}-${collectionSlug}-${variantId}`;
 };
 
 // Reducer для управления состоянием избранного
@@ -34,27 +61,59 @@ function favoritesReducer(
 ): FavoritesState {
   switch (action.type) {
     case "ADD_ITEM": {
-      const { payload: product } = action;
-
-      // Проверяем, не добавлен ли уже товар
-      if (state.items.some((item) => item.id === product.id)) {
-        return state;
+      const existingItem = state.items.find(
+        (item) => item.product.id === action.payload.id,
+      );
+      if (existingItem) {
+        return state; // Товар уже в избранном
       }
-
-      const newItems = [...state.items, product];
       return {
-        items: newItems,
-        totalItems: newItems.length,
+        ...state,
+        items: [...state.items, { product: action.payload }],
+      };
+    }
+
+    case "ADD_FABRIC_ITEM": {
+      const fabricKey = getFabricKey(
+        action.payload.categorySlug,
+        action.payload.collectionSlug,
+        action.payload.variant.id,
+      );
+      const existingFabric = state.fabricItems?.find(
+        (item) =>
+          getFabricKey(
+            item.fabric.categorySlug,
+            item.fabric.collectionSlug,
+            item.fabric.variant.id,
+          ) === fabricKey,
+      );
+      if (existingFabric) {
+        return state; // Ткань уже в избранном
+      }
+      return {
+        ...state,
+        fabricItems: [...(state.fabricItems || []), { fabric: action.payload }],
       };
     }
 
     case "REMOVE_ITEM": {
-      const { payload: productId } = action;
-      const newItems = state.items.filter((item) => item.id !== productId);
-
       return {
-        items: newItems,
-        totalItems: newItems.length,
+        ...state,
+        items: state.items.filter((item) => item.product.id !== action.payload),
+      };
+    }
+
+    case "REMOVE_FABRIC_ITEM": {
+      return {
+        ...state,
+        fabricItems: (state.fabricItems || []).filter(
+          (item) =>
+            getFabricKey(
+              item.fabric.categorySlug,
+              item.fabric.collectionSlug,
+              item.fabric.variant.id,
+            ) !== action.payload,
+        ),
       };
     }
 
@@ -76,39 +135,60 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
 
 // Провайдер контекста
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favorites, dispatch] = useReducer(favoritesReducer, initialState);
+  const [state, dispatch] = useReducer(favoritesReducer, initialState);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Загрузка избранного из localStorage при инициализации
-  useEffect(() => {
-    try {
-      const savedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
-      if (savedFavorites) {
-        const parsedFavorites = JSON.parse(savedFavorites);
-        dispatch({ type: "LOAD_FAVORITES", payload: parsedFavorites });
-      }
-    } catch (error) {
-      console.error("Ошибка при загрузке избранного из localStorage:", error);
-      // В случае ошибки очищаем localStorage
-      localStorage.removeItem(FAVORITES_STORAGE_KEY);
-    }
-  }, []);
+  // Загрузка избранного из localStorage
+  const [savedFavorites] = useLocalStorage(FAVORITES_STORAGE_KEY, initialState);
 
-  // Сохранение избранного в localStorage при изменении
   useEffect(() => {
-    try {
-      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
-    } catch (error) {
-      console.error("Ошибка при сохранении избранного в localStorage:", error);
+    if (savedFavorites && Object.keys(savedFavorites).length > 0) {
+      // Фильтруем невалидные записи тканей при загрузке
+      const validFavorites = {
+        ...savedFavorites,
+        fabricItems: (savedFavorites.fabricItems || []).filter(
+          (item) =>
+            item.fabric.categorySlug &&
+            item.fabric.collectionSlug &&
+            item.fabric.categorySlug !== "undefined" &&
+            item.fabric.collectionSlug !== "undefined",
+        ),
+      };
+      dispatch({ type: "LOAD_FAVORITES", payload: validFavorites });
     }
-  }, [favorites]);
+    setIsHydrated(true);
+  }, [savedFavorites]);
+
+  // Сохранение избранного в localStorage
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(state));
+    }
+  }, [state, isHydrated]);
 
   // Функции для работы с избранным
   const addToFavorites = useCallback((product: Product) => {
     dispatch({ type: "ADD_ITEM", payload: product });
   }, []);
 
+  const addFabricToFavorites = useCallback(
+    (fabric: {
+      collection: FabricCollection;
+      variant: FabricVariant;
+      categorySlug: string;
+      collectionSlug: string;
+    }) => {
+      dispatch({ type: "ADD_FABRIC_ITEM", payload: fabric });
+    },
+    [],
+  );
+
   const removeFromFavorites = useCallback((productId: string) => {
     dispatch({ type: "REMOVE_ITEM", payload: productId });
+  }, []);
+
+  const removeFabricFromFavorites = useCallback((fabricId: string) => {
+    dispatch({ type: "REMOVE_FABRIC_ITEM", payload: fabricId });
   }, []);
 
   const clearFavorites = useCallback(() => {
@@ -117,41 +197,53 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   const isInFavorites = useCallback(
     (productId: string): boolean => {
-      return favorites.items.some((item) => item.id === productId);
+      return state.items.some((item) => item.product.id === productId);
     },
-    [favorites.items],
+    [state.items],
+  );
+
+  const isFabricInFavorites = useCallback(
+    (fabricId: string): boolean => {
+      return (
+        state.fabricItems?.some(
+          (item) =>
+            getFabricKey(
+              item.fabric.categorySlug,
+              item.fabric.collectionSlug,
+              item.fabric.variant.id,
+            ) === fabricId,
+        ) || false
+      );
+    },
+    [state.fabricItems],
   );
 
   const toggleFavorite = useCallback(
     (product: Product) => {
-      if (isInFavorites(product.id)) {
-        removeFromFavorites(product.id);
+      const isInFav = state.items.some(
+        (item) => item.product.id === product.id,
+      );
+      if (isInFav) {
+        dispatch({ type: "REMOVE_ITEM", payload: product.id });
       } else {
-        addToFavorites(product);
+        dispatch({ type: "ADD_ITEM", payload: product });
       }
     },
-    [isInFavorites, removeFromFavorites, addToFavorites],
+    [state.items],
   );
 
-  // Мемоизированное значение контекста
-  const contextValue = useMemo<FavoritesContextType>(
-    () => ({
-      favorites,
-      addToFavorites,
-      removeFromFavorites,
-      clearFavorites,
-      isInFavorites,
-      toggleFavorite,
-    }),
-    [
-      favorites,
-      addToFavorites,
-      removeFromFavorites,
-      clearFavorites,
-      isInFavorites,
-      toggleFavorite,
-    ],
-  );
+  const contextValue: FavoritesContextType = {
+    items: state.items,
+    fabricItems: state.fabricItems,
+    addToFavorites,
+    addFabricToFavorites,
+    removeFromFavorites,
+    removeFabricFromFavorites,
+    clearFavorites,
+    isInFavorites,
+    isFabricInFavorites,
+    toggleFavorite,
+  };
 
   return (
     <FavoritesContext.Provider value={contextValue}>

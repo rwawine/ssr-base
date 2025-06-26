@@ -1,0 +1,335 @@
+.container {
+  max-width: 1660px;
+  margin: 0 auto;
+  padding: 40px 0;
+  margin-top: 100px;
+}
+
+.breadcrumbs {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.breadcrumbs a {
+  color: #4ecdc4;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.mainImage {
+  height: 350px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.variants h3 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.variantsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.variantButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.variantButton:hover {
+  border-color: #4ecdc4;
+  transform: translateY(-2px);
+}
+
+.variantActive {
+  border-color: #4ecdc4;
+  background: #f0fdfa;
+}
+
+.variantImage {
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.variantName {
+  font-size: 10px;
+  text-align: center;
+  color: #666;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-family: 'LTSuperior', Arial, sans-serif;
+}
+
+.colorName {
+  font-size: 1.1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.specifications h2,
+.application h2,
+.care h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  font-family: 'LTSuperior', Arial, sans-serif;
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.spec {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.specLabel {
+  font-weight: 500;
+  color: #666;
+}
+
+.specValue {
+  color: #333;
+  font-weight: 500;
+}
+
+.applicationList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.applicationItem {
+  padding: 0.5rem 1rem;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.careList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.careItem {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+  color: #666;
+  line-height: 1.5;
+}
+
+.careItem:last-child {
+  border-bottom: none;
+}
+
+
+.quantity {
+  margin-bottom: 1.5rem;
+}
+
+.quantity label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.quantityControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 200px;
+}
+
+.quantityButton {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--divan-border);
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantityButton:hover:not(:disabled) {
+  background: var(--divan-accent);
+  border-color: #aaa;
+}
+
+.quantityButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantityInput {
+  flex: 1;
+  height: 44px;
+  border: 1px solid var(--divan-border);
+  border-radius: 4px;
+  padding: 0 0.75rem;
+  text-align: center;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.quantityInput:focus {
+  outline: none;
+  border-color: #4ecdc4;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.actionButton {
+  flex: 1;
+  height: 44px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'LTSuperior', Arial, sans-serif;
+}
+
+.favoriteButton {
+  background-color: #fff;
+  color: var(--divan-text-primary);
+  border: 1px solid var(--divan-border);
+}
+
+.favoriteButton:hover {
+  background-color: var(--divan-accent);
+  border-color: #aaa;
+}
+
+.favoriteActive {
+  background-color: #ff6b6b;
+  color: #fff;
+  border-color: #ff6b6b;
+}
+
+.favoriteActive:hover {
+  background-color: #ff5252;
+  border-color: #ff5252;
+}
+
+.cartButton {
+  background-color: var(--divan-black-button);
+  color: var(--divan-bg);
+}
+
+.cartButton:hover {
+  background-color: var(--divan-black-button-hover);
+}
+
+.cartActive {
+  background-color: var(--divan-accent);
+  color: var(--divan-text-primary);
+  border: 1px solid var(--divan-border);
+}
+
+.cartActive:hover {
+  background-color: #e9e4de;
+  border-color: #d1cbc2;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .specsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .variantsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+} 

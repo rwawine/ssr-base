@@ -104,7 +104,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   const handleAddToCart = () => {
-    addToCart(product, 1, selectedDimension, selectedAdditionalOptions);
+    addToCart(product, 1, selectedDimension?.id, selectedAdditionalOptions);
   };
 
   const handleIncrease = () => {

@@ -122,7 +122,7 @@ export default function ProductDetail({
     if (inCart) {
       router.push("/cart");
     } else {
-      addToCart(product, 1, selectedDimension, selectedAdditionalOptions);
+      addToCart(product, 1, selectedDimension?.id, selectedAdditionalOptions);
     }
   };
 
