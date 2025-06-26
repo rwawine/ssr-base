@@ -6,11 +6,16 @@
   color: #aaa;
   padding: 16px 0;
   gap: 0 4px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #fff;
 }
 .breadcrumbItem {
   display: flex;
   align-items: center;
   gap: 0 4px;
+  white-space: nowrap;
 }
 .breadcrumbs a {
   color: #888;
@@ -39,6 +44,19 @@
 @media (max-width: 600px) {
   .breadcrumbs {
     font-size: 13px;
-    padding: 10px 0;
+    padding: 8px 0 8px 0;
+    gap: 0 2px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .breadcrumbs::-webkit-scrollbar {
+    display: none;
+  }
+  .list {
+    gap: 2px;
+  }
+  .separator {
+    margin: 0 0 0 2px;
+    font-size: 12px;
   }
 } 

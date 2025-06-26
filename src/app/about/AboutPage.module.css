@@ -37,7 +37,6 @@
     text-decoration: underline;
 }
 
-
 .header {
     text-align: center;
     margin: 3rem auto;
@@ -199,4 +198,138 @@
 .statLabel {
     color: #888;
     margin-top: 0.5rem;
+}
+
+.interiorImage {
+    object-fit: cover;
+    width: 100%;
+    border-radius: 32px;
+}
+
+@media (max-width: 1200px) {
+  .interiorSection,
+  .factorySection {
+    gap: 1.5rem;
+    padding: 3rem 2%;
+  }
+  .descriptionBox {
+    margin-left: -2rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+    .breadcrumbs {
+        margin-bottom: 0;
+    }
+  .features {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 1.5rem 0;
+  }
+  .interiorSection {
+    flex-direction: column;
+    margin: 2.5rem 0;
+    gap: 1.5rem;
+  }
+  .interiorImageWrapper {
+    min-width: 0;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  .interiorContent {
+    margin-top: 0;
+    width: 100%;
+  }
+  .descriptionBox {
+    margin-left: 0;
+    padding: 1.2rem;
+  }
+  .factorySection {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 0.5rem;
+  }
+  .factoryInfo {
+    max-width: 100%;
+  }
+  .factoryStats {
+    min-width: 0;
+    width: 100%;
+    flex-direction: row;
+    gap: 1.5rem;
+    justify-content: space-between;
+  }
+  .statItem {
+    text-align: center;
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .pageContainer {
+    padding: 0 6px;
+    padding-top: 70px;
+  }
+  .banner {
+    height: 160px;
+  }
+  .interiorImage {
+    height: 240px;
+  }
+  .bannerImage {
+    border-radius: 12px;
+  }
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .subtitle {
+    font-size: 0.98rem;
+    max-width: 100%;
+  }
+  .features {
+    padding: 1rem 0;
+    margin: 1.2rem 0;
+  }
+  .feature {
+    max-width: 100%;
+    gap: 0.7rem;
+  }
+  .featureIcon {
+    font-size: 1.3rem;
+  }
+  .interiorTitle {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .descriptionBox {
+    padding: 0.7rem;
+  }
+  .descriptionBox p {
+    margin-bottom: 0;
+  }
+  .resultSection {
+    margin: 2rem 0;
+  }
+  .resultTitle {
+    font-size: 1.1rem;
+    max-width: 100%;
+  }
+  .factorySection {
+    padding: 1.2rem 0.2rem;
+    margin-top: 2rem;
+  }
+  .factoryTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+  .factoryStats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .statValue {
+    font-size: 1.3rem;
+  }
 }

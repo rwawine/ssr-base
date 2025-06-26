@@ -84,6 +84,7 @@ export default function AboutPage() {
             alt="Стильный интерьер с мебелью"
             width={800}
             height={550}
+            className={styles.interiorImage}
             style={{ objectFit: "cover" }}
           />
         </div>

@@ -28,6 +28,7 @@ export default function CatalogClient({
   const [sort, setSort] = useState<"new" | "cheap" | "expensive">("new");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Закрытие дропдауна по клику вне
   useEffect(() => {
@@ -40,6 +41,13 @@ export default function CatalogClient({
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [sortDropdownOpen]);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 801);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const sortOptions = [
     { value: "new", label: "по новизне" },
@@ -160,65 +168,36 @@ export default function CatalogClient({
 
         {/* Сортировка */}
         <div className={styles.sortRow}>
-          {/* Desktop */}
           <span className={styles.sortLabel + " " + styles.sortDesktop}>
             Отсортировать товары:
           </span>
-          <div className={styles.sortDesktop}>
-            {sortOptions.map((opt) => (
-              <button
-                key={opt.value}
-                className={
-                  sort === opt.value ? styles.sortActive : styles.sortBtn
-                }
-                onClick={() => setSort(opt.value as any)}
+          {!isMobile && (
+            <div className={styles.sortDesktop}>
+              {sortOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  className={sort === opt.value ? styles.sortActive : styles.sortBtn}
+                  onClick={() => setSort(opt.value as any)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+          {isMobile && (
+            <div className={styles.sortMobile}>
+              <select
+                className={styles.sortMobileSelect}
+                value={sort}
+                onChange={e => setSort(e.target.value as any)}
+                aria-label="Сортировка товаров"
               >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-          {/* Mobile dropdown */}
-          <div className={styles.sortMobile} ref={sortRef}>
-            <button
-              className={styles.sortMobileBtn}
-              onClick={() => setSortDropdownOpen((v) => !v)}
-              aria-expanded={sortDropdownOpen}
-            >
-              {sortOptions.find((opt) => opt.value === sort)?.label}
-              <span
-                className={styles.sortMobileArrow}
-                style={{
-                  marginLeft: 8,
-                  display: "inline-block",
-                  transform: sortDropdownOpen
-                    ? "rotate(180deg)"
-                    : "rotate(0deg)",
-                }}
-              >
-                ▼
-              </span>
-            </button>
-            {sortDropdownOpen && (
-              <div className={styles.sortMobileDropdown}>
-                {sortOptions.map((opt) => (
-                  <button
-                    key={opt.value}
-                    className={
-                      sort === opt.value
-                        ? styles.sortMobileActive
-                        : styles.sortMobileOption
-                    }
-                    onClick={() => {
-                      setSort(opt.value as any);
-                      setSortDropdownOpen(false);
-                    }}
-                  >
-                    {opt.label}
-                  </button>
+                {sortOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
-              </div>
-            )}
-          </div>
+              </select>
+            </div>
+          )}
         </div>
 
         <div className={styles.catalogContent}>

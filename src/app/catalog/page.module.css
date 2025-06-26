@@ -190,7 +190,7 @@
   display: none;
   position: relative;
 }
-@media (max-width: 400px) {
+@media (max-width: 801px) {
   .sortDesktop {
     display: none !important;
   }
@@ -205,6 +205,17 @@
     justify-content: flex-start;
   }
   .sortLabel {
+    display: none;
+  }
+  .sortMobileSelect {
+    display: block;
+  }
+}
+@media (min-width: 801px) {
+  .sortMobileSelect {
+    display: none;
+  }
+  .sortMobile {
     display: none;
   }
 }
@@ -266,4 +277,16 @@
   text-align: left;
   padding: 10px 16px;
   cursor: pointer;
+}
+
+.sortMobileSelect {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  background: #fff;
+  color: #23272f;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }

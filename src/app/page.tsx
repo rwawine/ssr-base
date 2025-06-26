@@ -88,6 +88,8 @@ export default async function Home() {
         products={products}
         category={["Кровать"]}
         minRating={0}
+        title="Кровати в Минске"
+        description="В интернет-магазине Dilavia.by представлены только тщательно отобранные модели кроватей, мягкой и корпусной мебели. Каждая модель из нашего интернет каталога – это воплощение отличного дизайна, легенда мебельной отрасли."
       />
       <ReviewsBlock />
       <CopirateBlock />

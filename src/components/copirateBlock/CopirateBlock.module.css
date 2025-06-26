@@ -231,7 +231,7 @@
   /* Мобильные устройства */
   @media (max-width: 576px) {
     .copirate {
-      margin-top: 20px;
+      padding-top: 0;
     }
   
     .content {

@@ -7,17 +7,23 @@
 }
 
 .title {
-    font-family: "LTSuperior", sans-serif;
-    font-size: 36px;
-    font-weight: 400;
-    color: #232323;
+  font-family: "LTSuperior", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #232323;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 24px;
+  }
 }
 
 .titleWrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .button {
@@ -33,12 +39,13 @@
   padding: 8px 20px 8px 16px;
   cursor: pointer;
   transition: background 0.18s, color 0.18s;
-  box-shadow: 0 1px 4px 0 rgba(60,60,60,0.04);
 }
+
 .button:hover {
   background: #e5e7eb;
   color: #111;
 }
+
 .button svg {
   display: block;
 }
