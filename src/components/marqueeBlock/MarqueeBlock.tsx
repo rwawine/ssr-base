@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
-import styles from './MarqueeBlock.module.css';
-import { MarqueeApiResponse, MarqueeItem } from '@/types/marquee';
-import { fetchMarqueeData } from '@/utils/fetchMarqueeData';
+import React, { useEffect, useState, useRef } from "react";
+import Image from "next/image";
+import styles from "./MarqueeBlock.module.css";
+import { MarqueeApiResponse, MarqueeItem } from "@/types/marquee";
+import { fetchMarqueeData } from "@/utils/fetchMarqueeData";
 
 interface MarqueeBlockProps {
   className?: string;
@@ -13,7 +13,7 @@ interface MarqueeBlockProps {
 }
 
 export default function MarqueeBlock({
-  className = '',
+  className = "",
   speed = 120,
   showLoading = true,
 }: MarqueeBlockProps) {
@@ -31,8 +31,12 @@ export default function MarqueeBlock({
         const marqueeData = await fetchMarqueeData();
         setData(marqueeData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Произошла ошибка при загрузке данных');
-        console.error('MarqueeBlock error:', err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Произошла ошибка при загрузке данных",
+        );
+        console.error("MarqueeBlock error:", err);
       } finally {
         setLoading(false);
       }
@@ -44,12 +48,12 @@ export default function MarqueeBlock({
   // Динамические стили для анимации
   const animationStyle = {
     animationDuration: `${speed}s`,
-    animationPlayState: 'running',
+    animationPlayState: "running",
   };
 
   // Функция для рендера элемента marquee
   const renderMarqueeItem = (item: MarqueeItem, index: number) => {
-    if (item.__component === 'shared.title-item') {
+    if (item.__component === "shared.title-item") {
       return (
         <div key={`title-${item.id}-${index}`} className={styles.marqueeTitle}>
           {item.text}
@@ -57,7 +61,7 @@ export default function MarqueeBlock({
       );
     }
 
-    if (item.__component === 'shared.slide-item') {
+    if (item.__component === "shared.slide-item") {
       return (
         <div key={`slide-${item.id}-${index}`} className={styles.marqueeItem}>
           <Image
@@ -69,7 +73,7 @@ export default function MarqueeBlock({
             priority={index < 3}
             quality={90}
             draggable={false}
-            style={{ userSelect: 'none' }}
+            style={{ userSelect: "none" }}
           />
         </div>
       );
@@ -85,7 +89,14 @@ export default function MarqueeBlock({
         <div className={styles.marqueeWrapper} style={animationStyle}>
           {[...Array(6)].map((_, index) => (
             <div key={`loading-${index}`} className={styles.marqueeItem}>
-              <div className={styles.marqueeImage} style={{ backgroundColor: '#f0f0f0', width: '100%', height: '100%' }} />
+              <div
+                className={styles.marqueeImage}
+                style={{
+                  backgroundColor: "#f0f0f0",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </div>
           ))}
         </div>
@@ -98,7 +109,7 @@ export default function MarqueeBlock({
     return (
       <div className={`${styles.marqueeContainer} ${className}`}>
         <div className={styles.marqueeWrapper} style={animationStyle}>
-          <div className={styles.marqueeTitle} style={{ color: '#e74c3c' }}>
+          <div className={styles.marqueeTitle} style={{ color: "#e74c3c" }}>
             Ошибка загрузки данных
           </div>
         </div>
@@ -111,9 +122,7 @@ export default function MarqueeBlock({
     return (
       <div className={`${styles.marqueeContainer} ${className}`}>
         <div className={styles.marqueeWrapper} style={animationStyle}>
-          <div className={styles.marqueeTitle}>
-            Нет данных для отображения
-          </div>
+          <div className={styles.marqueeTitle}>Нет данных для отображения</div>
         </div>
       </div>
     );
@@ -123,12 +132,10 @@ export default function MarqueeBlock({
   const duplicatedItems = [...data.data.item, ...data.data.item];
 
   return (
-    <div 
-      className={`${styles.marqueeContainer} ${className}`}
-    >
-      <div 
+    <div className={`${styles.marqueeContainer} ${className}`}>
+      <div
         ref={wrapperRef}
-        className={styles.marqueeWrapper} 
+        className={styles.marqueeWrapper}
         style={animationStyle}
       >
         {duplicatedItems.map((item, index) => renderMarqueeItem(item, index))}

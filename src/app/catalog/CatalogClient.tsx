@@ -1,13 +1,15 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import ProductCard from '@/components/productCard/ProductCard';
-import CatalogFilters, { FilterState } from '@/components/catalog/CatalogFilters';
-import FilterToggle from '@/components/catalog/FilterToggle';
-import { Product } from '@/types/product';
+import React, { useState, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ProductCard } from "@/components/productCard/ProductCard";
+import CatalogFilters, {
+  FilterState,
+} from "@/components/catalog/CatalogFilters";
+import FilterToggle from "@/components/catalog/FilterToggle";
+import { Product } from "@/types/product";
 import styles from "./page.module.css";
-import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
+import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 interface CatalogClientProps {
   initialProducts: Product[];
@@ -15,15 +17,15 @@ interface CatalogClientProps {
   currentFilters: FilterState;
 }
 
-export default function CatalogClient({ 
-  initialProducts, 
-  filteredProducts, 
-  currentFilters 
+export default function CatalogClient({
+  initialProducts,
+  filteredProducts,
+  currentFilters,
 }: CatalogClientProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const [sort, setSort] = useState<'new' | 'cheap' | 'expensive'>('new');
+  const [sort, setSort] = useState<"new" | "cheap" | "expensive">("new");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
@@ -35,36 +37,38 @@ export default function CatalogClient({
         setSortDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, [sortDropdownOpen]);
 
   const sortOptions = [
-    { value: 'new', label: 'по новизне' },
-    { value: 'cheap', label: 'сначала дешевле' },
-    { value: 'expensive', label: 'сначала дороже' },
+    { value: "new", label: "по новизне" },
+    { value: "cheap", label: "сначала дешевле" },
+    { value: "expensive", label: "сначала дороже" },
   ];
 
   // Обновление URL при применении фильтров
   const handleApplyFilters = (newFilters: FilterState) => {
     const params = new URLSearchParams();
-    
+
     // Категории
     if (newFilters.category && newFilters.category.length > 0) {
-      newFilters.category.forEach(cat => params.append('category', cat));
+      newFilters.category.forEach((cat) => params.append("category", cat));
     }
     // Подкатегории
     if (newFilters.subcategory && newFilters.subcategory.length > 0) {
-      newFilters.subcategory.forEach(sub => params.append('subcategory', sub));
+      newFilters.subcategory.forEach((sub) =>
+        params.append("subcategory", sub),
+      );
     }
     // Сортировка
-    if (newFilters.sortBy && newFilters.sortBy !== 'name') {
-      params.set('sort', newFilters.sortBy);
+    if (newFilters.sortBy && newFilters.sortBy !== "name") {
+      params.set("sort", newFilters.sortBy);
     }
     // Цена
     if (newFilters.priceRange) {
-      params.set('minPrice', newFilters.priceRange[0].toString());
-      params.set('maxPrice', newFilters.priceRange[1].toString());
+      params.set("minPrice", newFilters.priceRange[0].toString());
+      params.set("maxPrice", newFilters.priceRange[1].toString());
     }
 
     router.push(`${pathname}?${params.toString()}`);
@@ -77,20 +81,22 @@ export default function CatalogClient({
     setFiltersOpen(false);
   };
 
-  const toggleFilters = () => setFiltersOpen(v => !v);
+  const toggleFilters = () => setFiltersOpen((v) => !v);
 
   // Подсчет активных фильтров (теперь проще)
-  const activeFiltersCount = Object.values(currentFilters).filter(value => {
+  const activeFiltersCount = Object.values(currentFilters).filter((value) => {
     if (Array.isArray(value)) return value.length > 0;
-    if (typeof value === 'object' && value !== null) return true; // для priceRange
-    if (typeof value === 'string') return value !== 'name'; // для sortBy
+    if (typeof value === "object" && value !== null) return true; // для priceRange
+    if (typeof value === "string") return value !== "name"; // для sortBy
     return false;
   }).length;
 
   // Сортировка товаров
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sort === 'cheap') return (a.price?.current || 0) - (b.price?.current || 0);
-    if (sort === 'expensive') return (b.price?.current || 0) - (a.price?.current || 0);
+    if (sort === "cheap")
+      return (a.price?.current || 0) - (b.price?.current || 0);
+    if (sort === "expensive")
+      return (b.price?.current || 0) - (a.price?.current || 0);
     // По новизне (id по убыванию, если id — число)
     return (Number(b.id) || 0) - (Number(a.id) || 0);
   });
@@ -99,25 +105,26 @@ export default function CatalogClient({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Каталог мебели Dilavia",
-    "description": "Широкий ассортимент мебели: кровати, диваны, кресла и многое другое",
-    "numberOfItems": filteredProducts.length,
-    "itemListElement": filteredProducts.map((product, index) => ({
+    name: "Каталог мебели Dilavia",
+    description:
+      "Широкий ассортимент мебели: кровати, диваны, кресла и многое другое",
+    numberOfItems: filteredProducts.length,
+    itemListElement: filteredProducts.map((product, index) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "item": {
+      position: index + 1,
+      item: {
         "@type": "Product",
-        "name": product.name,
-        "description": product.description,
-        "image": product.images?.[0],
-        "offers": {
+        name: product.name,
+        description: product.description,
+        image: product.images?.[0],
+        offers: {
           "@type": "Offer",
-          "price": product.price?.current,
-          "priceCurrency": "BYN",
-          "availability": "https://schema.org/InStock"
-        }
-      }
-    }))
+          price: product.price?.current,
+          priceCurrency: "BYN",
+          availability: "https://schema.org/InStock",
+        },
+      },
+    })),
   };
 
   return (
@@ -132,8 +139,8 @@ export default function CatalogClient({
         {/* Хлебные крошки */}
         <Breadcrumbs
           items={[
-            { label: 'Главная', href: 'https://dilavia.by/' },
-            { label: 'Каталог' }
+            { label: "Главная", href: "https://dilavia.by/" },
+            { label: "Каталог" },
           ]}
         />
         {/* Заголовок и кнопка фильтров */}
@@ -154,12 +161,16 @@ export default function CatalogClient({
         {/* Сортировка */}
         <div className={styles.sortRow}>
           {/* Desktop */}
-          <span className={styles.sortLabel + ' ' + styles.sortDesktop}>Отсортировать товары:</span>
+          <span className={styles.sortLabel + " " + styles.sortDesktop}>
+            Отсортировать товары:
+          </span>
           <div className={styles.sortDesktop}>
-            {sortOptions.map(opt => (
+            {sortOptions.map((opt) => (
               <button
                 key={opt.value}
-                className={sort === opt.value ? styles.sortActive : styles.sortBtn}
+                className={
+                  sort === opt.value ? styles.sortActive : styles.sortBtn
+                }
                 onClick={() => setSort(opt.value as any)}
               >
                 {opt.label}
@@ -170,21 +181,37 @@ export default function CatalogClient({
           <div className={styles.sortMobile} ref={sortRef}>
             <button
               className={styles.sortMobileBtn}
-              onClick={() => setSortDropdownOpen(v => !v)}
+              onClick={() => setSortDropdownOpen((v) => !v)}
               aria-expanded={sortDropdownOpen}
             >
-              {sortOptions.find(opt => opt.value === sort)?.label}
-              <span className={styles.sortMobileArrow} style={{ marginLeft: 8, display: 'inline-block', transform: sortDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+              {sortOptions.find((opt) => opt.value === sort)?.label}
+              <span
+                className={styles.sortMobileArrow}
+                style={{
+                  marginLeft: 8,
+                  display: "inline-block",
+                  transform: sortDropdownOpen
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                }}
+              >
                 ▼
               </span>
             </button>
             {sortDropdownOpen && (
               <div className={styles.sortMobileDropdown}>
-                {sortOptions.map(opt => (
+                {sortOptions.map((opt) => (
                   <button
                     key={opt.value}
-                    className={sort === opt.value ? styles.sortMobileActive : styles.sortMobileOption}
-                    onClick={() => { setSort(opt.value as any); setSortDropdownOpen(false); }}
+                    className={
+                      sort === opt.value
+                        ? styles.sortMobileActive
+                        : styles.sortMobileOption
+                    }
+                    onClick={() => {
+                      setSort(opt.value as any);
+                      setSortDropdownOpen(false);
+                    }}
                   >
                     {opt.label}
                   </button>
@@ -211,7 +238,7 @@ export default function CatalogClient({
               <div className={styles.noResults}>
                 <h3>Товары не найдены</h3>
                 <p>Попробуйте изменить параметры фильтрации</p>
-                <button 
+                <button
                   onClick={handleResetFilters}
                   className={styles.resetFiltersButton}
                 >
@@ -230,4 +257,4 @@ export default function CatalogClient({
       </div>
     </>
   );
-} 
+}

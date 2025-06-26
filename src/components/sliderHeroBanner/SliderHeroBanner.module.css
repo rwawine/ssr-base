@@ -16,6 +16,8 @@
     -moz-user-select: none;
     -ms-user-select: none;
     touch-action: pan-y pinch-zoom;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .sliderContent::after {
@@ -67,7 +69,7 @@
     background-position: center;
     background-repeat: no-repeat;
     z-index: 1;
-    filter: brightness(0.4);
+    filter: brightness(0.8);
 }
 /* End of Selection */
 
@@ -89,16 +91,18 @@
     height: 100%;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
     border-radius: 16px;
+    z-index: 2;
 }
 
 .content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%;
     padding: 60px;
+    max-width: 860px;
     color: #fff;
 }
 
@@ -106,12 +110,14 @@
     font-size: 48px;
     font-weight: 400;
     margin-bottom: 16px;
+    line-height: 1.2;
 }
 
 .description {
     font-size: 18px;
     line-height: 1.6;
     margin-bottom: 42px;
+    max-width: 600px;
 }
 
 .button {
@@ -124,11 +130,18 @@
     border-radius: 4px;
     font-weight: 400;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
 .button:hover {
     background-color: #f0f0f0;
     transform: translateY(-2px);
+}
+
+.button:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }
 
 /* Навигация */
@@ -198,23 +211,31 @@
     padding: 0;
     width: 40px;
     height: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 2px;
+    overflow: hidden;
     transition: all 0.3s ease;
+}
+
+.bullet:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.bullet:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }
 
 .bulletBar {
     width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.3);
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
     transition: all 0.3s ease;
 }
 
 .bulletActive .bulletBar {
     background: #fff;
-    transform: scaleX(1.2);
+    animation: bulletBarAnim 5s linear;
 }
 
 .bulletActive .bulletBar::after {
@@ -224,30 +245,29 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 2px;
     animation: bulletBarAnim 5s linear;
 }
 
 @keyframes bulletBarAnim {
     0% {
-        transform: scaleX(0);
+        transform: translateX(-100%);
     }
-
     100% {
-        transform: scaleX(1);
+        transform: translateX(0);
     }
 }
 
-/* Медиа запросы */
+/* Медиа-запросы */
 @media (max-width: 768px) {
     .hero {
         height: 400px;
+        border-radius: 16px;
     }
 
     .content {
-        margin-left: 20px;
-        margin-right: 20px;
+        padding: 40px 20px;
     }
 
     .title {
@@ -278,10 +298,6 @@
         width: 32px;
         height: 3px;
     }
-
-    .bulletBar {
-        height: 3px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -299,6 +315,7 @@
 
     .button {
         padding: 12px 24px;
+        font-size: 14px;
     }
 
     .navigation {
@@ -311,45 +328,16 @@
     .nextBtn {
         width: 32px;
         height: 32px;
-        font-size: 1.2rem;
+        font-size: 1.25rem;
     }
 
     .bullets {
         bottom: 5px;
+        gap: 6px;
     }
 
     .bullet {
         width: 28px;
         height: 2px;
-    }
-
-    .bulletBar {
-        height: 2px;
-    }
-}
-
-/* Скелетон для загрузки */
-.skeletonHero {
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: skeleton-loading 1.5s infinite;
-}
-
-.skeletonSlide {
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-}
-
-@keyframes skeleton-loading {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
     }
 }

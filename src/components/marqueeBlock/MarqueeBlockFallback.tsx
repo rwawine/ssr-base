@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, useRef } from 'react';
-import styles from './MarqueeBlock.module.css';
-import { MarqueeApiResponse, MarqueeItem } from '@/types/marquee';
-import { fetchMarqueeData } from '@/utils/fetchMarqueeData';
+import React, { useEffect, useState, useRef } from "react";
+import styles from "./MarqueeBlock.module.css";
+import { MarqueeApiResponse, MarqueeItem } from "@/types/marquee";
+import { fetchMarqueeData } from "@/utils/fetchMarqueeData";
 
 interface MarqueeBlockFallbackProps {
   className?: string;
@@ -13,7 +13,7 @@ interface MarqueeBlockFallbackProps {
 }
 
 export default function MarqueeBlockFallback({
-  className = '',
+  className = "",
   speed = 30,
   pauseOnHover = true,
   showLoading = true,
@@ -32,8 +32,12 @@ export default function MarqueeBlockFallback({
         const marqueeData = await fetchMarqueeData();
         setData(marqueeData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Произошла ошибка при загрузке данных');
-        console.error('MarqueeBlock error:', err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Произошла ошибка при загрузке данных",
+        );
+        console.error("MarqueeBlock error:", err);
       } finally {
         setLoading(false);
       }
@@ -56,11 +60,11 @@ export default function MarqueeBlockFallback({
 
   const animationStyle = {
     animationDuration: `${speed}s`,
-    animationPlayState: isPaused ? 'paused' : 'running',
+    animationPlayState: isPaused ? "paused" : "running",
   };
 
   const renderMarqueeItem = (item: MarqueeItem, index: number) => {
-    if (item.__component === 'shared.title-item') {
+    if (item.__component === "shared.title-item") {
       return (
         <div key={`title-${item.id}-${index}`} className={styles.marqueeTitle}>
           {item.text}
@@ -68,7 +72,7 @@ export default function MarqueeBlockFallback({
       );
     }
 
-    if (item.__component === 'shared.slide-item') {
+    if (item.__component === "shared.slide-item") {
       return (
         <div key={`slide-${item.id}-${index}`} className={styles.marqueeItem}>
           <img
@@ -77,7 +81,7 @@ export default function MarqueeBlockFallback({
             width={60}
             height={60}
             className={styles.marqueeImage}
-            loading={index < 3 ? 'eager' : 'lazy'}
+            loading={index < 3 ? "eager" : "lazy"}
           />
           <div className={styles.marqueeText}>
             {item.imageUrl.caption || `Мебель ${index + 1}`}
@@ -95,7 +99,10 @@ export default function MarqueeBlockFallback({
         <div className={styles.marqueeWrapper} style={animationStyle}>
           {[...Array(6)].map((_, index) => (
             <div key={`loading-${index}`} className={styles.marqueeItem}>
-              <div className={styles.marqueeImage} style={{ backgroundColor: '#f0f0f0' }} />
+              <div
+                className={styles.marqueeImage}
+                style={{ backgroundColor: "#f0f0f0" }}
+              />
               <div className={styles.marqueeText}>Загрузка...</div>
             </div>
           ))}
@@ -108,7 +115,7 @@ export default function MarqueeBlockFallback({
     return (
       <div className={`${styles.marqueeContainer} ${className}`}>
         <div className={styles.marqueeWrapper} style={animationStyle}>
-          <div className={styles.marqueeTitle} style={{ color: '#e74c3c' }}>
+          <div className={styles.marqueeTitle} style={{ color: "#e74c3c" }}>
             Ошибка загрузки данных
           </div>
         </div>
@@ -120,9 +127,7 @@ export default function MarqueeBlockFallback({
     return (
       <div className={`${styles.marqueeContainer} ${className}`}>
         <div className={styles.marqueeWrapper} style={animationStyle}>
-          <div className={styles.marqueeTitle}>
-            Нет данных для отображения
-          </div>
+          <div className={styles.marqueeTitle}>Нет данных для отображения</div>
         </div>
       </div>
     );
@@ -131,18 +136,18 @@ export default function MarqueeBlockFallback({
   const duplicatedItems = [...data.data.item, ...data.data.item];
 
   return (
-    <div 
+    <div
       className={`${styles.marqueeContainer} ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div 
+      <div
         ref={wrapperRef}
-        className={styles.marqueeWrapper} 
+        className={styles.marqueeWrapper}
         style={animationStyle}
       >
         {duplicatedItems.map((item, index) => renderMarqueeItem(item, index))}
       </div>
     </div>
   );
-} 
+}

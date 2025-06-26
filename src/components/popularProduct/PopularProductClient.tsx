@@ -1,17 +1,19 @@
 "use client";
-import React, { useRef, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { Product } from '@/types/product';
-import styles from './PopularProduct.module.css';
+import React, { useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Product } from "@/types/product";
+import styles from "./PopularProduct.module.css";
 
 interface PopularProductClientProps {
   products: Product[];
 }
 
-export default function PopularProductClient({ products }: PopularProductClientProps) {
+export default function PopularProductClient({
+  products,
+}: PopularProductClientProps) {
   const swiperRef = useRef<any>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -20,7 +22,7 @@ export default function PopularProductClient({ products }: PopularProductClientP
     swiperRef.current = swiper;
     setIsBeginning(swiper.isBeginning);
     setIsEnd(swiper.isEnd);
-    swiper.on('slideChange', () => {
+    swiper.on("slideChange", () => {
       setIsBeginning(swiper.isBeginning);
       setIsEnd(swiper.isEnd);
     });
@@ -33,13 +35,19 @@ export default function PopularProductClient({ products }: PopularProductClientP
 
   React.useEffect(() => {
     // Находим элементы
-    prevBtn.current = document.querySelector('.popular-swiper-prev') as HTMLButtonElement;
-    nextBtn.current = document.querySelector('.popular-swiper-next') as HTMLButtonElement;
-    gridSlider.current = document.querySelector(`.${styles.gridSlider}`) as HTMLDivElement;
+    prevBtn.current = document.querySelector(
+      ".popular-swiper-prev",
+    ) as HTMLButtonElement;
+    nextBtn.current = document.querySelector(
+      ".popular-swiper-next",
+    ) as HTMLButtonElement;
+    gridSlider.current = document.querySelector(
+      `.${styles.gridSlider}`,
+    ) as HTMLDivElement;
 
     if (gridSlider.current) {
       // Скрываем статичную сетку
-      gridSlider.current.style.display = 'none';
+      gridSlider.current.style.display = "none";
     }
   }, []);
 
@@ -47,11 +55,11 @@ export default function PopularProductClient({ products }: PopularProductClientP
   React.useEffect(() => {
     if (prevBtn.current) {
       prevBtn.current.disabled = isBeginning;
-      prevBtn.current.setAttribute('aria-disabled', isBeginning.toString());
+      prevBtn.current.setAttribute("aria-disabled", isBeginning.toString());
     }
     if (nextBtn.current) {
       nextBtn.current.disabled = isEnd;
-      nextBtn.current.setAttribute('aria-disabled', isEnd.toString());
+      nextBtn.current.setAttribute("aria-disabled", isEnd.toString());
     }
   }, [isBeginning, isEnd]);
 
@@ -64,8 +72,8 @@ export default function PopularProductClient({ products }: PopularProductClientP
     <Swiper
       modules={[Navigation]}
       navigation={{
-        nextEl: '.popular-swiper-next',
-        prevEl: '.popular-swiper-prev',
+        nextEl: ".popular-swiper-next",
+        prevEl: ".popular-swiper-prev",
       }}
       slidesPerView={4}
       spaceBetween={24}
@@ -76,7 +84,7 @@ export default function PopularProductClient({ products }: PopularProductClientP
         1400: { slidesPerView: 4 },
       }}
       className={styles.gridSlider}
-      style={{ display: 'block' }}
+      style={{ display: "block" }}
       onSwiper={handleSwiper}
     >
       {products.map((product) => (
@@ -84,16 +92,23 @@ export default function PopularProductClient({ products }: PopularProductClientP
           {/* Используем тот же ProductCard что и в SSR */}
           <div className={styles.productCard}>
             <div className={styles.productImage}>
-              <img src={product.images?.[0] || '/images/no-image.png'} alt={product.name} />
+              <img
+                src={product.images?.[0] || "/images/no-image.png"}
+                alt={product.name}
+              />
             </div>
             <div className={styles.productInfo}>
               <h3 className={styles.productName}>{product.name}</h3>
               <div className={styles.productPrice}>
                 {product.price?.current && (
-                  <span className={styles.currentPrice}>{product.price.current.toLocaleString('ru-RU')} BYN</span>
+                  <span className={styles.currentPrice}>
+                    {product.price.current.toLocaleString("ru-RU")} BYN
+                  </span>
                 )}
                 {product.price?.old && (
-                  <span className={styles.oldPrice}>{product.price.old.toLocaleString('ru-RU')} BYN</span>
+                  <span className={styles.oldPrice}>
+                    {product.price.old.toLocaleString("ru-RU")} BYN
+                  </span>
                 )}
               </div>
             </div>
@@ -102,4 +117,4 @@ export default function PopularProductClient({ products }: PopularProductClientP
       ))}
     </Swiper>
   );
-} 
+}

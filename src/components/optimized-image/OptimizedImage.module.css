@@ -1,0 +1,100 @@
+.container {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 0.375rem;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}
+
+.placeholder {
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.loadingSpinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #991b1b;
+  font-size: 0.875rem;
+}
+
+.errorContent {
+  text-align: center;
+  padding: 1rem;
+}
+
+.errorContent span {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 640px) {
+  .container {
+    border-radius: 0.25rem;
+  }
+  
+  .placeholder {
+    border-radius: 0.25rem;
+  }
+  
+  .error {
+    border-radius: 0.25rem;
+  }
+} 

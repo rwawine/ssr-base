@@ -12,24 +12,24 @@ export default function Head() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "Dilavia",
-            "url": "https://dilavia.by/",
-            "contactPoint": [
+            name: "Dilavia",
+            url: "https://dilavia.by/",
+            contactPoint: [
               {
                 "@type": "ContactPoint",
-                "telephone": "+375291234567",
-                "contactType": "customer service",
-                "email": "info@dilavia.by"
-              }
+                telephone: "+375291234567",
+                contactType: "customer service",
+                email: "info@dilavia.by",
+              },
             ],
-            "address": {
+            address: {
               "@type": "PostalAddress",
-              "addressLocality": "Минск",
-              "addressCountry": "BY"
-            }
-          })
+              addressLocality: "Минск",
+              addressCountry: "BY",
+            },
+          }),
         }}
       />
     </>
   );
-} 
+}

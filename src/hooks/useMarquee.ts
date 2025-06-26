@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { MarqueeApiResponse } from '@/types/marquee';
-import { fetchMarqueeData } from '@/utils/fetchMarqueeData';
+import { useState, useEffect } from "react";
+import { MarqueeApiResponse } from "@/types/marquee";
+import { fetchMarqueeData } from "@/utils/fetchMarqueeData";
 
 interface UseMarqueeReturn {
   data: MarqueeApiResponse | null;
@@ -21,8 +21,12 @@ export function useMarquee(): UseMarqueeReturn {
       const marqueeData = await fetchMarqueeData();
       setData(marqueeData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Произошла ошибка при загрузке данных');
-      console.error('useMarquee error:', err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Произошла ошибка при загрузке данных",
+      );
+      console.error("useMarquee error:", err);
     } finally {
       setLoading(false);
     }
@@ -42,4 +46,4 @@ export function useMarquee(): UseMarqueeReturn {
     error,
     refetch,
   };
-} 
+}

@@ -14,6 +14,13 @@
     display: block;
 }
 
+.bestsellerBadgeText {
+    font-family: 'LTSuperior', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
 .imageWrapper {
     aspect-ratio: 4 / 3;
     position: relative;
@@ -35,13 +42,13 @@
     top: 1rem;
     left: 1rem;
     background-color: #f6f6f6;
-    backdrop-filter: blur(4px);
-    padding: 0.3rem 0.75rem;
-    font-size: 0.8rem;
+    padding: 4px 8px;
+    font-size: 12px;
     font-weight: 400;
-    border-radius: 6px;
+    border-radius: 4px;
     z-index: 2;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 0.3rem;
 }

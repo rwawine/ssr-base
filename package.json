@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npm run sitemap",
+    "build": "npm run refactor && next build && npm run sitemap",
+    "build:no-refactor": "next build && npm run sitemap",
     "start": "next start",
     "lint": "next lint",
-    "sitemap": "node scripts/generate-sitemap.js"
+    "sitemap": "node scripts/generate-sitemap.js",
+    "refactor": "node scripts/refactor-before-build.js",
+    "refactor:check": "node scripts/refactor-before-build.js --check-only"
   },
   "dependencies": {
     "@splidejs/react-splide": "^0.7.12",
@@ -17,10 +20,12 @@
     "framer-motion": "^12.18.1",
     "keen-slider": "^6.8.6",
     "next": "15.3.4",
+    "next-safe-action": "^6.2.0",
     "photon-geocoder": "^1.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swiper": "^11.2.8",
+    "zod": "^3.23.8",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

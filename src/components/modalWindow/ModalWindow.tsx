@@ -1,91 +1,109 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import styles from './ModalWindow.module.css'
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import styles from "./ModalWindow.module.css";
 
 export type ModalContent = {
-  type: 'text' | 'form' | 'discount'
-  title?: string
-  content?: string
-  image?: string
-  buttonText?: string
-  onButtonClick?: () => void
-}
+  type: "text" | "form" | "discount";
+  title?: string;
+  content?: string;
+  image?: string;
+  buttonText?: string;
+  onButtonClick?: () => void;
+};
 
 interface ModalWindowProps {
-  isOpen: boolean
-  onClose: () => void
-  content: ModalContent
+  isOpen: boolean;
+  onClose: () => void;
+  content: ModalContent;
 }
 
-export default function ModalWindow({ isOpen, onClose, content }: ModalWindowProps) {
-  const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false)
+export default function ModalWindow({
+  isOpen,
+  onClose,
+  content,
+}: ModalWindowProps) {
+  const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
+      if (e.key === "Escape") {
+        onClose();
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen, onClose]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onClose()
+      onClose();
     }
-  }
+  };
 
   const renderContent = () => {
     switch (content.type) {
-      case 'text':
+      case "text":
         return (
           <div className={styles.textContent}>
             {content.title && <h2 className={styles.title}>{content.title}</h2>}
-            {content.content && <p className={styles.text}>{content.content}</p>}
+            {content.content && (
+              <p className={styles.text}>{content.content}</p>
+            )}
             {content.buttonText && (
-              <button 
-                className={styles.button} 
+              <button
+                className={styles.button}
                 onClick={content.onButtonClick || onClose}
               >
                 {content.buttonText}
               </button>
             )}
           </div>
-        )
+        );
 
-      case 'form':
+      case "form":
         return (
           <div className={styles.formContent}>
             {content.title && <h2 className={styles.title}>{content.title}</h2>}
-            <ContactForm onClose={onClose} isPrivacyAccepted={isPrivacyAccepted} setIsPrivacyAccepted={setIsPrivacyAccepted} />
+            <ContactForm
+              onClose={onClose}
+              isPrivacyAccepted={isPrivacyAccepted}
+              setIsPrivacyAccepted={setIsPrivacyAccepted}
+            />
           </div>
-        )
+        );
 
-      case 'discount':
+      case "discount":
         return (
           <div className={styles.discountContent}>
             {content.image && (
               <div className={styles.imageContainer}>
-                <img src={content.image} alt="Скидка" className={styles.discountImage} />
+                <img
+                  src={content.image}
+                  alt="Скидка"
+                  className={styles.discountImage}
+                />
               </div>
             )}
             <div className={styles.discountText}>
-              {content.title && <h2 className={styles.title}>{content.title}</h2>}
-              {content.content && <p className={styles.text}>{content.content}</p>}
+              {content.title && (
+                <h2 className={styles.title}>{content.title}</h2>
+              )}
+              {content.content && (
+                <p className={styles.text}>{content.content}</p>
+              )}
               {content.buttonText && (
-                <button 
-                  className={styles.button} 
+                <button
+                  className={styles.button}
                   onClick={content.onButtonClick || onClose}
                 >
                   {content.buttonText}
@@ -93,37 +111,40 @@ export default function ModalWindow({ isOpen, onClose, content }: ModalWindowPro
               )}
             </div>
           </div>
-        )
+        );
 
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div 
-          className={styles.modalOverlay} 
+        <motion.div
+          className={styles.modalOverlay}
           onClick={handleBackdropClick}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <motion.div 
+          <motion.div
             className={styles.modal}
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 50 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <button 
-              className={styles.closeButton} 
-              onClick={onClose}
-            >
+            <button className={styles.closeButton} onClick={onClose}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path
+                  d="M18 6L6 18M6 6L18 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
             {renderContent()}
@@ -131,144 +152,149 @@ export default function ModalWindow({ isOpen, onClose, content }: ModalWindowPro
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 // Компонент формы обратной связи
-function ContactForm({ 
-  onClose, 
-  isPrivacyAccepted, 
-  setIsPrivacyAccepted 
-}: { 
-  onClose: () => void
-  isPrivacyAccepted: boolean
-  setIsPrivacyAccepted: (value: boolean) => void
+function ContactForm({
+  onClose,
+  isPrivacyAccepted,
+  setIsPrivacyAccepted,
+}: {
+  onClose: () => void;
+  isPrivacyAccepted: boolean;
+  setIsPrivacyAccepted: (value: boolean) => void;
 }) {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    message: ''
-  })
+    name: "",
+    phone: "",
+    message: "",
+  });
 
   const [errors, setErrors] = useState({
-    name: '',
-    phone: '',
-    message: ''
-  })
+    name: "",
+    phone: "",
+    message: "",
+  });
 
   const [touched, setTouched] = useState({
     name: false,
     phone: false,
-    message: false
-  })
+    message: false,
+  });
 
   const validateField = (name: string, value: string) => {
     switch (name) {
-      case 'name':
+      case "name":
         if (!value.trim()) {
-          return 'Имя обязательно для заполнения'
+          return "Имя обязательно для заполнения";
         }
         if (value.trim().length < 2) {
-          return 'Имя должно содержать минимум 2 символа'
+          return "Имя должно содержать минимум 2 символа";
         }
         if (!/^[а-яёА-ЯЁ\s-]+$/.test(value.trim())) {
-          return 'Имя может содержать только буквы, пробелы и дефисы'
+          return "Имя может содержать только буквы, пробелы и дефисы";
         }
-        return ''
-      
-      case 'phone':
+        return "";
+
+      case "phone":
         if (!value.trim()) {
-          return 'Телефон обязателен для заполнения'
+          return "Телефон обязателен для заполнения";
         }
         // Поддержка белорусских номеров +375 и российских +7/8
-        const phoneRegex = /^(\+375|375|\+7|8)?[\s\-]?\(?[0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/
-        const cleanPhone = value.replace(/\s/g, '')
+        const phoneRegex =
+          /^(\+375|375|\+7|8)?[\s\-]?\(?[0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+        const cleanPhone = value.replace(/\s/g, "");
         if (!phoneRegex.test(cleanPhone)) {
-          return 'Введите корректный номер телефона (+375 для Беларуси, +7 для России)'
+          return "Введите корректный номер телефона (+375 для Беларуси, +7 для России)";
         }
-        return ''
-      
-      case 'message':
+        return "";
+
+      case "message":
         if (!value.trim()) {
-          return 'Сообщение обязательно для заполнения'
+          return "Сообщение обязательно для заполнения";
         }
         if (value.trim().length < 10) {
-          return 'Сообщение должно содержать минимум 10 символов'
+          return "Сообщение должно содержать минимум 10 символов";
         }
         if (value.trim().length > 500) {
-          return 'Сообщение не должно превышать 500 символов'
+          return "Сообщение не должно превышать 500 символов";
         }
-        return ''
-      
-      default:
-        return ''
-    }
-  }
+        return "";
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+      default:
+        return "";
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
+      [name]: value,
+    }));
 
     // Валидация при вводе, если поле уже было в фокусе
     if (touched[name as keyof typeof touched]) {
-      const error = validateField(name, value)
-      setErrors(prev => ({
+      const error = validateField(name, value);
+      setErrors((prev) => ({
         ...prev,
-        [name]: error
-      }))
+        [name]: error,
+      }));
     }
-  }
+  };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setTouched(prev => ({
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({
       ...prev,
-      [name]: true
-    }))
+      [name]: true,
+    }));
 
-    const error = validateField(name, value)
-    setErrors(prev => ({
+    const error = validateField(name, value);
+    setErrors((prev) => ({
       ...prev,
-      [name]: error
-    }))
-  }
+      [name]: error,
+    }));
+  };
 
   const validateForm = () => {
     const newErrors = {
-      name: validateField('name', formData.name),
-      phone: validateField('phone', formData.phone),
-      message: validateField('message', formData.message)
-    }
+      name: validateField("name", formData.name),
+      phone: validateField("phone", formData.phone),
+      message: validateField("message", formData.message),
+    };
 
-    setErrors(newErrors)
+    setErrors(newErrors);
     setTouched({
       name: true,
       phone: true,
-      message: true
-    })
+      message: true,
+    });
 
-    return !newErrors.name && !newErrors.phone && !newErrors.message
-  }
+    return !newErrors.name && !newErrors.phone && !newErrors.message;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!isPrivacyAccepted) {
-      alert('Необходимо согласиться с обработкой персональных данных')
-      return
+      alert("Необходимо согласиться с обработкой персональных данных");
+      return;
     }
 
     if (!validateForm()) {
-      return
+      return;
     }
 
     // Здесь будет логика отправки формы
-    console.log('Форма отправлена:', formData)
-    onClose()
-  }
+    console.log("Форма отправлена:", formData);
+    onClose();
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -277,7 +303,7 @@ function ContactForm({
           type="text"
           name="name"
           placeholder="Ваше имя"
-          className={`${styles.input} ${errors.name && touched.name ? styles.inputError : ''}`}
+          className={`${styles.input} ${errors.name && touched.name ? styles.inputError : ""}`}
           value={formData.name}
           onChange={handleInputChange}
           onBlur={handleBlur}
@@ -286,13 +312,13 @@ function ContactForm({
           <div className={styles.errorMessage}>{errors.name}</div>
         )}
       </div>
-      
+
       <div className={styles.formGroup}>
         <input
           type="tel"
           name="phone"
           placeholder="Ваш телефон"
-          className={`${styles.input} ${errors.phone && touched.phone ? styles.inputError : ''}`}
+          className={`${styles.input} ${errors.phone && touched.phone ? styles.inputError : ""}`}
           value={formData.phone}
           onChange={handleInputChange}
           onBlur={handleBlur}
@@ -301,12 +327,12 @@ function ContactForm({
           <div className={styles.errorMessage}>{errors.phone}</div>
         )}
       </div>
-      
+
       <div className={styles.formGroup}>
         <textarea
           name="message"
           placeholder="Ваше сообщение"
-          className={`${styles.textarea} ${errors.message && touched.message ? styles.inputError : ''}`}
+          className={`${styles.textarea} ${errors.message && touched.message ? styles.inputError : ""}`}
           rows={4}
           value={formData.message}
           onChange={handleInputChange}
@@ -327,7 +353,7 @@ function ContactForm({
           />
           <span className={styles.checkmark}></span>
           <span className={styles.privacyText}>
-            Я согласен с обработкой персональных данных в соответствии с{' '}
+            Я согласен с обработкой персональных данных в соответствии с{" "}
             <a href="/privacy" className={styles.privacyLink}>
               политикой конфиденциальности
             </a>
@@ -335,13 +361,13 @@ function ContactForm({
         </label>
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         className={styles.button}
         disabled={!isPrivacyAccepted}
       >
         Отправить
       </button>
     </form>
-  )
+  );
 }

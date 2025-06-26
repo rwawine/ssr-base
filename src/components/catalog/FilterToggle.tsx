@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import styles from './FilterToggle.module.css';
+import React from "react";
+import styles from "./FilterToggle.module.css";
 
 interface FilterToggleProps {
   onToggle: () => void;
@@ -9,19 +9,23 @@ interface FilterToggleProps {
   activeFiltersCount: number;
 }
 
-export default function FilterToggle({ onToggle, isOpen, activeFiltersCount }: FilterToggleProps) {
+export default function FilterToggle({
+  onToggle,
+  isOpen,
+  activeFiltersCount,
+}: FilterToggleProps) {
   return (
-    <button 
-      className={`${styles.filterToggle} ${isOpen ? styles.filterToggleActive : ''}`}
+    <button
+      className={`${styles.filterToggle} ${isOpen ? styles.filterToggleActive : ""}`}
       onClick={onToggle}
       aria-label="Открыть фильтры"
     >
-      <svg 
-        width="20" 
-        height="20" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
         strokeWidth="2"
         className={styles.filterIcon}
       >
@@ -33,4 +37,4 @@ export default function FilterToggle({ onToggle, isOpen, activeFiltersCount }: F
       )}
     </button>
   );
-} 
+}

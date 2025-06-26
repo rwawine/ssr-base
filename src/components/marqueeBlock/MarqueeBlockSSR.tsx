@@ -1,7 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
-import styles from './MarqueeBlock.module.css';
-import { MarqueeApiResponse, MarqueeItem } from '@/types/marquee';
+import React from "react";
+import Image from "next/image";
+import styles from "./MarqueeBlock.module.css";
+import { MarqueeApiResponse, MarqueeItem } from "@/types/marquee";
 
 interface MarqueeBlockSSRProps {
   data: MarqueeApiResponse;
@@ -12,13 +12,13 @@ interface MarqueeBlockSSRProps {
 
 export default function MarqueeBlockSSR({
   data,
-  className = '',
+  className = "",
   speed = 30,
   pauseOnHover = true,
 }: MarqueeBlockSSRProps) {
   // Функция для рендера элемента marquee
   const renderMarqueeItem = (item: MarqueeItem, index: number) => {
-    if (item.__component === 'shared.title-item') {
+    if (item.__component === "shared.title-item") {
       return (
         <div key={`title-${item.id}`} className={styles.marqueeTitle}>
           {item.text}
@@ -26,7 +26,7 @@ export default function MarqueeBlockSSR({
       );
     }
 
-    if (item.__component === 'shared.slide-item') {
+    if (item.__component === "shared.slide-item") {
       return (
         <div key={`slide-${item.id}`} className={styles.marqueeItem}>
           <Image
@@ -52,13 +52,11 @@ export default function MarqueeBlockSSR({
   if (!data || !data.data.item.length) {
     return (
       <div className={`${styles.marqueeContainer} ${className}`}>
-        <div 
-          className={styles.marqueeWrapper} 
+        <div
+          className={styles.marqueeWrapper}
           style={{ animationDuration: `${speed}s` }}
         >
-          <div className={styles.marqueeTitle}>
-            Нет данных для отображения
-          </div>
+          <div className={styles.marqueeTitle}>Нет данных для отображения</div>
         </div>
       </div>
     );
@@ -69,12 +67,12 @@ export default function MarqueeBlockSSR({
 
   return (
     <div className={`${styles.marqueeContainer} ${className}`}>
-      <div 
-        className={styles.marqueeWrapper} 
+      <div
+        className={styles.marqueeWrapper}
         style={{ animationDuration: `${speed}s` }}
       >
         {duplicatedItems.map((item, index) => renderMarqueeItem(item, index))}
       </div>
     </div>
   );
-} 
+}

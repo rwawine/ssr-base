@@ -74,4 +74,4 @@ export interface MarqueeData {
 export interface MarqueeApiResponse {
   data: MarqueeData;
   meta: Record<string, any>;
-} 
+}

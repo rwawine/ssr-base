@@ -1,4 +1,4 @@
-import { Product } from './product';
+import { Product } from "./product";
 
 export interface FavoritesState {
   items: Product[];
@@ -12,4 +12,4 @@ export interface FavoritesContextType {
   clearFavorites: () => void;
   isInFavorites: (productId: string) => boolean;
   toggleFavorite: (product: Product) => void;
-} 
+}

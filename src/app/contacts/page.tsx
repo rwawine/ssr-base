@@ -1,23 +1,26 @@
-import React from 'react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import styles from './ContactsPage.module.css';
-import ContactForm from './ContactForm';
-import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
+import React from "react";
+import { Metadata } from "next";
+import Link from "next/link";
+import styles from "./ContactsPage.module.css";
+import ContactForm from "./ContactForm";
+import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: 'Контакты | Dilavia',
-  description: 'Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи. Мы всегда готовы ответить на ваши вопросы.',
+  title: "Контакты | Dilavia",
+  description:
+    "Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи. Мы всегда готовы ответить на ваши вопросы.",
   openGraph: {
-    title: 'Контакты | Dilavia',
-    description: 'Контактная информация для связи с Dilavia. Мы производим современную дизайнерскую мебель и готовы к сотрудничеству.',
-    url: 'https://dilavia.by/contacts', // Replace with actual URL
-    type: 'website',
+    title: "Контакты | Dilavia",
+    description:
+      "Контактная информация для связи с Dilavia. Мы производим современную дизайнерскую мебель и готовы к сотрудничеству.",
+    url: "https://dilavia.by/contacts", // Replace with actual URL
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Контакты | Dilavia',
-    description: 'Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи.',
+    card: "summary_large_image",
+    title: "Контакты | Dilavia",
+    description:
+      "Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи.",
   },
 };
 
@@ -26,8 +29,8 @@ export default function ContactsPage() {
     <div className={styles.pageContainer}>
       <Breadcrumbs
         items={[
-          { label: 'Главная', href: 'https://dilavia.by/' },
-          { label: 'Контакты' }
+          { label: "Главная", href: "https://dilavia.by/" },
+          { label: "Контакты" },
         ]}
         className={styles.breadcrumbs}
       />
@@ -42,12 +45,18 @@ export default function ContactsPage() {
           </div>
           <div className={styles.infoBlock}>
             <h3>Телефон</h3>
-            <p><a href="tel:+375336641830">+375 (33) 664-18-30</a></p>
-            <p><a href="tel:+375298019271">+375 (29) 801-92-71</a></p>
+            <p>
+              <a href="tel:+375336641830">+375 (33) 664-18-30</a>
+            </p>
+            <p>
+              <a href="tel:+375298019271">+375 (29) 801-92-71</a>
+            </p>
           </div>
           <div className={styles.infoBlock}>
             <h3>Email</h3>
-            <p><a href="mailto:information@dilavia.by">information@dilavia.by</a></p>
+            <p>
+              <a href="mailto:information@dilavia.by">information@dilavia.by</a>
+            </p>
           </div>
         </aside>
         <ContactForm />

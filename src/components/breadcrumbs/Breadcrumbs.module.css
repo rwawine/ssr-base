@@ -21,8 +21,14 @@
   color: #23272f;
   text-decoration: underline;
 }
+.list {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+}
 .separator {
-  margin: 0 6px;
+  margin: 0 0 0 6px;
   color: #ccc;
   user-select: none;
 }
