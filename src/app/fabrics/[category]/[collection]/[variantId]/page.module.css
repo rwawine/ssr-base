@@ -90,6 +90,7 @@
 
 .variantName {
   font-size: 10px;
+  word-break: break-all;
   text-align: center;
   color: #666;
 }
