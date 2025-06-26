@@ -195,7 +195,9 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
             className={styles.select}
           >
             <option value="cash">Наличными при получении</option>
-            <option value="card">Картой онлайн</option>
+            <option value="card">Картой при получении</option>
+            <option value="credit">Кредит</option>
+            <option value="installment">Рассрочка</option>
           </select>
         </div>
       </form>

@@ -2,7 +2,7 @@
 .header__link,
 .login_expander__auth,
 .login_expander__button {
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .expander__small,
@@ -165,7 +165,7 @@
 
 .header__logo {
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -201,7 +201,7 @@
 .header__link_text {
     text-decoration: none;
     color: var(--black);
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .header__link_arrow {

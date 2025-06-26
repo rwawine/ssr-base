@@ -416,8 +416,9 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-size: 17px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: var(--font-primary);
   cursor: pointer;
   transition: background 0.2s;
   box-shadow: none;

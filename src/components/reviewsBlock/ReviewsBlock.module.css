@@ -7,7 +7,6 @@
 }
 
 .title {
-  font-family: "LTSuperior", sans-serif;
   font-size: 36px;
   font-weight: 400;
   color: #232323;
@@ -27,18 +26,21 @@
 }
 
 .button {
+  padding: 16px 24px 16px 32px;
+  border-radius: 12px;
+  background-color: #f2f2f3;
+  color: #1e1e1e;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: #f3f4f6;
-  color: #222;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.08rem;
-  font-weight: 400;
-  padding: 8px 20px 8px 16px;
+  gap: 8px;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
+  font-family: var(--font-primary);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  white-space: nowrap;
 }
 
 .button:hover {

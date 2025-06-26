@@ -56,7 +56,7 @@ export function generatePlaceholder(imageUrl: string): string {
   return `data:image/svg+xml;base64,${btoa(`
     <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="#f3f4f6"/>
-      <text x="50%" y="50%" font-family="Arial" font-size="16" fill="#9ca3af" text-anchor="middle" dy=".3em">
+      <text x="50%" y="50%" font-size="16" fill="#9ca3af" text-anchor="middle" dy=".3em">
         Загрузка...
       </text>
     </svg>

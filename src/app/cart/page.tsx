@@ -373,7 +373,7 @@ export default function CartPage() {
                 </div>
                 <div className={styles.cartProductPriceRow}>
                   <span className={styles.cartProductPrice}>
-                    {(
+                    от {(
                       item.selectedDimension?.price ||
                       item.product.price?.current
                     ).toLocaleString("ru-RU")}{" "}
@@ -533,7 +533,7 @@ export default function CartPage() {
             </div>
             <div className={styles.cartSummaryTotalLabel}>Итого</div>
             <div className={styles.cartSummaryTotalValue}>
-              {totalWithDiscount.toLocaleString("ru-RU")} BYN
+              от {totalWithDiscount.toLocaleString("ru-RU")} BYN
             </div>
             {discount > 0 && (
               <div className={styles.cartSummaryDiscount}>

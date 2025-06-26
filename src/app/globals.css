@@ -1,29 +1,5 @@
-@font-face {
-  font-family: 'LTSuperior';
-  src: url('/fonts/LTSuperior-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'LTSuperior';
-  src: url('/fonts/LTSuperior-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'LTSuperior';
-  src: url('/fonts/LTSuperior-Semibold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
+/* Google Fonts - Montserrat и Lato */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 html,
 body,
@@ -114,8 +90,7 @@ video {
   font: inherit;
   vertical-align: baseline;
   background: none;
-  font-family: 'LTSuperior', sans-serif;
-  font-weight: 400;
+  font-family: var(--font-primary);
   box-shadow: none;
   box-sizing: border-box;
   color: inherit;
@@ -142,9 +117,7 @@ section {
 
 body {
   line-height: 1;
-  background: none;
-  font-family: 'LTSuperior', sans-serif;
-  font-weight: 400;
+  font-family: var(--font-primary);
   background-color: #f6f6f6;
   overflow-x: hidden;
 }
@@ -184,6 +157,10 @@ table {
   --yellow-10: rgba(255, 204, 0, 0.1);
   --yellow-hover: #ffdd4d;
   --red: #ff0000;
+
+  /* Font Families */
+  --font-primary: 'Montserrat', sans-serif;
+  --font-lato: 'Lato', sans-serif;
 
   /* Card and Theme Variables */
   --card-bg: #ffffff;
