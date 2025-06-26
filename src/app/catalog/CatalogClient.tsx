@@ -226,8 +226,8 @@ export default function CatalogClient({
               </div>
             ) : (
               <div className={styles.productsGrid}>
-                {sortedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {sortedProducts.map((product, idx) => (
+                  <ProductCard key={product.id} product={product} priority={idx === 0} />
                 ))}
               </div>
             )}

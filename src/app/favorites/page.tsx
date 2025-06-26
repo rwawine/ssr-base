@@ -80,6 +80,7 @@ export default function FavoritesPage() {
             collection={item.fabric.collection}
             materialSlug={item.fabric.collectionSlug}
             categorySlug={item.fabric.categorySlug}
+            selectedVariantId={String(item.fabric.variant.id)}
           />
         ))}
       </div>

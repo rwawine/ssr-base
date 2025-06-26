@@ -12,6 +12,7 @@ import styles from "./ProductCard.module.css";
 
 interface ProductCardProps {
   product: Product;
+  priority?: boolean;
 }
 
 function ColorSwatch({ color }: { color: string }) {
@@ -35,7 +36,7 @@ function BestsellerBadge() {
   );
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, priority }: ProductCardProps) {
   const {
     addToCart,
     isInCart,
@@ -147,7 +148,7 @@ export function ProductCard({ product }: ProductCardProps) {
             width={400}
             height={300}
             className={styles.image}
-            priority={false}
+            priority={priority}
             quality={80}
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />

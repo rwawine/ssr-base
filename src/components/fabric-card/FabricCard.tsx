@@ -14,16 +14,19 @@ interface FabricCardProps {
   collection: FabricCollection;
   materialSlug: string;
   categorySlug: string;
+  selectedVariantId?: string;
 }
 
 export function FabricCard({
   collection,
   materialSlug,
   categorySlug,
+  selectedVariantId,
 }: FabricCardProps) {
-  const [selectedVariant, setSelectedVariant] = useState(
-    collection.variants[0],
-  );
+  const initialVariant =
+    collection.variants.find((v) => String(v.id) === String(selectedVariantId)) ||
+    collection.variants[0];
+  const [selectedVariant, setSelectedVariant] = useState(initialVariant);
   const { addFabricToCart, fabricItems } = useCart();
   const {
     addFabricToFavorites,

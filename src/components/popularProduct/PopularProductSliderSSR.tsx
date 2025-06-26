@@ -93,9 +93,9 @@ export default function PopularProductSliderSSR({
           </div>
         </div>
         <div className={`${styles.gridSlider} ${styles.gridSliderFallback}`}>
-          {products.map((product) => (
+          {products.map((product, idx) => (
             <div key={product.id} className={styles.gridItem}>
-              <ProductCard product={product} />
+              <ProductCard product={product} priority={idx === 0} />
             </div>
           ))}
         </div>
@@ -172,9 +172,9 @@ export default function PopularProductSliderSSR({
         className={styles.gridSlider}
         onSwiper={handleSwiper}
       >
-        {products.map((product) => (
+        {products.map((product, idx) => (
           <SwiperSlide key={product.id} className={styles.gridItem}>
-            <ProductCard product={product} />
+            <ProductCard product={product} priority={idx === 0} />
           </SwiperSlide>
         ))}
       </Swiper>

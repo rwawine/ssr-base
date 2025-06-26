@@ -42,7 +42,7 @@
 .image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.4s ease, opacity 0.3s ease;
 }
 
@@ -142,10 +142,12 @@
 }
 
 .chiclet {
-  padding: 0.5rem 0.75rem;
+  padding: 0;
+  height: 50px;
+  width: 50px;
   font-size: 0.8rem;
+  border: none;
   border-radius: 6px;
-  border: 1px solid var(--divan-border);
   background-color: #fdfdfd;
   color: var(--divan-text-primary);
   cursor: pointer;
@@ -153,7 +155,7 @@
 }
 
 .chiclet:hover {
-  border-color: #aaa;
+  border: 1px solid #aaa;
 }
 
 .chicletSelected {
@@ -161,6 +163,7 @@
   background-color: var(--divan-black-button);
   color: #fff;
   font-weight: 400;
+  border: 1px solid #1e1e1e;
 }
 
 .moreVariants {
@@ -225,7 +228,6 @@
     gap: 0.3rem;
   }
   .chiclet {
-    padding: 0.3rem 0.5rem;
     font-size: 0.7rem;
   }
   .addToCartButton {
