@@ -28,7 +28,6 @@
 }
 
 .title {
-    font-family: 'LTSuperior', sans-serif;
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
@@ -39,7 +38,6 @@
 .description {
     color: #b7b7b7;
     font-size: 14px;
-    font-family: 'LTSuperior', sans-serif;
     margin-top: 12px;
     font-weight: 400;
     line-height: 20.8px;

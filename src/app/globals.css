@@ -141,7 +141,8 @@ section {
 body {
   line-height: 1;
   background: none;
-  font-family: 'LTSuperior', Arial, sans-serif;
+  font-family: 'LTSuperior' !important;
+  font-weight: 400 !important;
 }
 
 ol,

@@ -26,7 +26,6 @@
 }
 
 .title {
-    font-family: 'LTSuperior', Arial, sans-serif;
     font-size: 18px;
     font-weight: 500;
     color: #232323;
@@ -52,7 +51,6 @@
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-    font-family: 'LTSuperior', Arial, sans-serif;
     font-size: 14px;
     color: #343434;
     font-weight: 400;
@@ -75,7 +73,6 @@
 
 .hours {
     margin-top: 20px;
-    font-family: 'LTSuperior', Arial, sans-serif;
     font-size: 14px;
     color: #343434;
     padding-left: 26px;
