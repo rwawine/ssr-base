@@ -7,15 +7,15 @@ import { generateMetadata as generatePageMetadata } from "@/lib/metadata";
 import { FabricDetailClient } from "./FabricDetailClient";
 
 interface FabricDetailPageProps {
-  params: {
+  params: Promise<{
     category: string;
     collection: string;
     variantId: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: FabricDetailPageProps) {
-  const { category, collection: collectionSlug, variantId } = params;
+  const { category, collection: collectionSlug, variantId } = await params;
   const collection = getFullFabricCollection(category, collectionSlug);
   const variant = getFabricVariantById(category, collectionSlug, variantId);
 
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: FabricDetailPageProps) {
 export default async function FabricDetailPage({
   params,
 }: FabricDetailPageProps) {
-  const { category, collection: collectionSlug, variantId } = params;
+  const { category, collection: collectionSlug, variantId } = await params;
   const collection = getFullFabricCollection(category, collectionSlug);
   const currentVariant = getFabricVariantById(
     category,

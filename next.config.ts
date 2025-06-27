@@ -58,6 +58,10 @@ const nextConfig: NextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable'
+          },
+          {
+            key: 'Content-Type',
+            value: 'application/javascript'
           }
         ],
       },
@@ -67,6 +71,10 @@ const nextConfig: NextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable'
+          },
+          {
+            key: 'Content-Type',
+            value: 'text/css'
           }
         ],
       },
@@ -97,22 +105,8 @@ const nextConfig: NextConfig = {
       };
     }
 
-    // Добавляем поддержку React 19
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      };
-    }
-
     return config;
   },
-  // Добавляем настройки для улучшения производительности
-  poweredByHeader: false,
-  compress: true,
-  generateEtags: false,
 };
 
 export default nextConfig;
