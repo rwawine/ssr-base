@@ -9,7 +9,6 @@ import CopirateBlock from "@/components/copirateBlock/CopirateBlock";
 import { fetchHeroSlides } from "@/utils/fetchHeroSlides";
 import productsData from "@/data/data.json";
 import { Product } from "@/types/product";
-import ResourcePreloader from "@/components/ResourcePreloader";
 import { generateMetadata } from "@/lib/metadata";
 import styles from "./page.module.css";
 
@@ -82,8 +81,8 @@ export default async function Home() {
         title="Кровати в Минске"
         description="В интернет-магазине Dilavia.by представлены только тщательно отобранные модели кроватей, мягкой и корпусной мебели. Каждая модель из нашего интернет каталога – это воплощение отличного дизайна."
       />
-      <ReviewsBlock />
       <CopirateBlock />
+      <ReviewsBlock />
     </main>
   );
 }
