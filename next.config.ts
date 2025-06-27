@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Добавляем настройки для статических файлов
+  assetPrefix: process.env.NODE_ENV === 'production' ? undefined : undefined,
+  basePath: '',
+  
   images: {
     remotePatterns: [
       {
@@ -24,7 +28,7 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Оптимизация для LCP
+  // Обновляем headers для правильной обработки статических файлов
   async headers() {
     return [
       {
@@ -45,6 +49,32 @@ const nextConfig: NextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin'
+          }
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          },
+          {
+            key: 'Content-Type',
+            value: 'application/javascript'
+          }
+        ],
+      },
+      {
+        source: '/_next/static/css/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          },
+          {
+            key: 'Content-Type',
+            value: 'text/css'
           }
         ],
       },

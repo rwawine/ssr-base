@@ -17,12 +17,6 @@ export function SliderSlide({
   isActive,
   isLCP = false,
 }: SliderSlideProps) {
-  const optimizedImageUrl = createOptimizedImageUrl(slide.image[0].url, {
-    width: 1440,
-    height: 600,
-    quality: index === 0 ? 90 : 85,
-  });
-
   return (
     <div
       className={`${styles.slide} ${isActive ? styles.slideActive : styles.slideHidden}`}
@@ -31,7 +25,7 @@ export function SliderSlide({
       {/* Используем OptimizedImage для первого слайда (LCP) */}
       {index === 0 ? (
         <OptimizedImage
-          src={optimizedImageUrl}
+          src={slide.image[0].url}
           alt={slide.title}
           width={1440}
           height={600}
@@ -43,7 +37,13 @@ export function SliderSlide({
       ) : (
         <div
           className={styles.backgroundImage}
-          style={{ backgroundImage: `url(${optimizedImageUrl})` }}
+          style={{ 
+            backgroundImage: `url(${createOptimizedImageUrl(slide.image[0].url, {
+              width: 1440,
+              height: 600,
+              quality: 85,
+            })})` 
+          }}
           role="img"
           aria-label={slide.title}
         />

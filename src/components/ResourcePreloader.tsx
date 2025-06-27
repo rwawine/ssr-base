@@ -17,27 +17,21 @@ export default function ResourcePreloader({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Предзагружаем критические изображения
+    // Предзагружаем только критические изображения (первые 2)
     if (criticalImages.length > 0) {
-      preloadCriticalImages(criticalImages);
+      const limitedImages = criticalImages.slice(0, 2);
+      preloadCriticalImages(limitedImages);
     }
 
-    // Предзагружаем шрифты
-    fonts.forEach((font) => {
+    // Предзагружаем только основные шрифты
+    const essentialFonts = fonts.slice(0, 2); // Ограничиваем количество
+    essentialFonts.forEach((font) => {
       const link = document.createElement("link");
       link.rel = "preload";
       link.as = "font";
+      link.type = "font/woff2";
       link.href = font;
       link.crossOrigin = "anonymous";
-      document.head.appendChild(link);
-    });
-
-    // Предзагружаем стили
-    stylesheets.forEach((stylesheet) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "style";
-      link.href = stylesheet;
       document.head.appendChild(link);
     });
 
@@ -75,27 +69,21 @@ export function useResourcePreloader(resources: ResourcePreloaderProps) {
 
     const { criticalImages = [], fonts = [], stylesheets = [] } = resources;
 
-    // Предзагружаем критические изображения
+    // Предзагружаем только критические изображения
     if (criticalImages.length > 0) {
-      preloadCriticalImages(criticalImages);
+      const limitedImages = criticalImages.slice(0, 2);
+      preloadCriticalImages(limitedImages);
     }
 
-    // Предзагружаем шрифты
-    fonts.forEach((font) => {
+    // Предзагружаем только основные шрифты
+    const essentialFonts = fonts.slice(0, 2);
+    essentialFonts.forEach((font) => {
       const link = document.createElement("link");
       link.rel = "preload";
       link.as = "font";
+      link.type = "font/woff2";
       link.href = font;
       link.crossOrigin = "anonymous";
-      document.head.appendChild(link);
-    });
-
-    // Предзагружаем стили
-    stylesheets.forEach((stylesheet) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "style";
-      link.href = stylesheet;
       document.head.appendChild(link);
     });
   }, [resources]);

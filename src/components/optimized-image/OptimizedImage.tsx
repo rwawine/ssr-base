@@ -83,6 +83,13 @@ export function OptimizedImage({
     sizes,
   });
 
+  // Определяем стили для поддержания пропорций
+  const imageStyle = {
+    width: width ? `100%` : 'auto',
+    height: height ? `${height}px` : 'auto',
+    objectFit: 'cover' as const,
+  };
+
   if (hasError) {
     return (
       <div className={`${styles.error} ${className}`} style={{ width, height }}>
@@ -103,6 +110,7 @@ export function OptimizedImage({
         width={width || 400}
         height={height || 300}
         className={styles.image}
+        style={imageStyle}
         priority={priority}
         placeholder={placeholder}
         blurDataURL={blurDataURL}

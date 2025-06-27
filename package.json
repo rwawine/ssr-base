@@ -10,7 +10,8 @@
     "lint": "next lint",
     "sitemap": "node scripts/generate-sitemap.js",
     "refactor": "node scripts/refactor-before-build.js",
-    "refactor:check": "node scripts/refactor-before-build.js --check-only"
+    "refactor:check": "node scripts/refactor-before-build.js --check-only",
+    "check-mime": "node scripts/fix-mime-types.js"
   },
   "dependencies": {
     "@splidejs/react-splide": "^0.7.12",
