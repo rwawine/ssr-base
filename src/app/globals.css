@@ -115,13 +115,6 @@ section {
   display: block;
 }
 
-body {
-  line-height: 1;
-  font-family: var(--font-primary);
-  background-color: #f6f6f6;
-  overflow-x: hidden;
-}
-
 ol,
 ul {
   list-style: none;
@@ -229,4 +222,11 @@ table {
     transition: none !important;
     animation: none !important;
   }
+}
+
+body {
+  line-height: 1;
+  font-family: var(--font-primary);
+  background-color: #f6f6f6;
+  overflow-x: hidden;
 }
