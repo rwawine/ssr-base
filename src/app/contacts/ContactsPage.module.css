@@ -177,6 +177,32 @@
     transform: translateY(-2px);
 }
 
+.submitButton:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.submitStatus {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.submitStatus.success {
+    background-color: #d1fae5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+.submitStatus.error {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
 .mapContainer {
     margin-top: 4rem;
     width: 100%;
@@ -187,4 +213,170 @@
     align-items: center;
     justify-content: center;
     color: #888;
+}
+
+/* Адаптивные стили для планшетов */
+@media (max-width: 1024px) {
+    .pageContainer {
+        padding: 0 15px;
+        padding-top: 100px;
+    }
+
+    .title {
+        font-size: 2.4rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .contentWrapper {
+        gap: 3rem;
+    }
+
+    .contactForm {
+        padding: 2rem;
+    }
+
+    .formTitle {
+        font-size: 1.6rem;
+    }
+
+    .mapContainer {
+        height: 400px;
+        margin-top: 3rem;
+    }
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+    .pageContainer {
+        padding: 0 10px;
+        padding-top: 90px;
+    }
+
+    .breadcrumbs {
+        font-size: 12px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .contentWrapper {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .contactInfo {
+        order: 2;
+    }
+
+    .contactForm {
+        order: 1;
+        padding: 1.5rem;
+    }
+
+    .formTitle {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .infoBlock {
+        margin-bottom: 1.5rem;
+    }
+
+    .infoBlock h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .infoBlock p, .infoBlock a {
+        font-size: 0.95rem;
+    }
+
+    .formGroup {
+        margin-bottom: 1.2rem;
+    }
+
+    .formGroup label {
+        font-size: 0.85rem;
+    }
+
+    .formGroup input,
+    .formGroup textarea,
+    .formGroup select {
+        padding: 0.8rem 0.9rem;
+        font-size: 0.95rem;
+    }
+
+    .formGroup textarea {
+        min-height: 120px;
+    }
+
+    .submitButton {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .mapContainer {
+        height: 300px;
+        margin-top: 2rem;
+    }
+}
+
+/* Адаптивные стили для маленьких мобильных устройств */
+@media (max-width: 480px) {
+    .pageContainer {
+        padding: 0 8px;
+        padding-top: 80px;
+    }
+
+    .title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contactForm {
+        padding: 1.2rem;
+    }
+
+    .formTitle {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .infoBlock {
+        margin-bottom: 1.2rem;
+    }
+
+    .infoBlock h3 {
+        font-size: 1rem;
+    }
+
+    .infoBlock p, .infoBlock a {
+        font-size: 0.9rem;
+    }
+
+    .formGroup input,
+    .formGroup textarea,
+    .formGroup select {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .formGroup textarea {
+        min-height: 100px;
+    }
+
+    .submitButton {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .mapContainer {
+        height: 250px;
+        margin-top: 1.5rem;
+    }
 } 

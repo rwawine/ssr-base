@@ -183,6 +183,12 @@ function ContactForm({
     message: false,
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
   const validateField = (name: string, value: string) => {
     switch (name) {
       case "name":
@@ -236,6 +242,11 @@ function ContactForm({
       [name]: value,
     }));
 
+    // Сбрасываем статус отправки при изменении формы
+    if (submitStatus.type) {
+      setSubmitStatus({ type: null, message: '' });
+    }
+
     // Валидация при вводе, если поле уже было в фокусе
     if (touched[name as keyof typeof touched]) {
       const error = validateField(name, value);
@@ -283,13 +294,19 @@ function ContactForm({
     e.preventDefault();
 
     if (!isPrivacyAccepted) {
-      alert("Необходимо согласиться с обработкой персональных данных");
+      setSubmitStatus({
+        type: 'error',
+        message: 'Необходимо согласиться с обработкой персональных данных'
+      });
       return;
     }
 
     if (!validateForm()) {
       return;
     }
+
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
 
     try {
       // Подготавливаем данные для отправки
@@ -311,21 +328,58 @@ function ContactForm({
 
       const result = await response.json();
 
-      if (response.ok) {
-        alert('Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.');
-        onClose();
+      if (response.ok && result.success) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.'
+        });
+        
+        // Очищаем форму при успешной отправке
+        setFormData({
+          name: "",
+          phone: "",
+          message: "",
+        });
+        setTouched({
+          name: false,
+          phone: false,
+          message: false,
+        });
+        setErrors({
+          name: "",
+          phone: "",
+          message: "",
+        });
+        
+        // Закрываем модальное окно через 2 секунды
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       } else {
-        console.error('Ошибка отправки сообщения:', result.error);
-        alert('Произошла ошибка при отправке сообщения. Попробуйте еще раз.');
+        setSubmitStatus({
+          type: 'error',
+          message: result.error || 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.'
+        });
       }
     } catch (error) {
       console.error('Ошибка отправки сообщения:', error);
-      alert('Произошла ошибка при отправке сообщения. Попробуйте еще раз.');
+      setSubmitStatus({
+        type: 'error',
+        message: 'Произошла ошибка при отправке сообщения. Проверьте подключение к интернету и попробуйте еще раз.'
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+      {submitStatus.type && (
+        <div className={`${styles.submitStatus} ${styles[submitStatus.type]}`}>
+          {submitStatus.message}
+        </div>
+      )}
+
       <div className={styles.formGroup}>
         <input
           type="text"
@@ -335,6 +389,7 @@ function ContactForm({
           value={formData.name}
           onChange={handleInputChange}
           onBlur={handleBlur}
+          disabled={isSubmitting}
         />
         {errors.name && touched.name && (
           <div className={styles.errorMessage}>{errors.name}</div>
@@ -350,6 +405,7 @@ function ContactForm({
           value={formData.phone}
           onChange={handleInputChange}
           onBlur={handleBlur}
+          disabled={isSubmitting}
         />
         {errors.phone && touched.phone && (
           <div className={styles.errorMessage}>{errors.phone}</div>
@@ -365,6 +421,7 @@ function ContactForm({
           value={formData.message}
           onChange={handleInputChange}
           onBlur={handleBlur}
+          disabled={isSubmitting}
         />
         {errors.message && touched.message && (
           <div className={styles.errorMessage}>{errors.message}</div>
@@ -378,6 +435,7 @@ function ContactForm({
             checked={isPrivacyAccepted}
             onChange={(e) => setIsPrivacyAccepted(e.target.checked)}
             className={styles.checkbox}
+            disabled={isSubmitting}
           />
           <span className={styles.checkmark}></span>
           <span className={styles.privacyText}>
@@ -392,9 +450,9 @@ function ContactForm({
       <button
         type="submit"
         className={styles.button}
-        disabled={!isPrivacyAccepted}
+        disabled={!isPrivacyAccepted || isSubmitting}
       >
-        Отправить
+        {isSubmitting ? "Отправка..." : "Отправить"}
       </button>
     </form>
   );

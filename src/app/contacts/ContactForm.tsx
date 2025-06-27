@@ -3,29 +3,56 @@
 import React, { useState } from "react";
 import styles from "./ContactsPage.module.css";
 
+interface FormData {
+  name: string;
+  email: string;
+  topic: string;
+  message: string;
+}
+
+interface FormErrors {
+  name: string;
+  email: string;
+  topic: string;
+  message: string;
+}
+
+interface FormTouched {
+  name: boolean;
+  email: boolean;
+  topic: boolean;
+  message: boolean;
+}
+
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     topic: "",
     message: "",
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     name: "",
     email: "",
     topic: "",
     message: "",
   });
 
-  const [touched, setTouched] = useState({
+  const [touched, setTouched] = useState<FormTouched>({
     name: false,
     email: false,
     topic: false,
     message: false,
   });
 
-  const validateField = (name: string, value: string) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const validateField = (name: string, value: string): string => {
     switch (name) {
       case "name":
         if (!value.trim()) {
@@ -83,8 +110,13 @@ export default function ContactForm() {
       [name]: value,
     }));
 
+    // Сбрасываем статус отправки при изменении формы
+    if (submitStatus.type) {
+      setSubmitStatus({ type: null, message: '' });
+    }
+
     // Валидация при вводе, если поле уже было в фокусе
-    if (touched[name as keyof typeof touched]) {
+    if (touched[name as keyof FormTouched]) {
       const error = validateField(name, value);
       setErrors((prev) => ({
         ...prev,
@@ -111,7 +143,7 @@ export default function ContactForm() {
     }));
   };
 
-  const validateForm = () => {
+  const validateForm = (): boolean => {
     const newErrors = {
       name: validateField("name", formData.name),
       email: validateField("email", formData.email),
@@ -135,21 +167,86 @@ export default function ContactForm() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
 
-    // Здесь будет логика отправки формы
-    console.log("Форма отправлена:", formData);
-    alert("Форма отправлена (демонстрация)");
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      // Отправляем данные на API
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'contact_form',
+          name: formData.name,
+          email: formData.email,
+          topic: formData.topic,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.'
+        });
+        
+        // Очищаем форму при успешной отправке
+        setFormData({
+          name: "",
+          email: "",
+          topic: "",
+          message: "",
+        });
+        setTouched({
+          name: false,
+          email: false,
+          topic: false,
+          message: false,
+        });
+        setErrors({
+          name: "",
+          email: "",
+          topic: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: result.error || 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.'
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка отправки формы:', error);
+      setSubmitStatus({
+        type: 'error',
+        message: 'Произошла ошибка при отправке сообщения. Проверьте подключение к интернету и попробуйте еще раз.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <section className={styles.contactForm}>
       <h2 className={styles.formTitle}>Форма обратной связи</h2>
+      
+      {submitStatus.type && (
+        <div className={`${styles.submitStatus} ${styles[submitStatus.type]}`}>
+          {submitStatus.message}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label htmlFor="name">Ваше имя</label>
@@ -161,6 +258,7 @@ export default function ContactForm() {
             value={formData.name}
             onChange={handleInputChange}
             onBlur={handleBlur}
+            disabled={isSubmitting}
           />
           {errors.name && touched.name && (
             <div className={styles.errorMessage}>{errors.name}</div>
@@ -177,6 +275,7 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleInputChange}
             onBlur={handleBlur}
+            disabled={isSubmitting}
           />
           {errors.email && touched.email && (
             <div className={styles.errorMessage}>{errors.email}</div>
@@ -192,6 +291,7 @@ export default function ContactForm() {
             value={formData.topic}
             onChange={handleInputChange}
             onBlur={handleBlur}
+            disabled={isSubmitting}
           >
             <option value="">Выберите тему</option>
             <option value="cooperation">Сотрудничество</option>
@@ -213,14 +313,19 @@ export default function ContactForm() {
             value={formData.message}
             onChange={handleInputChange}
             onBlur={handleBlur}
+            disabled={isSubmitting}
           />
           {errors.message && touched.message && (
             <div className={styles.errorMessage}>{errors.message}</div>
           )}
         </div>
 
-        <button type="submit" className={styles.submitButton}>
-          Отправить
+        <button 
+          type="submit" 
+          className={styles.submitButton}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Отправка..." : "Отправить"}
         </button>
       </form>
     </section>

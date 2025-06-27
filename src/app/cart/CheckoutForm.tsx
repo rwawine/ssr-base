@@ -20,6 +20,10 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
     });
     const [errors, setErrors] = useState<any>({});
     const [loading, setLoading] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<{
+      type: 'success' | 'error' | null;
+      message: string;
+    }>({ type: null, message: '' });
 
     // Сохраняем ссылку на форму
     const formElement = React.useRef<HTMLFormElement>(null);
@@ -57,6 +61,11 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
       e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) => {
       setForm({ ...form, [e.target.name]: e.target.value });
+      
+      // Сбрасываем статус отправки при изменении формы
+      if (submitStatus.type) {
+        setSubmitStatus({ type: null, message: '' });
+      }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -73,6 +82,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
 
       // Если валидация прошла успешно, устанавливаем состояние загрузки
       setLoading(true);
+      setSubmitStatus({ type: null, message: '' });
 
       try {
         // Подготавливаем данные для отправки
@@ -105,20 +115,31 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
 
         const result = await response.json();
 
-        if (response.ok) {
+        if (response.ok && result.success) {
+          setSubmitStatus({
+            type: 'success',
+            message: 'Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.'
+          });
+          
           // Очищаем корзину после успешной отправки
           clearCart();
+          
           // Вызываем callback для уведомления основного компонента
           if (props.onOrderSuccess) {
             props.onOrderSuccess();
           }
         } else {
-          console.error('Ошибка отправки заказа:', result.error);
-          alert('Произошла ошибка при отправке заказа. Попробуйте еще раз.');
+          setSubmitStatus({
+            type: 'error',
+            message: result.error || 'Произошла ошибка при отправке заказа. Попробуйте еще раз.'
+          });
         }
       } catch (error) {
         console.error('Ошибка отправки заказа:', error);
-        alert('Произошла ошибка при отправке заказа. Попробуйте еще раз.');
+        setSubmitStatus({
+          type: 'error',
+          message: 'Произошла ошибка при отправке заказа. Проверьте подключение к интернету и попробуйте еще раз.'
+        });
       } finally {
         setLoading(false);
       }
@@ -132,6 +153,13 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
         autoComplete="off"
       >
         <h2 className={styles.sectionTitle}>Оформление заказа</h2>
+        
+        {submitStatus.type && (
+          <div className={`${styles.submitStatus} ${styles[submitStatus.type]}`}>
+            {submitStatus.message}
+          </div>
+        )}
+        
         <div className={styles.field}>
           <label>Телефон*</label>
           <input
@@ -148,12 +176,18 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
                 value.replace(/\D/g, "").replace(/^375/, "").slice(0, 9);
               if (value.length < 4) value = "+375";
               setForm({ ...form, phone: value });
+              
+              // Сбрасываем статус отправки при изменении формы
+              if (submitStatus.type) {
+                setSubmitStatus({ type: null, message: '' });
+              }
             }}
             placeholder="+375XXXXXXXXX"
             className={styles.input}
             maxLength={13}
             autoComplete="tel"
             pattern="\+375[0-9]{9}"
+            disabled={loading}
           />
           {errors.phone && <div className={styles.error}>{errors.phone}</div>}
         </div>
@@ -165,6 +199,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
             placeholder="Имя"
             className={styles.input}
             autoComplete="name"
+            disabled={loading}
           />
           {errors.name && <div className={styles.error}>{errors.name}</div>}
         </div>
@@ -176,6 +211,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
             placeholder="Почта"
             className={styles.input}
             autoComplete="email"
+            disabled={loading}
           />
           {errors.email && <div className={styles.error}>{errors.email}</div>}
         </div>
@@ -192,7 +228,13 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
                   ? styles.buttonActive
                   : styles.buttonTab
               }
-              onClick={() => setForm((f) => ({ ...f, delivery: "courier" }))}
+              onClick={() => {
+                setForm((f) => ({ ...f, delivery: "courier" }));
+                if (submitStatus.type) {
+                  setSubmitStatus({ type: null, message: '' });
+                }
+              }}
+              disabled={loading}
             >
               Курьер
             </button>
@@ -203,7 +245,13 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
                   ? styles.buttonActive
                   : styles.buttonTab
               }
-              onClick={() => setForm((f) => ({ ...f, delivery: "pickup" }))}
+              onClick={() => {
+                setForm((f) => ({ ...f, delivery: "pickup" }));
+                if (submitStatus.type) {
+                  setSubmitStatus({ type: null, message: '' });
+                }
+              }}
+              disabled={loading}
             >
               Самовывоз
             </button>
@@ -218,6 +266,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
               placeholder="Адрес*"
               className={styles.input}
               autoComplete="address"
+              disabled={loading}
             />
             {errors.address && (
               <div className={styles.error}>{errors.address}</div>
@@ -236,6 +285,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
             value={form.payment}
             onChange={handleChange}
             className={styles.select}
+            disabled={loading}
           >
             <option value="cash">Наличными при получении</option>
             <option value="card">Картой при получении</option>

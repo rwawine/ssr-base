@@ -21,7 +21,15 @@ interface ContactData {
   message: string;
 }
 
-type EmailData = OrderData | ContactData;
+interface ContactFormData {
+  type: 'contact_form';
+  name: string;
+  email: string;
+  topic: string;
+  message: string;
+}
+
+type EmailData = OrderData | ContactData | ContactFormData;
 
 // Создаем транспортер для Gmail
 const transporter = nodemailer.createTransport({
@@ -37,9 +45,9 @@ export async function POST(request: NextRequest) {
     const body: EmailData = await request.json();
     
     // Валидация данных
-    if (!body.name || !body.phone) {
+    if (!body.name) {
       return NextResponse.json(
-        { error: 'Не все обязательные поля заполнены' },
+        { error: 'Имя обязательно для заполнения' },
         { status: 400 }
       );
     }
@@ -171,6 +179,58 @@ export async function POST(request: NextRequest) {
         
         Время отправки: ${new Date().toLocaleString('ru-RU')}
       `;
+
+    } else if (body.type === 'contact_form') {
+      const contactFormData = body as ContactFormData;
+      
+      if (!contactFormData.email || !contactFormData.message) {
+        return NextResponse.json(
+          { error: 'Email и сообщение обязательны для заполнения' },
+          { status: 400 }
+        );
+      }
+
+      subject = `Форма обратной связи от ${contactFormData.name} - ${contactFormData.email}`;
+      
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333; border-bottom: 2px solid #28a745; padding-bottom: 10px;">
+            Форма обратной связи с сайта
+          </h2>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #28a745; margin-top: 0;">Данные клиента:</h3>
+            <p><strong>Имя:</strong> ${contactFormData.name}</p>
+            <p><strong>Email:</strong> ${contactFormData.email}</p>
+            <p><strong>Тема обращения:</strong> ${contactFormData.topic}</p>
+          </div>
+
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #28a745; margin-top: 0;">Сообщение:</h3>
+            <p style="white-space: pre-wrap; line-height: 1.6;">${contactFormData.message}</p>
+          </div>
+
+          <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0; color: #0056b3;">
+              <strong>Время отправки:</strong> ${new Date().toLocaleString('ru-RU')}
+            </p>
+          </div>
+        </div>
+      `;
+
+      textContent = `
+        Форма обратной связи с сайта
+        
+        Данные клиента:
+        Имя: ${contactFormData.name}
+        Email: ${contactFormData.email}
+        Тема обращения: ${contactFormData.topic}
+        
+        Сообщение:
+        ${contactFormData.message}
+        
+        Время отправки: ${new Date().toLocaleString('ru-RU')}
+      `;
     }
 
     // Настройки письма
@@ -186,7 +246,12 @@ export async function POST(request: NextRequest) {
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json(
-      { success: true, message: body.type === 'order' ? 'Заказ успешно отправлен' : 'Сообщение успешно отправлено' },
+      { 
+        success: true, 
+        message: body.type === 'order' ? 'Заказ успешно отправлен' : 
+                 body.type === 'contact_form' ? 'Сообщение успешно отправлено' :
+                 'Сообщение успешно отправлено' 
+      },
       { status: 200 }
     );
 
