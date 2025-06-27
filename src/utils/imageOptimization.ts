@@ -114,14 +114,7 @@ export const createSrcSet = (
 export const preloadCriticalImages = (images: string[]) => {
   if (typeof window === "undefined") return;
 
-  const linkExists = (href: string): boolean => {
-    return Array.from(document.head.querySelectorAll('link[rel="preload"]'))
-      .some(link => link.getAttribute('href') === href);
-  };
-
   images.forEach((src, index) => {
-    if (linkExists(src)) return;
-
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "image";

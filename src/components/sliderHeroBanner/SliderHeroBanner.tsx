@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSlider } from "@/hooks/useSlider";
+import { preloadImages } from "@/lib/image-utils";
 import { createOptimizedImageUrl } from "@/lib/image-utils";
 import { SliderSlide } from "./SliderSlide";
 import { SliderNavigation } from "./SliderNavigation";
@@ -24,6 +26,20 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
     pauseOnInteraction: true,
     resumeDelay: 3000,
   });
+
+  // Предзагружаем критические изображения (первые 2 слайда)
+  useEffect(() => {
+    if (slides.length > 0 && typeof window !== "undefined") {
+      const criticalImages = slides.slice(0, 2).map((slide) =>
+        createOptimizedImageUrl(slide.image[0].url, {
+          width: 1440,
+          height: 600,
+          quality: 90,
+        }),
+      );
+      preloadImages(criticalImages).catch(console.error);
+    }
+  }, [slides]);
 
   // Обработчики событий мыши
   const handleMouseDown = (e: React.MouseEvent) => {

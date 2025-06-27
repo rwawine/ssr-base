@@ -9,29 +9,6 @@ interface ResourcePreloaderProps {
   stylesheets?: string[];
 }
 
-// Функция для проверки существования preload ссылки
-const linkExists = (href: string, rel: string): boolean => {
-  if (typeof window === "undefined") return false;
-  return Array.from(document.head.querySelectorAll(`link[rel="${rel}"]`))
-    .some(link => link.getAttribute('href') === href);
-};
-
-// Функция для безопасного добавления preload ссылки
-const addPreloadLink = (href: string, rel: string, attributes: Record<string, string> = {}) => {
-  if (typeof window === "undefined" || linkExists(href, rel)) return;
-
-  const link = document.createElement("link");
-  link.rel = rel;
-  link.href = href;
-  
-  // Добавляем дополнительные атрибуты
-  Object.entries(attributes).forEach(([key, value]) => {
-    link.setAttribute(key, value);
-  });
-  
-  document.head.appendChild(link);
-};
-
 export default function ResourcePreloader({
   criticalImages = [],
   fonts = [],
@@ -40,27 +17,38 @@ export default function ResourcePreloader({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Предзагружаем только критические изображения (первые 2)
+    // Предзагружаем критические изображения
     if (criticalImages.length > 0) {
-      const limitedImages = criticalImages.slice(0, 2);
-      preloadCriticalImages(limitedImages);
+      preloadCriticalImages(criticalImages);
     }
 
-    // Предзагружаем только основные шрифты
-    const essentialFonts = fonts.slice(0, 2); // Ограничиваем количество
-    essentialFonts.forEach((font) => {
-      addPreloadLink(font, "preload", {
-        as: "font",
-        type: "font/woff2",
-        crossorigin: "anonymous"
-      });
+    // Предзагружаем шрифты
+    fonts.forEach((font) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "font";
+      link.href = font;
+      link.crossOrigin = "anonymous";
+      document.head.appendChild(link);
+    });
+
+    // Предзагружаем стили
+    stylesheets.forEach((stylesheet) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "style";
+      link.href = stylesheet;
+      document.head.appendChild(link);
     });
 
     // DNS prefetch для внешних доменов
     const externalDomains = ["res.cloudinary.com", "admin.dilavia.by"];
 
     externalDomains.forEach((domain) => {
-      addPreloadLink(`//${domain}`, "dns-prefetch");
+      const link = document.createElement("link");
+      link.rel = "dns-prefetch";
+      link.href = `//${domain}`;
+      document.head.appendChild(link);
     });
 
     // Preconnect для критических доменов
@@ -70,7 +58,10 @@ export default function ResourcePreloader({
     ];
 
     criticalDomains.forEach((domain) => {
-      addPreloadLink(domain, "preconnect");
+      const link = document.createElement("link");
+      link.rel = "preconnect";
+      link.href = domain;
+      document.head.appendChild(link);
     });
   }, [criticalImages, fonts, stylesheets]);
 
@@ -84,20 +75,28 @@ export function useResourcePreloader(resources: ResourcePreloaderProps) {
 
     const { criticalImages = [], fonts = [], stylesheets = [] } = resources;
 
-    // Предзагружаем только критические изображения
+    // Предзагружаем критические изображения
     if (criticalImages.length > 0) {
-      const limitedImages = criticalImages.slice(0, 2);
-      preloadCriticalImages(limitedImages);
+      preloadCriticalImages(criticalImages);
     }
 
-    // Предзагружаем только основные шрифты
-    const essentialFonts = fonts.slice(0, 2);
-    essentialFonts.forEach((font) => {
-      addPreloadLink(font, "preload", {
-        as: "font",
-        type: "font/woff2",
-        crossorigin: "anonymous"
-      });
+    // Предзагружаем шрифты
+    fonts.forEach((font) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "font";
+      link.href = font;
+      link.crossOrigin = "anonymous";
+      document.head.appendChild(link);
+    });
+
+    // Предзагружаем стили
+    stylesheets.forEach((stylesheet) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "style";
+      link.href = stylesheet;
+      document.head.appendChild(link);
     });
   }, [resources]);
 }
