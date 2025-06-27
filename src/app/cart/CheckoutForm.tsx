@@ -77,6 +77,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
       try {
         // Подготавливаем данные для отправки
         const orderData = {
+          type: 'order' as const,
           ...form,
           cartItems: [
             ...items.map((item: any) => ({
@@ -94,7 +95,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
         };
 
         // Отправляем данные на API
-        const response = await fetch('/api/send-order', {
+        const response = await fetch('/api/send-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

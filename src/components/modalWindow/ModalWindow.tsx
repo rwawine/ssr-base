@@ -279,7 +279,7 @@ function ContactForm({
     return !newErrors.name && !newErrors.phone && !newErrors.message;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isPrivacyAccepted) {
@@ -291,9 +291,37 @@ function ContactForm({
       return;
     }
 
-    // Здесь будет логика отправки формы
-    console.log("Форма отправлена:", formData);
-    onClose();
+    try {
+      // Подготавливаем данные для отправки
+      const contactData = {
+        type: 'contact' as const,
+        name: formData.name,
+        phone: formData.phone,
+        message: formData.message
+      };
+
+      // Отправляем данные на API
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.');
+        onClose();
+      } else {
+        console.error('Ошибка отправки сообщения:', result.error);
+        alert('Произошла ошибка при отправке сообщения. Попробуйте еще раз.');
+      }
+    } catch (error) {
+      console.error('Ошибка отправки сообщения:', error);
+      alert('Произошла ошибка при отправке сообщения. Попробуйте еще раз.');
+    }
   };
 
   return (
