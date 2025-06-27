@@ -9,7 +9,7 @@ interface Product {
 const products: Product[] = allProducts[0]?.products || [];
 
 export async function GET() {
-  const baseUrl = "https://ssr-base.vercel.app";
+  const baseUrl = "https://dilavia.by";
   const now = new Date().toISOString();
 
   const staticRoutes = [

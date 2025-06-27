@@ -1,4 +1,19 @@
 User-agent: *
-Disallow:
+Allow: /
 
-Sitemap: https://ssr-base.vercel.app/sitemap.xml
+# Запрещаем индексацию служебных страниц
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+
+# Разрешаем индексацию статических файлов
+Allow: /images/
+Allow: /favicon.ico
+Allow: /logo.svg
+
+# Указываем правильный домен для sitemap
+Sitemap: https://dilavia.by/sitemap.xml
+
+# Дополнительные настройки для поисковых роботов
+Crawl-delay: 1

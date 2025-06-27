@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE_URL = 'https://ssr-base.vercel.app'; // Замените на ваш домен
+const SITE_URL = 'https://dilavia.by'; // Замените на ваш домен
 
 // Основные статические страницы
 const staticPages = [
