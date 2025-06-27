@@ -10,13 +10,13 @@ import type { BreadcrumbItem } from "@/types";
 import styles from "./page.module.css";
 
 interface CategoryPageProps {
-  params: Promise<{ category: string }>;
+  params: { category: string };
 }
 
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const { category } = await params;
+  const { category } = params;
   const material = getFabricMaterialBySlug(category);
   if (!material) return {};
 
@@ -27,7 +27,7 @@ export async function generateMetadata({
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = await params;
+  const { category } = params;
   const material = getFabricMaterialBySlug(category);
 
   if (!material) {

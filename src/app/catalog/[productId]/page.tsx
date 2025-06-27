@@ -12,14 +12,16 @@ async function getProductsData() {
   return JSON.parse(fileContents);
 }
 
-type Params = Promise<{ productId: string }>;
+interface Params {
+  productId: string;
+}
 
 export async function generateMetadata({
   params,
 }: {
   params: Params;
 }): Promise<Metadata> {
-  const { productId: slug } = await params;
+  const { productId: slug } = params;
   const productsData = await getProductsData();
   const products: Product[] = productsData[0].products;
   const product = products.find((p) => p.slug === slug);
@@ -63,7 +65,7 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: { params: Params }) {
-  const { productId: slug } = await params;
+  const { productId: slug } = params;
   const productsData = await getProductsData();
   const products: Product[] = productsData[0].products;
   const product = products.find((p) => p.slug === slug);

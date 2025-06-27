@@ -138,9 +138,9 @@ function sortProducts(products: Product[], sortBy: string) {
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }): Promise<Metadata> {
-  const resolvedSearchParams = await searchParams;
+  const resolvedSearchParams = searchParams;
   const products = getProductsFromFile();
   const filteredProducts = filterProducts(products, resolvedSearchParams);
 
@@ -201,9 +201,9 @@ export async function generateMetadata({
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const resolvedSearchParams = await searchParams;
+  const resolvedSearchParams = searchParams;
   const allProducts = getProductsFromFile();
   const filteredProducts = filterProducts(allProducts, resolvedSearchParams);
 
