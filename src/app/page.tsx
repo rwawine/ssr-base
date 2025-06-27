@@ -33,16 +33,6 @@ export default async function Home() {
 
   return (
     <main className={styles.container}>
-      {/* Предзагрузка критических ресурсов */}
-      <ResourcePreloader
-        criticalImages={criticalImages}
-        fonts={[
-          "/fonts/LTSuperior-Regular.woff2",
-          "/fonts/LTSuperior-Medium.woff2",
-          "/fonts/LTSuperior-Semibold.woff2",
-        ]}
-      />
-
       <Script
         id="website-schema"
         type="application/ld+json"
