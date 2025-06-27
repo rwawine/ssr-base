@@ -9,6 +9,7 @@ interface CheckoutFormProps {
 
 const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
   (props, ref) => {
+    const { items, fabricItems, totalPrice, clearCart } = useCart();
     const [form, setForm] = useState({
       name: "",
       phone: "",
@@ -72,13 +73,54 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
 
       // Если валидация прошла успешно, устанавливаем состояние загрузки
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        // Вызываем callback для уведомления основного компонента
-        if (props.onOrderSuccess) {
-          props.onOrderSuccess();
+
+      try {
+        // Подготавливаем данные для отправки
+        const orderData = {
+          ...form,
+          cartItems: [
+            ...items.map((item: any) => ({
+              name: item.product.name,
+              quantity: item.quantity,
+              price: item.selectedDimension?.price || item.product.price?.current || 0
+            })),
+            ...fabricItems.map((item: any) => ({
+              name: `${item.fabric.collection.name} - ${item.fabric.variant.name}`,
+              quantity: item.quantity,
+              price: 0 // Ткани бесплатные
+            }))
+          ],
+          totalAmount: totalPrice
+        };
+
+        // Отправляем данные на API
+        const response = await fetch('/api/send-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Очищаем корзину после успешной отправки
+          clearCart();
+          // Вызываем callback для уведомления основного компонента
+          if (props.onOrderSuccess) {
+            props.onOrderSuccess();
+          }
+        } else {
+          console.error('Ошибка отправки заказа:', result.error);
+          alert('Произошла ошибка при отправке заказа. Попробуйте еще раз.');
         }
-      }, 1200);
+      } catch (error) {
+        console.error('Ошибка отправки заказа:', error);
+        alert('Произошла ошибка при отправке заказа. Попробуйте еще раз.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     return (
