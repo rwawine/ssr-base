@@ -11,7 +11,7 @@ export async function fetchMarqueeData(): Promise<MarqueeApiResponse> {
         "Content-Type": "application/json",
       },
       // Добавляем кэширование для оптимизации производительности
-      next: { revalidate: 3600 }, // Кэшируем на 1 час
+      next: { revalidate: 60 }, // Кэшируем на 1 час
     });
 
     if (!response.ok) {

@@ -4,7 +4,6 @@ import { Product } from "@/types/product";
 import ProductDetail from "./ProductDetail";
 import { generateProductMetadata } from "@/lib/seo-utils";
 import { generatePageMetadata } from "@/lib/metadata";
-import { SeoProvider } from "@/components/seo/SeoProvider";
 
 async function getProductsData() {
   const data = await import("@/data/data.json");
@@ -140,12 +139,12 @@ export default async function ProductPage({
   const structuredData = generateProductMetadata(product);
 
   return (
-    <SeoProvider>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <ProductDetail product={product} relatedProducts={relatedProducts} />
-    </SeoProvider>
+    </>
   );
 }

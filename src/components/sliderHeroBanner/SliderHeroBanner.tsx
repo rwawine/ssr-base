@@ -1,7 +1,6 @@
 "use client";
 
 import { useSlider } from "@/hooks/useSlider";
-import { createOptimizedImageUrl } from "@/lib/image-utils";
 import { SliderSlide } from "./SliderSlide";
 import { SliderNavigation } from "./SliderNavigation";
 import type { SliderHeroBannerProps } from "@/types";
@@ -58,7 +57,14 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
   };
 
   // Не отображаем слайдер если нет данных или данные неполные
-  if (!slides || slides.length === 0 || !slides[0]?.image?.[0]?.url) {
+  if (!slides || slides.length === 0) {
+    return null;
+  }
+
+  // Проверяем, что у всех слайдов есть изображения
+  const validSlides = slides.filter((slide) => slide?.image?.[0]?.url);
+
+  if (validSlides.length === 0) {
     return null;
   }
 
@@ -77,7 +83,7 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
         aria-label="Главный слайдер"
         aria-live="polite"
       >
-        {slides.map((slide, index) => (
+        {validSlides.map((slide, index) => (
           <SliderSlide
             key={slide.id || index}
             slide={slide}
@@ -89,7 +95,7 @@ export default function SliderHeroBanner({ slides }: SliderHeroBannerProps) {
       </div>
 
       <SliderNavigation
-        slidesCount={slides.length}
+        slidesCount={validSlides.length}
         currentSlide={currentSlide}
         controls={{ goToSlide, goToPrev, goToNext }}
       />

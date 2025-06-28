@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { OptimizedImage } from "@/components/optimized-image/OptimizedImage";
-import { createOptimizedImageUrl } from "@/lib/image-utils";
 import type { Slide } from "@/types";
 import styles from "./SliderHeroBanner.module.css";
 

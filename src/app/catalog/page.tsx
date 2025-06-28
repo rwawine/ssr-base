@@ -266,12 +266,38 @@ export default async function CatalogPage({
         : undefined,
   };
 
+  // Получаем названия категорий для Schema.org
+  let categoryName: string | undefined;
+  let subcategoryName: string | undefined;
+
+  if (resolvedSearchParams.category) {
+    const categoryCode = Array.isArray(resolvedSearchParams.category)
+      ? resolvedSearchParams.category[0]
+      : resolvedSearchParams.category;
+    const categoryProduct = products.find(
+      (p) => p.category?.code === categoryCode,
+    );
+    categoryName = categoryProduct?.category?.name;
+  }
+
+  if (resolvedSearchParams.subcategory) {
+    const subcategoryCode = Array.isArray(resolvedSearchParams.subcategory)
+      ? resolvedSearchParams.subcategory[0]
+      : resolvedSearchParams.subcategory;
+    const subcategoryProduct = products.find(
+      (p) => p.subcategory?.code === subcategoryCode,
+    );
+    subcategoryName = subcategoryProduct?.subcategory?.name;
+  }
+
   return (
     <CatalogClient
       initialProducts={products}
       filteredProducts={sortedProducts}
       currentFilters={currentFilters}
       initialSort={sort}
+      categoryName={categoryName}
+      subcategoryName={subcategoryName}
     />
   );
 }

@@ -6,7 +6,6 @@ import {
 } from "@/lib/fabric-utils";
 import { generatePageMetadata } from "@/lib/metadata";
 import { FabricDetailClient } from "./FabricDetailClient";
-import { SeoProvider } from "@/components/seo/SeoProvider";
 
 interface FabricDetailPageProps {
   params: Promise<{
@@ -51,12 +50,10 @@ export default async function FabricDetailPage({
   }
 
   return (
-    <SeoProvider>
-      <FabricDetailClient
-        collection={collection}
-        currentVariant={currentVariant}
-        params={{ category, collection: collectionSlug, variantId }}
-      />
-    </SeoProvider>
+    <FabricDetailClient
+      collection={collection}
+      currentVariant={currentVariant}
+      params={{ category, collection: collectionSlug, variantId }}
+    />
   );
 }

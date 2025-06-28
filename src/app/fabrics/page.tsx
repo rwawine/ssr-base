@@ -8,7 +8,6 @@ import { generatePageMetadata } from "@/lib/metadata";
 import { Breadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
 import type { BreadcrumbItem } from "@/types";
 import styles from "./page.module.css";
-import { SeoProvider } from "@/components/seo/SeoProvider";
 
 export const metadata = generatePageMetadata(
   {
@@ -61,7 +60,7 @@ export default function FabricsPage() {
   };
 
   return (
-    <SeoProvider>
+    <>
       {/* Структурированные данные для SEO */}
       <script
         type="application/ld+json"
@@ -152,6 +151,6 @@ export default function FabricsPage() {
           </div>
         </div>
       </div>
-    </SeoProvider>
+    </>
   );
 }

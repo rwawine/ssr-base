@@ -18,7 +18,6 @@ import { ProductSchema } from "@/components/schema";
 import styles from "./ProductDetail.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import productCardStyles from "@/components/productCard/ProductCard.module.css";
-import { SeoHead } from "@/components/seo/SeoHead";
 
 interface ProductDetailProps {
   product: Product;
@@ -228,15 +227,6 @@ export default function ProductDetail({
 
   return (
     <div className={styles.container}>
-      <SeoHead
-        fallbackSeo={{
-          title: product.name,
-          description:
-            product.description || `Купить ${product.name} по выгодной цене`,
-          canonical: `/catalog/${product.id}`,
-        }}
-      />
-
       {/* Schema.org микроразметка для продукта */}
       <ProductSchema
         product={product}

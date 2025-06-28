@@ -4,6 +4,7 @@ import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import Reviews from "@/components/reviews/Reviews";
 import styles from "./ReviewsPage.module.css";
 import { generatePageMetadata } from "@/lib/metadata";
+import { ReviewPageSchema } from "@/components/schema";
 
 export const metadata: Metadata = generatePageMetadata(
   {
@@ -18,18 +19,21 @@ export const metadata: Metadata = generatePageMetadata(
 
 export default function ReviewsPage() {
   return (
-    <main className={styles.pageContainer}>
-      <div className={styles.header}>
-        <Breadcrumbs
-          items={[
-            { label: "Главная", href: "https://dilavia.by/" },
-            { label: "Отзывы" },
-          ]}
-          className={styles.breadcrumbs}
-        />
-        <h1 className={styles.mainTitle}>Отзывы и рейтинг</h1>
-      </div>
-      <Reviews />
-    </main>
+    <>
+      <ReviewPageSchema />
+      <main className={styles.pageContainer}>
+        <div className={styles.header}>
+          <Breadcrumbs
+            items={[
+              { label: "Главная", href: "https://dilavia.by/" },
+              { label: "Отзывы" },
+            ]}
+            className={styles.breadcrumbs}
+          />
+          <h1 className={styles.mainTitle}>Отзывы и рейтинг</h1>
+        </div>
+        <Reviews />
+      </main>
+    </>
   );
 }

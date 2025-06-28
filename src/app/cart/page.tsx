@@ -6,10 +6,8 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { AdditionalOption } from "@/types/product";
 import { CartItem } from "@/types/cart";
-import { useRouter } from "next/navigation";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import CheckoutForm from "./CheckoutForm";
-import { SeoHead } from "@/components/seo/SeoHead";
 
 export default function CartPage() {
   const {
@@ -22,7 +20,6 @@ export default function CartPage() {
     updateFabricQuantity,
     clearCart,
   } = useCart();
-  const router = useRouter();
   const [promo, setPromo] = useState("");
   const [promoError, setPromoError] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
@@ -136,7 +133,7 @@ export default function CartPage() {
 
   const handleOrderSuccess = () => {
     setLoading(true);
-    setOrderItems([...items, ...fabricItems]);
+    setOrderItems([...items, ...(fabricItems || [])]);
     setOrderTotal(Math.round((totalPrice || 0) * (1 - discount)));
     setOrderDiscount(discount);
     setOrderDiscountValue(Math.round((totalPrice || 0) * discount));
@@ -162,48 +159,12 @@ export default function CartPage() {
   }, []);
 
   const totalWithDiscount = Math.round((totalPrice || 0) * (1 - discount));
-  const totalItemsCount = items.length + fabricItems.length;
-
-  // SEO данные для корзины
-  const seo = {
-    title: "Корзина — Dilavia",
-    description:
-      "Ваша корзина в интернет-магазине Dilavia. Здесь вы можете оформить заказ на мебель и ткани.",
-    canonical: "https://dilavia.by/cart",
-  };
-
-  // Пример структурированных данных для корзины (ItemList)
-  const structuredData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: "Корзина",
-      itemListElement: items.map((item, idx) => ({
-        "@type": "ListItem",
-        position: idx + 1,
-        item: {
-          "@type": "Product",
-          name: item.product.name,
-          image: item.product.images?.[0],
-          offers: {
-            "@type": "Offer",
-            price: item.product.price?.current,
-            priceCurrency: "BYN",
-            availability: "https://schema.org/InStock",
-          },
-        },
-      })),
-    },
-  ];
+  const totalItemsCount =
+    (items ? items.length : 0) + (fabricItems ? fabricItems.length : 0);
 
   if (!isHydrated) {
     return (
       <div className={styles.container}>
-        <SeoHead fallbackSeo={seo} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
         <Breadcrumbs
           items={[
             { label: "Главная", href: "https://dilavia.by/" },
@@ -220,11 +181,6 @@ export default function CartPage() {
   if (orderSubmitted) {
     return (
       <div className={styles.container}>
-        <SeoHead fallbackSeo={seo} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
         <Breadcrumbs
           items={[
             { label: "Главная", href: "https://dilavia.by/" },
@@ -353,14 +309,13 @@ export default function CartPage() {
     );
   }
 
-  if (totalItemsCount === 0) {
+  if (
+    totalItemsCount === 0 &&
+    items !== undefined &&
+    fabricItems !== undefined
+  ) {
     return (
       <div className={styles.container}>
-        <SeoHead fallbackSeo={seo} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
         <Breadcrumbs
           items={[
             { label: "Главная", href: "https://dilavia.by/" },
@@ -385,17 +340,6 @@ export default function CartPage() {
 
   return (
     <div className={styles.container}>
-      <SeoHead fallbackSeo={seo} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <Breadcrumbs
-        items={[
-          { label: "Главная", href: "https://dilavia.by/" },
-          { label: "Корзина" },
-        ]}
-      />
       <div className={styles.cartHeader}>
         <h1 className={styles.cartTitle}>Корзина</h1>
         <button className={styles.clearCartBtn} onClick={handleClearCart}>
@@ -405,7 +349,7 @@ export default function CartPage() {
       <div className={styles.cartGrid}>
         <div className={styles.cartItemsSection}>
           {/* Товары */}
-          {items.map((item: CartItem, index: number) => (
+          {items?.map((item: CartItem, index: number) => (
             <div
               key={`${item.product.id}-${item.selectedDimension?.id || "default"}-${index}`}
               className={styles.cartProductRow}
@@ -519,7 +463,7 @@ export default function CartPage() {
           ))}
 
           {/* Ткани */}
-          {fabricItems.map((item, index) => (
+          {fabricItems?.map((item, index) => (
             <div
               key={`fabric-${item.fabric.categorySlug}-${item.fabric.collectionSlug}-${item.fabric.variant.id}-${index}`}
               className={styles.cartProductRow}

@@ -4,7 +4,6 @@ import Header from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
 import { CartProvider } from "@/hooks/CartContext";
 import { FavoritesProvider } from "@/hooks/FavoritesContext";
-import { SeoProvider } from "@/components/seo/SeoProvider";
 import { defaultMetadata } from "@/lib/metadata";
 import { GlobalSchema } from "@/components/schema/GlobalSchema";
 
@@ -90,11 +89,9 @@ export default function RootLayout({
       <body>
         <CartProvider>
           <FavoritesProvider>
-            <SeoProvider>
-              <Header />
-              {children}
-              <Footer />
-            </SeoProvider>
+            <Header />
+            {children}
+            <Footer />
           </FavoritesProvider>
         </CartProvider>
       </body>

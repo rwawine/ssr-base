@@ -2,7 +2,7 @@ import React from "react";
 import { siteConfig } from "@/lib/metadata";
 
 export function GlobalSchema() {
-  // Объединенная схема организации (убираем дубликаты из head.tsx и OrganizationSchema.tsx)
+  // Объединенная схема организации (централизованная)
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -37,7 +37,7 @@ export function GlobalSchema() {
       },
       {
         "@type": "ContactPoint",
-        email: "information@dilavia.by",
+        email: "infomiagkhikomfort@gmail.com",
         contactType: "customer service",
         areaServed: "BY",
       },
@@ -83,7 +83,7 @@ export function GlobalSchema() {
     },
   };
 
-  // Схема веб-сайта
+  // Схема веб-сайта (централизованная)
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -117,7 +117,7 @@ export function GlobalSchema() {
     description: "Мебельная фабрика - производство и продажа мебели в Минске",
     url: siteConfig.url,
     telephone: "+375336641830",
-    email: "information@dilavia.by",
+    email: "infomiagkhikomfort@gmail.com",
     address: {
       "@type": "PostalAddress",
       streetAddress: "ул. Железнодорожная, д. 33А, оф. 402",

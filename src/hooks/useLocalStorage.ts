@@ -4,9 +4,12 @@ import { useState, useEffect } from "react";
  * Кастомный хук для работы с localStorage
  */
 export function useLocalStorage<T>(key: string, initialValue: T) {
+  // Проверяем, что мы на клиенте
+  const isClient = typeof window !== "undefined";
+
   // Получаем значение из localStorage или используем начальное значение
   const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === "undefined") {
+    if (!isClient) {
       return initialValue;
     }
 
@@ -28,7 +31,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       setStoredValue(valueToStore);
 
       // Сохраняем в localStorage
-      if (typeof window !== "undefined") {
+      if (isClient) {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
@@ -38,6 +41,8 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 
   // Синхронизируем с изменениями в других вкладках
   useEffect(() => {
+    if (!isClient) return;
+
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === key && e.newValue !== null) {
         try {
@@ -48,11 +53,9 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       }
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("storage", handleStorageChange);
-      return () => window.removeEventListener("storage", handleStorageChange);
-    }
-  }, [key]);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, [key, isClient]);
 
   return [storedValue, setValue] as const;
 }

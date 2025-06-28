@@ -9,6 +9,7 @@ import CopirateBlock from "@/components/copirateBlock/CopirateBlock";
 import { fetchHeroSlides } from "@/utils/fetchHeroSlides";
 import productsData from "@/data/data.json";
 import { Product } from "@/types/product";
+import { Slide } from "@/types";
 import { generatePageMetadata } from "@/lib/metadata";
 import styles from "./page.module.css";
 
@@ -27,40 +28,57 @@ export const metadata: Metadata = generatePageMetadata(
 );
 
 export default async function Home() {
-  const slides = await fetchHeroSlides();
+  let slides: Slide[] = [];
+
+  try {
+    slides = await fetchHeroSlides();
+    // Убеждаемся, что слайды имеют правильную структуру
+    slides = slides.filter(
+      (slide) =>
+        slide &&
+        slide.image &&
+        Array.isArray(slide.image) &&
+        slide.image.length > 0 &&
+        slide.image[0]?.url,
+    );
+  } catch (error) {
+    console.error("Error fetching hero slides:", error);
+    slides = [];
+  }
+
   const products: Product[] = productsData[0].products as unknown as Product[];
 
   return (
     <main className={styles.container}>
+      {/* Структурированные данные для популярных товаров */}
       <Script
-        id="website-schema"
+        id="popular-products-schema"
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "WebSite",
-            url: "https://dilavia.by/",
-            name: "Dilavia — Мебель для вашего дома",
-            potentialAction: {
-              "@type": "SearchAction",
-              target: "https://dilavia.by/search?q={search_term_string}",
-              "query-input": "required name=search_term_string",
-            },
-          }),
-        }}
-      />
-      <Script
-        id="organization-schema"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "Dilavia",
-            url: "https://dilavia.by/",
-            logo: "https://dilavia.by/favicon.ico",
+            "@type": "ItemList",
+            name: "Популярные товары",
+            description: "Популярные товары мебельной фабрики Dilavia",
+            numberOfItems: products.length,
+            itemListElement: products.slice(0, 8).map((product, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "Product",
+                name: product.name,
+                description: product.description,
+                image: product.images?.[0],
+                url: `/catalog/${product.slug}`,
+                offers: {
+                  "@type": "Offer",
+                  price: product.price?.current,
+                  priceCurrency: "BYN",
+                  availability: "https://schema.org/InStock",
+                },
+              },
+            })),
           }),
         }}
       />

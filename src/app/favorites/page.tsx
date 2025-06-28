@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/productCard/ProductCard";
 import { FabricCard } from "@/components/fabric-card/FabricCard";
 import styles from "./page.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import { SeoHead } from "@/components/seo/SeoHead";
+import Script from "next/script";
 
 export default function FavoritesPage() {
   const { items, fabricItems, clearFavorites } = useFavorites();
@@ -23,48 +23,64 @@ export default function FavoritesPage() {
 
   const totalItemsCount = items.length + validFabricItems.length;
 
+  // Структурированные данные для избранного
+  const favoritesSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Избранные товары",
+    description: "Избранные товары в интернет-магазине Dilavia",
+    numberOfItems: totalItemsCount,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: item.product.name,
+        image: item.product.images?.[0],
+        url: `/catalog/${item.product.slug}`,
+        offers: {
+          "@type": "Offer",
+          price: item.product.price?.current,
+          priceCurrency: "BYN",
+          availability: "https://schema.org/InStock",
+        },
+      },
+    })),
+  };
+
   if (totalItemsCount === 0) {
     return (
-      <>
-        <SeoHead
-          fallbackSeo={{
-            title: "Избранное | Dilavia",
-            description:
-              "Ваши избранные товары в интернет-магазине Dilavia. Сохраняйте понравившуюся мебель и возвращайтесь к ней в любое время для оформления заказа.",
-            canonical: "/favorites",
-          }}
+      <div className={styles.container}>
+        <Breadcrumbs
+          items={[
+            { label: "Главная", href: "https://dilavia.by/" },
+            { label: "Избранное" },
+          ]}
+          className={styles.breadcrumbs}
         />
-        <div className={styles.container}>
-          <Breadcrumbs
-            items={[
-              { label: "Главная", href: "https://dilavia.by/" },
-              { label: "Избранное" },
-            ]}
-            className={styles.breadcrumbs}
-          />
-          <div className={styles.emptyFavoritesModern}>
-            <h1 className={styles.emptyFavoritesTitle}>
-              В избранном пока нет товаров
-            </h1>
-            <p className={styles.emptyFavoritesSubtitle}>
-              Добавьте товары в избранное, чтобы сохранить их для покупки позже
-            </p>
-            <Link href="/catalog" className={styles.emptyFavoritesButton}>
-              Перейти в каталог
-            </Link>
-          </div>
+        <div className={styles.emptyFavoritesModern}>
+          <h1 className={styles.emptyFavoritesTitle}>
+            В избранном пока нет товаров
+          </h1>
+          <p className={styles.emptyFavoritesSubtitle}>
+            Добавьте товары в избранное, чтобы сохранить их для покупки позже
+          </p>
+          <Link href="/catalog" className={styles.emptyFavoritesButton}>
+            Перейти в каталог
+          </Link>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
     <>
-      <SeoHead
-        fallbackSeo={{
-          title: "Избранное | Dilavia",
-          description: `Ваши избранные товары в интернет-магазине Dilavia. ${totalItemsCount} товаров в избранном. Сохраняйте понравившуюся мебель и возвращайтесь к ней в любое время для оформления заказа.`,
-          canonical: "/favorites",
+      <Script
+        id="favorites-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(favoritesSchema),
         }}
       />
       <div className={styles.container}>

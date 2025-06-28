@@ -8,10 +8,8 @@ interface BreadcrumbsProps {
   className?: string;
 }
 
-/**
- * Компонент для вставки JSON-LD микроразметки Schema.org BreadcrumbList
- */
-const BreadcrumbsJsonLd: React.FC<{ items: BreadcrumbItem[] }> = ({
+/* Удаляю компонент BreadcrumbsJsonLd, чтобы избежать ошибки гидратации */
+/* const BreadcrumbsJsonLd: React.FC<{ items: BreadcrumbItem[] }> = ({
   items,
 }) => {
   if (!items || items.length === 0) return null;
@@ -39,7 +37,7 @@ const BreadcrumbsJsonLd: React.FC<{ items: BreadcrumbItem[] }> = ({
       }}
     />
   );
-};
+}; */
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   if (!items || items.length === 0) {
@@ -51,7 +49,8 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       className={`${styles.breadcrumbs} ${className || ""}`}
       aria-label="Хлебные крошки"
     >
-      <BreadcrumbsJsonLd items={items} />
+      {/* Удаляю вызов BreadcrumbsJsonLd */}
+      {/* <BreadcrumbsJsonLd items={items} /> */}
       <ol className={styles.list}>
         {items.map((item, index) => (
           <li key={index} className={styles.item}>

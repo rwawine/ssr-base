@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import styles from "./OptimizedImage.module.css";
 
 const FALLBACK_SRC = "/images/no-image.png";
@@ -28,42 +27,24 @@ export function OptimizedImage({
   height,
   priority = false,
   className = "",
-  sizes,
+  sizes = "100vw",
   quality = 80,
   placeholder = "empty",
   blurDataURL,
   onLoad,
   onError,
 }: OptimizedImageProps) {
-  // Показываем только картинку или fallback, никаких плейсхолдеров
-  const [imgSrc, setImgSrc] = useState(src || FALLBACK_SRC);
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-    setImgSrc(src || FALLBACK_SRC);
-  }, [src]);
-
-  const handleError = () => {
-    if (imgSrc !== FALLBACK_SRC) {
-      setImgSrc(FALLBACK_SRC);
-    }
-    onError?.();
-  };
-
-  // Формируем className статично, без динамических операций
+  // Формируем className статично
   const containerClassName = className
     ? `${styles.container} ${className}`.trim()
     : styles.container;
 
-  // Стабилизируем sizes для предотвращения гидратации
-  const stableSizes =
-    sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw";
+  const imageSrc = src || FALLBACK_SRC;
 
   return (
-    <div className={containerClassName} suppressHydrationWarning>
+    <div className={containerClassName}>
       <Image
-        src={imgSrc}
+        src={imageSrc}
         alt={alt}
         width={width || 400}
         height={height || 300}
@@ -71,12 +52,11 @@ export function OptimizedImage({
         priority={priority}
         placeholder={placeholder}
         blurDataURL={blurDataURL}
-        sizes={stableSizes}
+        sizes={sizes}
         quality={quality}
         onLoad={onLoad}
-        onError={handleError}
-        unoptimized={imgSrc.startsWith("http")}
-        suppressHydrationWarning
+        onError={onError}
+        unoptimized={imageSrc.startsWith("http")}
       />
     </div>
   );

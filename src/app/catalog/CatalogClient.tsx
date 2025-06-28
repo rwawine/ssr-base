@@ -10,13 +10,14 @@ import FilterToggle from "@/components/catalog/FilterToggle";
 import { Product } from "@/types/product";
 import styles from "./page.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import { SeoHead } from "@/components/seo/SeoHead";
 
 interface CatalogClientProps {
   initialProducts: Product[];
   filteredProducts: Product[];
   currentFilters: FilterState;
   initialSort: "new" | "cheap" | "expensive";
+  categoryName?: string;
+  subcategoryName?: string;
 }
 
 export default function CatalogClient({
@@ -24,6 +25,8 @@ export default function CatalogClient({
   filteredProducts,
   currentFilters,
   initialSort,
+  categoryName,
+  subcategoryName,
 }: CatalogClientProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const router = useRouter();
@@ -45,8 +48,13 @@ export default function CatalogClient({
 
     const checkMobile = () => setIsMobile(window.innerWidth <= 801);
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 801);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [isHydrated]);
 
   // Инициализация сортировки из URL или sessionStorage
@@ -156,32 +164,6 @@ export default function CatalogClient({
     return filteredProducts;
   }, [filteredProducts, sort]);
 
-  // Структурированные данные для SEO
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Каталог мебели Dilavia",
-    description:
-      "Широкий ассортимент мебели: кровати, диваны, кресла и многое другое",
-    numberOfItems: filteredProducts.length,
-    itemListElement: filteredProducts.map((product, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
-        "@type": "Product",
-        name: product.name,
-        description: product.description,
-        image: product.images?.[0],
-        offers: {
-          "@type": "Offer",
-          price: product.price?.current,
-          priceCurrency: "BYN",
-          availability: "https://schema.org/InStock",
-        },
-      },
-    })),
-  };
-
   const handleSortChange = (newSort: string) => {
     if (!isHydrated) return;
 
@@ -197,120 +179,125 @@ export default function CatalogClient({
   };
 
   return (
-    <>
-      <SeoHead
-        fallbackSeo={{
-          title: "Каталог мебели - купить в Минске | Dilavia",
-          description: `Широкий ассортимент качественной мебели. Найдено товаров: ${filteredProducts.length}. Доставка по всей Беларуси. Гарантия качества.`,
-          canonical: "/catalog",
-        }}
+    <div className={styles.container}>
+      {/* Хлебные крошки */}
+      <Breadcrumbs
+        items={[
+          { label: "Главная", href: "https://dilavia.by/" },
+          { label: "Каталог", href: "https://dilavia.by/catalog" },
+          ...(categoryName
+            ? [
+                {
+                  label: categoryName,
+                  href: `https://dilavia.by/catalog?category=${currentFilters.category?.[0] || ""}`,
+                },
+              ]
+            : []),
+          ...(subcategoryName
+            ? [
+                {
+                  label: subcategoryName,
+                },
+              ]
+            : []),
+        ]}
       />
-
-      {/* Структурированные данные для SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-
-      <div className={styles.container}>
-        {/* Хлебные крошки */}
-        <Breadcrumbs
-          items={[
-            { label: "Главная", href: "https://dilavia.by/" },
-            { label: "Каталог" },
-          ]}
-        />
-        {/* Заголовок и кнопка фильтров */}
-        <div className={styles.catalogHeader}>
-          <div className={styles.catalogTitle}>
-            <h1>Каталог товаров</h1>
-            <p className={styles.catalogSubtitle}>
-              Найдено товаров: {filteredProducts.length}
-            </p>
-          </div>
-          <FilterToggle
-            onToggle={toggleFilters}
-            isOpen={filtersOpen}
-            activeFiltersCount={activeFiltersCount}
-          />
+      {/* Заголовок и кнопка фильтров */}
+      <div className={styles.catalogHeader}>
+        <div className={styles.catalogTitle}>
+          <h1>
+            {subcategoryName
+              ? `${subcategoryName} - ${categoryName || "Каталог"}`
+              : categoryName
+                ? categoryName
+                : "Каталог товаров"}
+          </h1>
+          <p className={styles.catalogSubtitle}>
+            Найдено товаров: {filteredProducts.length}
+          </p>
         </div>
+        <FilterToggle
+          onToggle={toggleFilters}
+          isOpen={filtersOpen}
+          activeFiltersCount={activeFiltersCount}
+        />
+      </div>
 
-        {/* Сортировка */}
-        <div className={styles.sortRow}>
-          <span className={`${styles.sortLabel} ${styles.sortDesktop}`}>
-            Отсортировать товары:
-          </span>
-          {!isMobile && (
-            <div className={styles.sortDesktop}>
+      {/* Сортировка */}
+      <div className={styles.sortRow}>
+        <span className={`${styles.sortLabel} ${styles.sortDesktop}`}>
+          Отсортировать товары:
+        </span>
+        {!isMobile && (
+          <div className={styles.sortDesktop}>
+            {sortOptions.map((opt) => (
+              <button
+                key={opt.value}
+                className={
+                  sort === opt.value ? styles.sortActive : styles.sortBtn
+                }
+                onClick={() => handleSortChange(opt.value as any)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {isMobile && (
+          <div className={styles.sortMobile}>
+            <select
+              className={styles.sortMobileSelect}
+              value={sort}
+              onChange={(e) => handleSortChange(e.target.value as any)}
+              aria-label="Сортировка товаров"
+            >
               {sortOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  className={
-                    sort === opt.value ? styles.sortActive : styles.sortBtn
-                  }
-                  onClick={() => handleSortChange(opt.value as any)}
-                >
+                <option key={opt.value} value={opt.value}>
                   {opt.label}
-                </button>
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      <div className={styles.catalogContent}>
+        {/* Фильтры */}
+        <CatalogFilters
+          products={initialProducts}
+          initialFilters={currentFilters}
+          isOpen={filtersOpen}
+          onApply={handleApplyFilters}
+          onReset={handleResetFilters}
+          onClose={() => setFiltersOpen(false)}
+        />
+
+        {/* Список товаров */}
+        <div className={styles.productsSection}>
+          {sortedProducts.length === 0 ? (
+            <div className={styles.noResults}>
+              <h3>Товары не найдены</h3>
+              <p>Попробуйте изменить параметры фильтрации</p>
+              <button
+                onClick={handleResetFilters}
+                className={styles.resetFiltersButton}
+              >
+                Сбросить фильтры
+              </button>
+            </div>
+          ) : (
+            <div className={styles.productsGrid}>
+              {sortedProducts.map((product, idx) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  priority={idx === 0}
+                />
               ))}
             </div>
           )}
-          {isMobile && (
-            <div className={styles.sortMobile}>
-              <select
-                className={styles.sortMobileSelect}
-                value={sort}
-                onChange={(e) => handleSortChange(e.target.value as any)}
-                aria-label="Сортировка товаров"
-              >
-                {sortOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.catalogContent}>
-          {/* Фильтры */}
-          <CatalogFilters
-            products={initialProducts}
-            initialFilters={currentFilters}
-            isOpen={filtersOpen}
-            onApply={handleApplyFilters}
-            onReset={handleResetFilters}
-            onClose={() => setFiltersOpen(false)}
-          />
-
-          {/* Список товаров */}
-          <div className={styles.productsSection}>
-            {sortedProducts.length === 0 ? (
-              <div className={styles.noResults}>
-                <h3>Товары не найдены</h3>
-                <p>Попробуйте изменить параметры фильтрации</p>
-                <button
-                  onClick={handleResetFilters}
-                  className={styles.resetFiltersButton}
-                >
-                  Сбросить фильтры
-                </button>
-              </div>
-            ) : (
-              <div className={styles.productsGrid}>
-                {sortedProducts.map((product, idx) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    priority={idx === 0}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

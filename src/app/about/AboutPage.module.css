@@ -1,218 +1,220 @@
 .pageContainer {
-    color: #333;
-    padding: 0 20px;
-    padding-top: 110px;
-    max-width: 1660px;
-    margin: 0 auto;
+  color: #333;
+  padding: 0 20px;
+  padding-top: 110px;
+  max-width: 1660px;
+  margin: 0 auto;
 }
 
 .banner {
-    width: 100%;
-    height: 350px;
-    position: relative;
+  width: 100%;
+  height: 600px;
+  position: relative;
 }
 
 .bannerImage {
-    object-fit: cover;
-    width: 100%;
-    border-radius: 32px;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 32px;
 }
 
 .breadcrumbs {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    gap: 8px;
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 40px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 40px;
 }
 
 .breadcrumbs a {
-    color: #888;
-    text-decoration: none;
+  color: #888;
+  text-decoration: none;
 }
 
 .breadcrumbs a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .header {
-    text-align: center;
-    margin: 3rem auto;
+  text-align: center;
+  margin: 3rem auto;
 }
 
 .title {
-    font-size: 2.8rem;
-    font-weight: 400;
-    text-align: center;
-    margin-bottom: 3rem;
+  font-size: 2.8rem;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .subtitle {
   font-weight: 400;
-    font-size: 1.1rem;
-    color: #666;
-    max-width: 550px;
-    margin: 0 auto;
-    line-height: 1.6;
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .features {
-    display: flex;
-    justify-content: space-evenly;
-    text-align: center;
-    padding: 2rem 0;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-    margin: 4rem 5%;
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 4rem 5%;
 }
 
 .feature {
-    max-width: 250px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  max-width: 250px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .featureIcon {
-    font-size: 2rem;
-    color: #333;
+  font-size: 2rem;
+  color: #333;
 }
 
 .feature p {
-    font-size: 1rem;
-    text-align: left;
+  font-size: 1rem;
+  text-align: left;
 }
 
 .interiorSection {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    margin: 5rem 5%;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin: 5rem 5%;
 }
 
 .interiorImageWrapper {
-    flex: 1.2;
-    position: relative;
-    min-width: 55%;
+  flex: 1.2;
+  position: relative;
+  min-width: 55%;
 }
 
 .interiorContent {
-    flex: 1;
-    position: relative;
-    margin-top: 4rem;
+  flex: 1;
+  position: relative;
+  margin-top: 4rem;
 }
 
 .interiorTitle {
-    font-size: 2.5rem;
-    font-weight: 400;
-    line-height: 1.3;
-    margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 2rem;
 }
 
 .descriptionBox {
-    background-color: #f7f2ec;
-    padding: 2.5rem;
-    position: relative;
-    margin-left: -8rem;
-    z-index: 1;
+  background-color: #f7f2ec;
+  padding: 2.5rem;
+  position: relative;
+  margin-left: -8rem;
+  z-index: 1;
 }
 
 .descriptionBox p {
-    line-height: 1.7;
-    margin-bottom: 2rem;
+  line-height: 1.7;
 }
 
 .insetImage {
-    width: 220px;
-    height: 150px;
-    object-fit: cover;
-    position: absolute;
-    right: -3rem;
-    bottom: -3rem;
-    border: 8px solid white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 220px;
+  height: 150px;
+  object-fit: cover;
+  position: absolute;
+  right: -3rem;
+  bottom: -3rem;
+  border: 8px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .resultSection {
-    text-align: center;
-    margin: 5rem auto;
+  text-align: center;
+  margin: 5rem auto;
 }
 
 .resultLogo {
-    font-weight: 400;
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
 }
 
 .resultTitle {
-    font-size: 2.2rem;
-    font-weight: 400;
-    max-width: 400px;
-    margin: 0 auto;
-    line-height: 1.4;
+  font-size: 20px;
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.4;
 }
 
 .factorySection {
-    display: flex;
-    justify-content: space-between;
-    gap: 4rem;
-    background-color: #f9f9f9;
-    padding: 4rem 5%;
-    margin-top: 5rem;
+  border-radius: 32px;
+  display: flex;
+  justify-content: space-between;
+  gap: 4rem;
+  background-color: #f9f9f9;
+  padding: 4rem 5%;
+  margin-top: 5rem;
 }
 
 .factoryInfo {
-    max-width: 50%;
+  max-width: 50%;
 }
 
 .factoryTitle {
-    font-size: 2.2rem;
-    font-weight: 400;
-    line-height: 1.4;
-    margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
 }
 
 .factoryText {
-    color: #555;
-    line-height: 1.7;
+  color: #555;
+  line-height: 1.7;
 }
 
 .factoryStats {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2.5rem;
-    min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5rem;
+  min-width: 300px;
 }
 
 .statItem {
-    text-align: left;
+  text-align: left;
 }
 
 .statValue {
-    font-size: 2.8rem;
-    font-weight: 400;
+  font-size: 2.8rem;
+  font-weight: 400;
 }
 
 .statLabel {
-    color: #888;
-    margin-top: 0.5rem;
+  color: #888;
+  margin-top: 0.5rem;
 }
 
 .interiorImage {
-    object-fit: cover;
-    width: 100%;
-    border-radius: 32px;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 32px;
 }
 
 @media (max-width: 1200px) {
+
   .interiorSection,
   .factorySection {
     gap: 1.5rem;
     padding: 3rem 2%;
   }
+
   .descriptionBox {
     margin-left: -2rem;
     padding: 1.5rem;
@@ -220,41 +222,49 @@
 }
 
 @media (max-width: 900px) {
-    .breadcrumbs {
-        margin-bottom: 0;
-    }
+  .breadcrumbs {
+    margin-bottom: 0;
+  }
+
   .features {
     flex-direction: column;
     gap: 1.5rem;
     margin: 2rem 0;
     padding: 1.5rem 0;
   }
+
   .interiorSection {
     flex-direction: column;
     margin: 2.5rem 0;
     gap: 1.5rem;
   }
+
   .interiorImageWrapper {
     min-width: 0;
     width: 100%;
     margin-bottom: 1.5rem;
   }
+
   .interiorContent {
     margin-top: 0;
     width: 100%;
   }
+
   .descriptionBox {
     margin-left: 0;
     padding: 1.2rem;
   }
+
   .factorySection {
     flex-direction: column;
     gap: 2rem;
     padding: 2rem 0.5rem;
   }
+
   .factoryInfo {
     max-width: 100%;
   }
+
   .factoryStats {
     min-width: 0;
     width: 100%;
@@ -262,6 +272,7 @@
     gap: 1.5rem;
     justify-content: space-between;
   }
+
   .statItem {
     text-align: center;
     flex: 1;
@@ -273,63 +284,80 @@
     padding: 0 6px;
     padding-top: 70px;
   }
+
   .banner {
     height: 160px;
   }
+
   .interiorImage {
     height: 240px;
   }
+
   .bannerImage {
     border-radius: 12px;
   }
+
   .title {
     font-size: 1.5rem;
     margin-bottom: 1.2rem;
   }
+
   .subtitle {
     font-size: 0.98rem;
     max-width: 100%;
   }
+
   .features {
     padding: 1rem 0;
     margin: 1.2rem 0;
   }
+
   .feature {
     max-width: 100%;
     gap: 0.7rem;
   }
+
   .featureIcon {
     font-size: 1.3rem;
   }
+
   .interiorTitle {
     font-size: 1.2rem;
     margin-bottom: 1rem;
   }
+
   .descriptionBox {
     padding: 0.7rem;
   }
+
   .descriptionBox p {
     margin-bottom: 0;
   }
+
   .resultSection {
     margin: 2rem 0;
   }
+
   .resultTitle {
     font-size: 1.1rem;
     max-width: 100%;
   }
+
   .factorySection {
     padding: 1.2rem 0.2rem;
     margin-top: 2rem;
   }
+
   .factoryTitle {
     font-size: 1.1rem;
     margin-bottom: 0.7rem;
   }
+
   .factoryStats {
     flex-direction: column;
     gap: 1rem;
   }
+
   .statValue {
     font-size: 1.3rem;
   }

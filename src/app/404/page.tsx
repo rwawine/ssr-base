@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import BackButton from "./BackButton";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import { ErrorPageSchema } from "@/components/schema";
 
 export const metadata: Metadata = {
   title: "404 — Страница не найдена | Dilavia",
@@ -26,26 +27,30 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <Breadcrumbs
-          items={[
-            { label: "Главная", href: "https://dilavia.by/" },
-            { label: "404" },
-          ]}
-        />
-        <h1 className={styles.title}>404</h1>
-        <h2 className={styles.subtitle}>Страница не найдена</h2>
-        <p className={styles.description}>
-          К сожалению, запрашиваемая страница не существует или была перемещена.
-        </p>
-        <div className={styles.actions}>
-          <BackButton className={styles.button} />
-          <Link href="/" className={`${styles.button} ${styles.primary}`}>
-            На главную
-          </Link>
+    <>
+      <ErrorPageSchema />
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <Breadcrumbs
+            items={[
+              { label: "Главная", href: "https://dilavia.by/" },
+              { label: "404" },
+            ]}
+          />
+          <h1 className={styles.title}>404</h1>
+          <h2 className={styles.subtitle}>Страница не найдена</h2>
+          <p className={styles.description}>
+            К сожалению, запрашиваемая страница не существует или была
+            перемещена.
+          </p>
+          <div className={styles.actions}>
+            <BackButton className={styles.button} />
+            <Link href="/" className={`${styles.button} ${styles.primary}`}>
+              На главную
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

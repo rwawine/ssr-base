@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { SeoProvider } from "@/components/seo/SeoProvider";
 
 // Базовые метаданные для layout каталога
 export const metadata: Metadata = {
@@ -28,5 +27,5 @@ export default function CatalogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <SeoProvider>{children}</SeoProvider>;
+  return <>{children}</>;
 }
