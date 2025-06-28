@@ -26,9 +26,16 @@ const Header: React.FC<HeaderProps> = ({
   },
 }) => {
   // Контексты для корзины и избранного
-  const { items: cartItems, totalItems: cartTotalItems } = useCart();
-  const { items: favoritesItems, fabricItems: favoritesFabricItems } =
-    useFavorites();
+  const {
+    items: cartItems,
+    totalItems: cartTotalItems,
+    isHydrated: isCartHydrated,
+  } = useCart();
+  const {
+    items: favoritesItems,
+    fabricItems: favoritesFabricItems,
+    isHydrated: isFavoritesHydrated,
+  } = useFavorites();
 
   // Вычисляем общее количество товаров в избранном
   const favoritesTotalItems =
@@ -39,12 +46,9 @@ const Header: React.FC<HeaderProps> = ({
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
   const [isNavMenuExpanded, setIsNavMenuExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Проверка гидратации для предотвращения несоответствия SSR/CSR
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  // Проверяем, что оба контекста гидратированы
+  const isHydrated = isCartHydrated && isFavoritesHydrated;
 
   // Определение мобильного устройства
   useEffect(() => {
@@ -109,8 +113,16 @@ const Header: React.FC<HeaderProps> = ({
             </Link>
             <div
               className={styles.header__link_menu}
-              onMouseEnter={() => !isMobile && setIsNavMenuExpanded(true)}
-              onMouseLeave={() => !isMobile && setIsNavMenuExpanded(false)}
+              onMouseEnter={
+                isHydrated
+                  ? () => !isMobile && setIsNavMenuExpanded(true)
+                  : undefined
+              }
+              onMouseLeave={
+                isHydrated
+                  ? () => !isMobile && setIsNavMenuExpanded(false)
+                  : undefined
+              }
             >
               <div className={styles.header__link}>
                 <Link
@@ -122,7 +134,11 @@ const Header: React.FC<HeaderProps> = ({
                 </Link>
                 <div
                   className={styles.header__link_arrow}
-                  onClick={() => setIsNavMenuExpanded(!isNavMenuExpanded)}
+                  onClick={
+                    isHydrated
+                      ? () => setIsNavMenuExpanded(!isNavMenuExpanded)
+                      : undefined
+                  }
                 >
                   <ArrowDownIcon
                     className={`${styles.icon} ${isNavMenuExpanded ? styles.icon_rotated : ""}`}
@@ -130,7 +146,10 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
               {isNavMenuExpanded && (
-                <div className={styles.header__expander}>
+                <div
+                  className={styles.header__expander}
+                  suppressHydrationWarning
+                >
                   <div className={`${styles.expander} ${styles.menu_expander}`}>
                     <div className={styles.menu_expander__content}>
                       {navMenuItems.map((item, index) => (
@@ -190,9 +209,21 @@ const Header: React.FC<HeaderProps> = ({
             {/* Телефон */}
             <div
               className={styles.header__info_phone}
-              onMouseEnter={() => !isMobile && setIsPhoneExpanded(true)}
-              onMouseLeave={() => !isMobile && setIsPhoneExpanded(false)}
-              onClick={() => isMobile && setIsPhoneExpanded(!isPhoneExpanded)}
+              onMouseEnter={
+                isHydrated
+                  ? () => !isMobile && setIsPhoneExpanded(true)
+                  : undefined
+              }
+              onMouseLeave={
+                isHydrated
+                  ? () => !isMobile && setIsPhoneExpanded(false)
+                  : undefined
+              }
+              onClick={
+                isHydrated
+                  ? () => isMobile && setIsPhoneExpanded(!isPhoneExpanded)
+                  : undefined
+              }
             >
               <div className={styles.header__info_link}>
                 <PhoneIcon className={styles.icon} />
@@ -205,7 +236,10 @@ const Header: React.FC<HeaderProps> = ({
                 </a>
               </div>
               {isPhoneExpanded && (
-                <div className={styles.header__expander}>
+                <div
+                  className={styles.header__expander}
+                  suppressHydrationWarning
+                >
                   <div
                     className={`${styles.expander} ${styles.phone_expander}`}
                   >
@@ -241,15 +275,16 @@ const Header: React.FC<HeaderProps> = ({
                 title="Перейти в избранное"
               >
                 <HeartIcon />
-                <span suppressHydrationWarning>
-                  {isHydrated && favoritesTotalItems > 0 && (
-                    <span
-                      className={styles.badge}
-                      aria-label={`${favoritesTotalItems} товаров в избранном`}
-                    >
-                      {favoritesTotalItems > 99 ? "99+" : favoritesTotalItems}
-                    </span>
-                  )}
+                <span
+                  className={`${styles.badge} ${!isHydrated ? styles.badge_hidden : ""}`}
+                  aria-label={
+                    isHydrated && favoritesTotalItems > 0
+                      ? `${favoritesTotalItems} товаров в избранном`
+                      : undefined
+                  }
+                  suppressHydrationWarning
+                >
+                  {favoritesTotalItems > 99 ? "99+" : favoritesTotalItems}
                 </span>
               </Link>
             </div>
@@ -262,15 +297,16 @@ const Header: React.FC<HeaderProps> = ({
                 title="Перейти в корзину"
               >
                 <CartIcon />
-                <span suppressHydrationWarning>
-                  {isHydrated && cartTotalItems > 0 && (
-                    <span
-                      className={styles.badge}
-                      aria-label={`${cartTotalItems} товаров в корзине`}
-                    >
-                      {cartTotalItems > 99 ? "99+" : cartTotalItems}
-                    </span>
-                  )}
+                <span
+                  className={`${styles.badge} ${!isHydrated ? styles.badge_hidden : ""}`}
+                  aria-label={
+                    isHydrated && cartTotalItems > 0
+                      ? `${cartTotalItems} товаров в корзине`
+                      : undefined
+                  }
+                  suppressHydrationWarning
+                >
+                  {cartTotalItems > 99 ? "99+" : cartTotalItems}
                 </span>
               </Link>
             </div>
@@ -279,7 +315,11 @@ const Header: React.FC<HeaderProps> = ({
             <div className={styles.header__info_menu}>
               <div
                 className={`${styles.header__info_menu_btn} ${styles.menu_btn} ${isMenuExpanded ? styles.menu_btn_active : ""}`}
-                onClick={() => setIsMenuExpanded(!isMenuExpanded)}
+                onClick={
+                  isHydrated
+                    ? () => setIsMenuExpanded(!isMenuExpanded)
+                    : undefined
+                }
               >
                 <span className={styles.menu_btn__span}></span>
                 <span className={styles.menu_btn__span}></span>
@@ -292,14 +332,14 @@ const Header: React.FC<HeaderProps> = ({
 
       {/* Мобильная навигация */}
       {isMenuExpanded && (
-        <div className={styles.header_nav}>
+        <div className={styles.header_nav} suppressHydrationWarning>
           <div className={styles.mobile_menu}>
             {mobileMenuItems.map((item, index) => (
               <div key={index} className={styles.mobile_menu__item}>
                 <Link
                   href={item.url}
                   className={styles.mobile_menu__link}
-                  onClick={handleMobileMenuClick}
+                  onClick={isHydrated ? handleMobileMenuClick : undefined}
                 >
                   {item.title}
                 </Link>
@@ -310,7 +350,7 @@ const Header: React.FC<HeaderProps> = ({
                         key={subIndex}
                         href={subItem.url}
                         className={styles.mobile_menu__sublink}
-                        onClick={handleMobileMenuClick}
+                        onClick={isHydrated ? handleMobileMenuClick : undefined}
                       >
                         {subItem.title}
                       </Link>
@@ -327,10 +367,15 @@ const Header: React.FC<HeaderProps> = ({
       {(isPhoneExpanded || isMenuExpanded) && isMobile && (
         <div
           className={styles.header__overlay}
-          onClick={() => {
-            setIsPhoneExpanded(false);
-            setIsMenuExpanded(false);
-          }}
+          onClick={
+            isHydrated
+              ? () => {
+                  setIsPhoneExpanded(false);
+                  setIsMenuExpanded(false);
+                }
+              : undefined
+          }
+          suppressHydrationWarning
         ></div>
       )}
     </header>

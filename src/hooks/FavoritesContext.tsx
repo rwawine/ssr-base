@@ -243,6 +243,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     isInFavorites,
     isFabricInFavorites,
     toggleFavorite,
+    isHydrated,
   };
 
   return (

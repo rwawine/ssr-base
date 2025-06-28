@@ -541,6 +541,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     totalItems,
     getItemQuantity,
     isInCart,
+    isHydrated,
   };
 
   return (

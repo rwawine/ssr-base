@@ -75,4 +75,5 @@ export interface CartContextType {
     dimensionId?: string,
     additionalOptions?: AdditionalOption[],
   ) => boolean;
+  isHydrated: boolean;
 }

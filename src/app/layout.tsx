@@ -4,9 +4,9 @@ import Header from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
 import { CartProvider } from "@/hooks/CartContext";
 import { FavoritesProvider } from "@/hooks/FavoritesContext";
+import { SeoProvider } from "@/components/seo/SeoProvider";
 import { defaultMetadata } from "@/lib/metadata";
 import { GlobalSchema } from "@/components/schema/GlobalSchema";
-import { SeoProvider } from "@/components/seo/SeoProvider";
 
 export const metadata: Metadata = defaultMetadata;
 

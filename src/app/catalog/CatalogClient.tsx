@@ -140,8 +140,21 @@ export default function CatalogClient({
     return false;
   }).length;
 
-  // sortedProducts больше не сортируем на клиенте, используем filteredProducts
-  const sortedProducts = filteredProducts;
+  // sortedProducts теперь сортируется на клиенте
+  const sortedProducts = React.useMemo(() => {
+    if (sort === "cheap") {
+      return [...filteredProducts].sort(
+        (a, b) => (a.price?.current || 0) - (b.price?.current || 0),
+      );
+    }
+    if (sort === "expensive") {
+      return [...filteredProducts].sort(
+        (a, b) => (b.price?.current || 0) - (a.price?.current || 0),
+      );
+    }
+    // "new" или дефолт
+    return filteredProducts;
+  }, [filteredProducts, sort]);
 
   // Структурированные данные для SEO
   const structuredData = {

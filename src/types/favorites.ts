@@ -35,4 +35,5 @@ export interface FavoritesContextType {
   isInFavorites: (productId: string) => boolean;
   isFabricInFavorites: (fabricId: string) => boolean;
   toggleFavorite: (product: Product) => void;
+  isHydrated: boolean;
 }

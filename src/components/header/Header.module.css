@@ -63,6 +63,10 @@
     z-index: 10;
 }
 
+.badge_hidden {
+    display: none;
+}
+
 .header__info_favorite .header__info_link,
 .header__info_cart .header__info_link {
     position: relative;

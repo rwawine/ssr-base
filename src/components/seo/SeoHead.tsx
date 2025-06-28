@@ -52,8 +52,14 @@ export function SeoHead({ fallbackSeo }: SeoHeadProps) {
       <meta name="twitter:image" content={`${siteConfig.url}${ogImage}`} />
 
       {/* Robots */}
-      <meta name="robots" content={seo?.noindex ? "noindex" : "index,follow"} />
-      {seo?.nofollow && <meta name="robots" content="nofollow" />}
+      <meta
+        name="robots"
+        content={seo?.noindex ? "noindex" : "index,follow"}
+        suppressHydrationWarning
+      />
+      {seo?.nofollow && (
+        <meta name="robots" content="nofollow" suppressHydrationWarning />
+      )}
 
       {/* Структурированные данные */}
       {seo?.structuredData?.map((data, index) => (
