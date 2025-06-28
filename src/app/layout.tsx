@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer/Footer";
 import { CartProvider } from "@/hooks/CartContext";
 import { FavoritesProvider } from "@/hooks/FavoritesContext";
 import { defaultMetadata } from "@/lib/metadata";
+import { OrganizationSchema, WebSiteSchema } from "@/components/schema";
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -46,7 +47,7 @@ export default function RootLayout({
           <div>
             <img
               src="https://mc.yandex.ru/watch/102656171"
-              style={{ position: 'absolute', left: '-9999px' }}
+              style={{ position: "absolute", left: "-9999px" }}
               alt=""
             />
           </div>
@@ -76,14 +77,16 @@ export default function RootLayout({
           <div>
             <img
               src="https://mc.yandex.ru/watch/103105597"
-              style={{ position: 'absolute', left: '-9999px' }}
+              style={{ position: "absolute", left: "-9999px" }}
               alt=""
             />
           </div>
         </noscript>
         {/* /Yandex.Metrika counter #2 */}
 
-
+        {/* Schema.org микроразметка */}
+        <OrganizationSchema />
+        <WebSiteSchema />
       </head>
       <body>
         <CartProvider>

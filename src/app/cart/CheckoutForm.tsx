@@ -21,9 +21,9 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
     const [errors, setErrors] = useState<any>({});
     const [loading, setLoading] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<{
-      type: 'success' | 'error' | null;
+      type: "success" | "error" | null;
       message: string;
-    }>({ type: null, message: '' });
+    }>({ type: null, message: "" });
 
     // Сохраняем ссылку на форму
     const formElement = React.useRef<HTMLFormElement>(null);
@@ -61,10 +61,10 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
       e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) => {
       setForm({ ...form, [e.target.name]: e.target.value });
-      
+
       // Сбрасываем статус отправки при изменении формы
       if (submitStatus.type) {
-        setSubmitStatus({ type: null, message: '' });
+        setSubmitStatus({ type: null, message: "" });
       }
     };
 
@@ -82,33 +82,36 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
 
       // Если валидация прошла успешно, устанавливаем состояние загрузки
       setLoading(true);
-      setSubmitStatus({ type: null, message: '' });
+      setSubmitStatus({ type: null, message: "" });
 
       try {
         // Подготавливаем данные для отправки
         const orderData = {
-          type: 'order' as const,
+          type: "order" as const,
           ...form,
           cartItems: [
             ...items.map((item: any) => ({
               name: item.product.name,
               quantity: item.quantity,
-              price: item.selectedDimension?.price || item.product.price?.current || 0
+              price:
+                item.selectedDimension?.price ||
+                item.product.price?.current ||
+                0,
             })),
             ...fabricItems.map((item: any) => ({
               name: `${item.fabric.collection.name} - ${item.fabric.variant.name}`,
               quantity: item.quantity,
-              price: 0 // Ткани бесплатные
-            }))
+              price: 0, // Ткани бесплатные
+            })),
           ],
-          totalAmount: totalPrice
+          totalAmount: totalPrice,
         };
 
         // Отправляем данные на API
-        const response = await fetch('/api/send-email', {
-          method: 'POST',
+        const response = await fetch("/api/send-email", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(orderData),
         });
@@ -117,28 +120,32 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
 
         if (response.ok && result.success) {
           setSubmitStatus({
-            type: 'success',
-            message: 'Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.'
+            type: "success",
+            message:
+              "Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.",
           });
-          
+
           // Очищаем корзину после успешной отправки
           clearCart();
-          
+
           // Вызываем callback для уведомления основного компонента
           if (props.onOrderSuccess) {
             props.onOrderSuccess();
           }
         } else {
           setSubmitStatus({
-            type: 'error',
-            message: result.error || 'Произошла ошибка при отправке заказа. Попробуйте еще раз.'
+            type: "error",
+            message:
+              result.error ||
+              "Произошла ошибка при отправке заказа. Попробуйте еще раз.",
           });
         }
       } catch (error) {
-        console.error('Ошибка отправки заказа:', error);
+        console.error("Ошибка отправки заказа:", error);
         setSubmitStatus({
-          type: 'error',
-          message: 'Произошла ошибка при отправке заказа. Проверьте подключение к интернету и попробуйте еще раз.'
+          type: "error",
+          message:
+            "Произошла ошибка при отправке заказа. Проверьте подключение к интернету и попробуйте еще раз.",
         });
       } finally {
         setLoading(false);
@@ -153,13 +160,15 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
         autoComplete="off"
       >
         <h2 className={styles.sectionTitle}>Оформление заказа</h2>
-        
+
         {submitStatus.type && (
-          <div className={`${styles.submitStatus} ${styles[submitStatus.type]}`}>
+          <div
+            className={`${styles.submitStatus} ${styles[submitStatus.type]}`}
+          >
             {submitStatus.message}
           </div>
         )}
-        
+
         <div className={styles.field}>
           <label>Телефон*</label>
           <input
@@ -176,10 +185,10 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
                 value.replace(/\D/g, "").replace(/^375/, "").slice(0, 9);
               if (value.length < 4) value = "+375";
               setForm({ ...form, phone: value });
-              
+
               // Сбрасываем статус отправки при изменении формы
               if (submitStatus.type) {
-                setSubmitStatus({ type: null, message: '' });
+                setSubmitStatus({ type: null, message: "" });
               }
             }}
             placeholder="+375XXXXXXXXX"
@@ -231,7 +240,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
               onClick={() => {
                 setForm((f) => ({ ...f, delivery: "courier" }));
                 if (submitStatus.type) {
-                  setSubmitStatus({ type: null, message: '' });
+                  setSubmitStatus({ type: null, message: "" });
                 }
               }}
               disabled={loading}
@@ -248,7 +257,7 @@ const CheckoutForm = forwardRef<HTMLFormElement, CheckoutFormProps>(
               onClick={() => {
                 setForm((f) => ({ ...f, delivery: "pickup" }));
                 if (submitStatus.type) {
-                  setSubmitStatus({ type: null, message: '' });
+                  setSubmitStatus({ type: null, message: "" });
                 }
               }}
               disabled={loading}

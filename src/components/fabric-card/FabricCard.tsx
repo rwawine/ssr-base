@@ -24,8 +24,9 @@ export function FabricCard({
   selectedVariantId,
 }: FabricCardProps) {
   const initialVariant =
-    collection.variants.find((v) => String(v.id) === String(selectedVariantId)) ||
-    collection.variants[0];
+    collection.variants.find(
+      (v) => String(v.id) === String(selectedVariantId),
+    ) || collection.variants[0];
   const [selectedVariant, setSelectedVariant] = useState(initialVariant);
   const { addFabricToCart, fabricItems } = useCart();
   const {

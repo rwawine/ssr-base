@@ -37,12 +37,15 @@ export function SliderSlide({
       ) : (
         <div
           className={styles.backgroundImage}
-          style={{ 
-            backgroundImage: `url(${createOptimizedImageUrl(slide.image[0].url, {
-              width: 1440,
-              height: 600,
-              quality: 85,
-            })})` 
+          style={{
+            backgroundImage: `url(${createOptimizedImageUrl(
+              slide.image[0].url,
+              {
+                width: 1440,
+                height: 600,
+                quality: 85,
+              },
+            )})`,
           }}
           role="img"
           aria-label={slide.title}

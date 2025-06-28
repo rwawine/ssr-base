@@ -48,9 +48,9 @@ export default function ContactForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
-    type: 'success' | 'error' | null;
+    type: "success" | "error" | null;
     message: string;
-  }>({ type: null, message: '' });
+  }>({ type: null, message: "" });
 
   const validateField = (name: string, value: string): string => {
     switch (name) {
@@ -112,7 +112,7 @@ export default function ContactForm() {
 
     // Сбрасываем статус отправки при изменении формы
     if (submitStatus.type) {
-      setSubmitStatus({ type: null, message: '' });
+      setSubmitStatus({ type: null, message: "" });
     }
 
     // Валидация при вводе, если поле уже было в фокусе
@@ -175,17 +175,17 @@ export default function ContactForm() {
     }
 
     setIsSubmitting(true);
-    setSubmitStatus({ type: null, message: '' });
+    setSubmitStatus({ type: null, message: "" });
 
     try {
       // Отправляем данные на API
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
+      const response = await fetch("/api/send-email", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type: 'contact_form',
+          type: "contact_form",
           name: formData.name,
           email: formData.email,
           topic: formData.topic,
@@ -197,10 +197,11 @@ export default function ContactForm() {
 
       if (response.ok && result.success) {
         setSubmitStatus({
-          type: 'success',
-          message: 'Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.'
+          type: "success",
+          message:
+            "Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.",
         });
-        
+
         // Очищаем форму при успешной отправке
         setFormData({
           name: "",
@@ -222,15 +223,18 @@ export default function ContactForm() {
         });
       } else {
         setSubmitStatus({
-          type: 'error',
-          message: result.error || 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.'
+          type: "error",
+          message:
+            result.error ||
+            "Произошла ошибка при отправке сообщения. Попробуйте еще раз.",
         });
       }
     } catch (error) {
-      console.error('Ошибка отправки формы:', error);
+      console.error("Ошибка отправки формы:", error);
       setSubmitStatus({
-        type: 'error',
-        message: 'Произошла ошибка при отправке сообщения. Проверьте подключение к интернету и попробуйте еще раз.'
+        type: "error",
+        message:
+          "Произошла ошибка при отправке сообщения. Проверьте подключение к интернету и попробуйте еще раз.",
       });
     } finally {
       setIsSubmitting(false);
@@ -240,7 +244,7 @@ export default function ContactForm() {
   return (
     <section className={styles.contactForm}>
       <h2 className={styles.formTitle}>Форма обратной связи</h2>
-      
+
       {submitStatus.type && (
         <div className={`${styles.submitStatus} ${styles[submitStatus.type]}`}>
           {submitStatus.message}
@@ -320,8 +324,8 @@ export default function ContactForm() {
           )}
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={styles.submitButton}
           disabled={isSubmitting}
         >

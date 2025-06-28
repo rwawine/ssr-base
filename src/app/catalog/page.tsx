@@ -3,6 +3,7 @@ import CatalogClient from "./CatalogClient";
 import { Product } from "@/types/product";
 import { Metadata } from "next";
 import { FilterState } from "@/components/catalog/CatalogFilters";
+import { generateCategoryMetadata } from "@/lib/seo-utils";
 
 /**
  * Получить все товары из локального файла данных.
@@ -106,29 +107,27 @@ function filterProducts(
 }
 
 /**
- * Сортировка товаров по выбранному критерию.
- * @param {Product[]} products - Массив товаров
+ * Сортировка товаров по различным критериям
+ * @param {Product[]} products - Массив товаров для сортировки
  * @param {string} sortBy - Критерий сортировки
  */
 function sortProducts(products: Product[], sortBy: string) {
   switch (sortBy) {
     case "price-asc":
-      products.sort(
-        (a, b) => (a.price?.current || 0) - (b.price?.current || 0),
-      );
+      products.sort((a, b) => a.price.current - b.price.current);
       break;
     case "price-desc":
-      products.sort(
-        (a, b) => (b.price?.current || 0) - (a.price?.current || 0),
-      );
+      products.sort((a, b) => b.price.current - a.price.current);
       break;
     case "popularity":
       products.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
       break;
     case "name":
-    default:
       products.sort((a, b) => a.name.localeCompare(b.name));
       break;
+    default:
+      // По умолчанию сортируем по популярности
+      products.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
   }
 }
 
@@ -147,10 +146,7 @@ export async function generateMetadata({
   const categoryParam = resolvedSearchParams.category;
   const subcategoryParam = resolvedSearchParams.subcategory;
 
-  let title = "Каталог товаров | Dilavia";
-  let description =
-    "Широкий ассортимент мебели: кровати, диваны, кресла и многое другое. Доставка по всей Беларуси.";
-
+  // Если есть фильтр по категории, генерируем специфичные метаданные
   if (categoryParam) {
     const categoryName = Array.isArray(categoryParam)
       ? categoryParam[0]
@@ -159,8 +155,10 @@ export async function generateMetadata({
       (p) => p.category?.code === categoryName,
     );
     if (categoryProduct?.category?.name) {
-      title = `${categoryProduct.category.name} | Dilavia`;
-      description = `Купить ${categoryProduct.category.name.toLowerCase()} в интернет-магазине Dilavia. Доставка по всей Беларуси.`;
+      return generateCategoryMetadata(
+        categoryProduct.category.name,
+        filteredProducts.length,
+      );
     }
   }
 
@@ -172,18 +170,24 @@ export async function generateMetadata({
       (p) => p.subcategory?.code === subcategoryName,
     );
     if (subcategoryProduct?.subcategory?.name) {
-      title = `${subcategoryProduct.subcategory.name} | Dilavia`;
-      description = `Купить ${subcategoryProduct.subcategory.name.toLowerCase()} в интернет-магазине Dilavia. Доставка по всей Беларуси.`;
+      return generateCategoryMetadata(
+        subcategoryProduct.subcategory.name,
+        filteredProducts.length,
+      );
     }
   }
 
+  // Дефолтные метаданные для каталога
   return {
-    title,
-    description,
-    keywords: "мебель, кровати, диваны, кресла, купить мебель, доставка",
+    title: "Каталог мебели - купить в Минске | Dilavia",
+    description:
+      "Широкий ассортимент качественной мебели: кровати, диваны, кресла и многое другое. Доставка по всей Беларуси. Гарантия качества.",
+    keywords:
+      "каталог мебели, мебель Минск, купить мебель, диваны, кровати, кресла, доставка по Беларуси, Dilavia",
     openGraph: {
-      title,
-      description,
+      title: "Каталог мебели - купить в Минске | Dilavia",
+      description:
+        "Широкий ассортимент качественной мебели для вашего дома с доставкой по всей Беларуси",
       url: "https://dilavia.by/catalog",
       type: "website",
       locale: "ru_RU",

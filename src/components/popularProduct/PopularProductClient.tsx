@@ -102,7 +102,7 @@ export default function PopularProductClient({
               <div className={styles.productPrice}>
                 {product.price?.current && (
                   <span className={styles.currentPrice}>
-                  {product.price.current.toLocaleString("ru-RU")} BYN
+                    {product.price.current.toLocaleString("ru-RU")} BYN
                   </span>
                 )}
                 {product.price?.old && (

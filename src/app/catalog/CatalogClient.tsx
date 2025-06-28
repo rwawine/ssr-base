@@ -45,8 +45,8 @@ export default function CatalogClient({
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 801);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const sortOptions = [
@@ -176,7 +176,9 @@ export default function CatalogClient({
               {sortOptions.map((opt) => (
                 <button
                   key={opt.value}
-                  className={sort === opt.value ? styles.sortActive : styles.sortBtn}
+                  className={
+                    sort === opt.value ? styles.sortActive : styles.sortBtn
+                  }
                   onClick={() => setSort(opt.value as any)}
                 >
                   {opt.label}
@@ -189,11 +191,13 @@ export default function CatalogClient({
               <select
                 className={styles.sortMobileSelect}
                 value={sort}
-                onChange={e => setSort(e.target.value as any)}
+                onChange={(e) => setSort(e.target.value as any)}
                 aria-label="Сортировка товаров"
               >
-                {sortOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                {sortOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -227,7 +231,11 @@ export default function CatalogClient({
             ) : (
               <div className={styles.productsGrid}>
                 {sortedProducts.map((product, idx) => (
-                  <ProductCard key={product.id} product={product} priority={idx === 0} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    priority={idx === 0}
+                  />
                 ))}
               </div>
             )}

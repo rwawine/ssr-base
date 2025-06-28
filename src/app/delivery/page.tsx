@@ -4,11 +4,12 @@ import Link from "next/link";
 import styles from "./Delivery.module.css";
 import Accordion from "@/components/faq/Accordion";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import { FAQSchema } from "@/components/schema";
 
 export const metadata: Metadata = {
-  title: "Доставка и оплата | Dilavia",
+  title: "Доставка мебели по Беларуси - условия, сроки, стоимость | Dilavia",
   description:
-    "Условия доставки и оплаты мебели в интернет-магазине Dilavia. Быстрая и удобная доставка по всей Беларуси. Способы оплаты и сроки.",
+    "Бесплатная доставка мебели по Минску и всей Беларуси. Срок изготовления 2-4 недели, гарантия 18 месяцев, возможность возврата в течение 14 дней",
   openGraph: {
     title: "Доставка и оплата | Dilavia",
     description:
@@ -55,6 +56,12 @@ const faqItems = [
 export default function DeliveryPage() {
   return (
     <main className={styles.container}>
+      <FAQSchema
+        items={faqItems.map(({ title, content }) => ({
+          question: title,
+          answer: content,
+        }))}
+      />
       <Breadcrumbs
         items={[
           { label: "Главная", href: "https://dilavia.by/" },

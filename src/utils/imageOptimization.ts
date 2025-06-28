@@ -115,8 +115,9 @@ export const preloadCriticalImages = (images: string[]) => {
   if (typeof window === "undefined") return;
 
   const linkExists = (href: string): boolean => {
-    return Array.from(document.head.querySelectorAll('link[rel="preload"]'))
-      .some(link => link.getAttribute('href') === href);
+    return Array.from(
+      document.head.querySelectorAll('link[rel="preload"]'),
+    ).some((link) => link.getAttribute("href") === href);
   };
 
   images.forEach((src, index) => {

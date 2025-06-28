@@ -185,9 +185,9 @@ function ContactForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
-    type: 'success' | 'error' | null;
+    type: "success" | "error" | null;
     message: string;
-  }>({ type: null, message: '' });
+  }>({ type: null, message: "" });
 
   const validateField = (name: string, value: string) => {
     switch (name) {
@@ -244,7 +244,7 @@ function ContactForm({
 
     // Сбрасываем статус отправки при изменении формы
     if (submitStatus.type) {
-      setSubmitStatus({ type: null, message: '' });
+      setSubmitStatus({ type: null, message: "" });
     }
 
     // Валидация при вводе, если поле уже было в фокусе
@@ -295,8 +295,8 @@ function ContactForm({
 
     if (!isPrivacyAccepted) {
       setSubmitStatus({
-        type: 'error',
-        message: 'Необходимо согласиться с обработкой персональных данных'
+        type: "error",
+        message: "Необходимо согласиться с обработкой персональных данных",
       });
       return;
     }
@@ -306,22 +306,22 @@ function ContactForm({
     }
 
     setIsSubmitting(true);
-    setSubmitStatus({ type: null, message: '' });
+    setSubmitStatus({ type: null, message: "" });
 
     try {
       // Подготавливаем данные для отправки
       const contactData = {
-        type: 'contact' as const,
+        type: "contact" as const,
         name: formData.name,
         phone: formData.phone,
-        message: formData.message
+        message: formData.message,
       };
 
       // Отправляем данные на API
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
+      const response = await fetch("/api/send-email", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(contactData),
       });
@@ -330,10 +330,11 @@ function ContactForm({
 
       if (response.ok && result.success) {
         setSubmitStatus({
-          type: 'success',
-          message: 'Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.'
+          type: "success",
+          message:
+            "Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.",
         });
-        
+
         // Очищаем форму при успешной отправке
         setFormData({
           name: "",
@@ -350,22 +351,25 @@ function ContactForm({
           phone: "",
           message: "",
         });
-        
+
         // Закрываем модальное окно через 2 секунды
         setTimeout(() => {
           onClose();
         }, 2000);
       } else {
         setSubmitStatus({
-          type: 'error',
-          message: result.error || 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.'
+          type: "error",
+          message:
+            result.error ||
+            "Произошла ошибка при отправке сообщения. Попробуйте еще раз.",
         });
       }
     } catch (error) {
-      console.error('Ошибка отправки сообщения:', error);
+      console.error("Ошибка отправки сообщения:", error);
       setSubmitStatus({
-        type: 'error',
-        message: 'Произошла ошибка при отправке сообщения. Проверьте подключение к интернету и попробуйте еще раз.'
+        type: "error",
+        message:
+          "Произошла ошибка при отправке сообщения. Проверьте подключение к интернету и попробуйте еще раз.",
       });
     } finally {
       setIsSubmitting(false);

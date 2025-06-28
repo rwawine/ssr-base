@@ -373,7 +373,8 @@ export default function CartPage() {
                 </div>
                 <div className={styles.cartProductPriceRow}>
                   <span className={styles.cartProductPrice}>
-                    от {(
+                    от{" "}
+                    {(
                       item.selectedDimension?.price ||
                       item.product.price?.current
                     ).toLocaleString("ru-RU")}{" "}

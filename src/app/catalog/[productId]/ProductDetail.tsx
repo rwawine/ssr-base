@@ -15,6 +15,7 @@ import { useCart } from "@/hooks/CartContext";
 import { useFavorites } from "@/hooks/FavoritesContext";
 import { ProductCard } from "@/components/productCard/ProductCard";
 import ProductOptions from "@/components/productCard/ProductOptions";
+import { ProductSchema } from "@/components/schema";
 import styles from "./ProductDetail.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import productCardStyles from "@/components/productCard/ProductCard.module.css";
@@ -155,16 +156,27 @@ export default function ProductDetail({
 
   // Компактные характеристики только по реальным полям
   const shortSpecs: { label: string; value: string | number }[] = [
-    { label: 'Артикул', value: product.id },
-    { label: 'Модель', value: product.name },
-    { label: 'Гарантия', value: product.warranty || '' },
-    { label: 'Цвет', value: product.color || '' },
-    { label: 'Страна', value: product.country || '' },
-    { label: 'Категория', value: product.category?.name || '' },
-    { label: 'Подкатегория', value: product.subcategory?.name || '' },
-    { label: 'Размер', value: selectedDimension ? `${selectedDimension.width}x${selectedDimension.length}` : '' },
-    { label: 'Особенности', value: product.features && product.features.length > 0 ? product.features.join(', ') : '' },
-  ].filter(spec => spec.value !== '');
+    { label: "Артикул", value: product.id },
+    { label: "Модель", value: product.name },
+    { label: "Гарантия", value: product.warranty || "" },
+    { label: "Цвет", value: product.color || "" },
+    { label: "Страна", value: product.country || "" },
+    { label: "Категория", value: product.category?.name || "" },
+    { label: "Подкатегория", value: product.subcategory?.name || "" },
+    {
+      label: "Размер",
+      value: selectedDimension
+        ? `${selectedDimension.width}x${selectedDimension.length}`
+        : "",
+    },
+    {
+      label: "Особенности",
+      value:
+        product.features && product.features.length > 0
+          ? product.features.join(", ")
+          : "",
+    },
+  ].filter((spec) => spec.value !== "");
 
   const breadcrumbs = [
     { label: "Главная", href: "/" },
@@ -203,7 +215,7 @@ export default function ProductDetail({
   // Обработчик клика по миниатюре
   const handleThumbClick = (index: number) => {
     if (isTransitioning || activeIndex === index) return;
-    
+
     if (mainSwiperRef.current && mainSwiperRef.current.swiper) {
       const swiper = mainSwiperRef.current.swiper;
       setIsTransitioning(true);
@@ -216,6 +228,13 @@ export default function ProductDetail({
 
   return (
     <div className={styles.container}>
+      {/* Schema.org микроразметка для продукта */}
+      <ProductSchema
+        product={product}
+        selectedDimension={selectedDimension}
+        additionalOptionsPrice={additionalOptionsPrice}
+      />
+
       <Breadcrumbs items={breadcrumbs} className={styles.breadcrumbs} />
 
       <div className={styles.productPage}>
@@ -231,9 +250,7 @@ export default function ProductDetail({
               }
               thumbs={{
                 swiper:
-                  thumbsSwiper && !thumbsSwiper.destroyed
-                    ? thumbsSwiper
-                    : null,
+                  thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
               }}
               className={styles.mainSwiper}
               loop={images.length > 1}
@@ -368,17 +385,19 @@ export default function ProductDetail({
 
         <div className={styles.info}>
           <h1 className={styles.title}>{product.name}</h1>
-          
+
           <div className={styles.availabilityInfo}>
             <div className={styles.availabilityItem}>
               <span className={styles.label}>Доступность:</span>
-              <span className={styles.value}>{product.availability || 'В наличии'}</span>
+              <span className={styles.value}>
+                {product.availability || "В наличии"}
+              </span>
             </div>
             <div className={styles.categoryLinks}>
               <span>Категории: </span>
               {product.category && product.subcategory && (
-                <Link 
-                  href={`/catalog?category=${product.category.code}&subcategory=${product.subcategory.code}`} 
+                <Link
+                  href={`/catalog?category=${product.category.code}&subcategory=${product.subcategory.code}`}
                   className={styles.categoryLink}
                 >
                   {product.subcategory.name}
@@ -387,7 +406,9 @@ export default function ProductDetail({
             </div>
             <div className={styles.availabilityItem}>
               <span className={styles.label}>Срок изготовления:</span>
-              <span className={styles.value}>{product.manufacturing || '35-50 рабочих дней'}</span>
+              <span className={styles.value}>
+                {product.manufacturing || "35-50 рабочих дней"}
+              </span>
             </div>
           </div>
 
@@ -401,17 +422,17 @@ export default function ProductDetail({
               )}
             </div>
             <button
-              className={`${styles.favoriteButton} ${inFavorites ? styles.active : ''}`}
+              className={`${styles.favoriteButton} ${inFavorites ? styles.active : ""}`}
               onClick={() => toggleFavorite(product)}
-              aria-label={inFavorites ? "Удалить из избранного" : "Добавить в избранное"}
+              aria-label={
+                inFavorites ? "Удалить из избранного" : "Добавить в избранное"
+              }
             >
               <FavoriteIcon isActive={inFavorites} />
             </button>
           </div>
 
-          <div className={styles.description}>
-            {product.description}
-          </div>
+          <div className={styles.description}>{product.description}</div>
 
           {dimensions.length > 1 && (
             <div className={styles.dimensions}>
@@ -419,17 +440,22 @@ export default function ProductDetail({
               <select
                 value={`${selectedDimension?.width}x${selectedDimension?.length}`}
                 onChange={(e) => {
-                  const [width, length] = e.target.value.split('x').map(Number)
-                  const dimension = dimensions.find(d => d.width === width && d.length === length)
+                  const [width, length] = e.target.value.split("x").map(Number);
+                  const dimension = dimensions.find(
+                    (d) => d.width === width && d.length === length,
+                  );
                   if (dimension) {
-                    setSelectedDimension(dimension)
-                    setSelectedAdditionalOptions([])
+                    setSelectedDimension(dimension);
+                    setSelectedAdditionalOptions([]);
                   }
                 }}
                 className={styles.dimensionSelect}
               >
                 {dimensions.map((dim) => (
-                  <option key={`${dim.width}x${dim.length}`} value={`${dim.width}x${dim.length}`}>
+                  <option
+                    key={`${dim.width}x${dim.length}`}
+                    value={`${dim.width}x${dim.length}`}
+                  >
                     {dim.width}x{dim.length} см
                   </option>
                 ))}
@@ -437,30 +463,37 @@ export default function ProductDetail({
             </div>
           )}
 
-          {selectedDimension?.additionalOptions && selectedDimension.additionalOptions.length > 0 && (
-            <div className={styles.additionalOptions}>
-              <label>Дополнительные опции:</label>
-              <select
-                value={selectedAdditionalOptions.length > 0 ? selectedAdditionalOptions[0]?.name || '' : ''}
-                onChange={(e) => {
-                  const option = selectedDimension.additionalOptions?.find(opt => opt.name === e.target.value)
-                  if (option) {
-                    setSelectedAdditionalOptions([option])
-                  } else {
-                    setSelectedAdditionalOptions([])
+          {selectedDimension?.additionalOptions &&
+            selectedDimension.additionalOptions.length > 0 && (
+              <div className={styles.additionalOptions}>
+                <label>Дополнительные опции:</label>
+                <select
+                  value={
+                    selectedAdditionalOptions.length > 0
+                      ? selectedAdditionalOptions[0]?.name || ""
+                      : ""
                   }
-                }}
-                className={styles.optionSelect}
-              >
-                <option value="">Выберите опцию</option>
-                {selectedDimension.additionalOptions.map((opt) => (
-                  <option key={opt.name} value={opt.name}>
-                    {opt.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+                  onChange={(e) => {
+                    const option = selectedDimension.additionalOptions?.find(
+                      (opt) => opt.name === e.target.value,
+                    );
+                    if (option) {
+                      setSelectedAdditionalOptions([option]);
+                    } else {
+                      setSelectedAdditionalOptions([]);
+                    }
+                  }}
+                  className={styles.optionSelect}
+                >
+                  <option value="">Выберите опцию</option>
+                  {selectedDimension.additionalOptions.map((opt) => (
+                    <option key={opt.name} value={opt.name}>
+                      {opt.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
           {/* Компактные характеристики */}
           <div className={styles.shortSpecsBlock}>
@@ -471,9 +504,12 @@ export default function ProductDetail({
               </div>
             ))}
           </div>
-          <button className={styles.openDrawerBtn} onClick={() => setIsDrawerOpen(true)}>
-              Характеристики и описание
-            </button>
+          <button
+            className={styles.openDrawerBtn}
+            onClick={() => setIsDrawerOpen(true)}
+          >
+            Характеристики и описание
+          </button>
           {!inCart ? (
             <button
               className={styles.addToCartButton}
@@ -515,44 +551,119 @@ export default function ProductDetail({
 
       {/* Drawer справа */}
       {isDrawerOpen && (
-        <div className={styles.drawerOverlay} onClick={() => setIsDrawerOpen(false)}>
-          <div className={styles.drawer} onClick={e => e.stopPropagation()}>
+        <div
+          className={styles.drawerOverlay}
+          onClick={() => setIsDrawerOpen(false)}
+        >
+          <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
             <div className={styles.drawerHeader}>
-              <span className={styles.drawerTitle}>Характеристики и описание</span>
-              <button className={styles.drawerClose} onClick={() => setIsDrawerOpen(false)}>×</button>
+              <span className={styles.drawerTitle}>
+                Характеристики и описание
+              </span>
+              <button
+                className={styles.drawerClose}
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                ×
+              </button>
             </div>
             <div className={styles.drawerContent}>
               {/* Общие характеристики */}
               <div className={styles.drawerSection}>
                 <h3>Общие характеристики</h3>
-                <div className={styles.drawerRow}><span>Артикул</span><span>{product.id}</span></div>
-                <div className={styles.drawerRow}><span>Модель</span><span>{product.name}</span></div>
-                {product.warranty && <div className={styles.drawerRow}><span>Гарантия</span><span>{product.warranty}</span></div>}
-                {product.category?.name && <div className={styles.drawerRow}><span>Категория</span><span>{product.category.name}</span></div>}
-                {product.subcategory?.name && <div className={styles.drawerRow}><span>Подкатегория</span><span>{product.subcategory.name}</span></div>}
-                {product.color && <div className={styles.drawerRow}><span>Цвет</span><span>{product.color}</span></div>}
-                {product.country && <div className={styles.drawerRow}><span>Страна</span><span>{product.country}</span></div>}
-                {product.style && <div className={styles.drawerRow}><span>Стиль</span><span>{product.style}</span></div>}
-                {product.configuration && <div className={styles.drawerRow}><span>Конфигурация</span><span>{product.configuration}</span></div>}
-                {product.filler && <div className={styles.drawerRow}><span>Наполнитель</span><span>{product.filler}</span></div>}
-                {product.legs && <div className={styles.drawerRow}><span>Ножки</span><span>{product.legs}</span></div>}
-                {product.frame && <div className={styles.drawerRow}><span>Каркас</span><span>{product.frame}</span></div>}
-                {product.mechanism !== undefined && <div className={styles.drawerRow}><span>Механизм трансформации</span><span>{product.mechanism ? 'Да' : 'Нет'}</span></div>}
+                <div className={styles.drawerRow}>
+                  <span>Артикул</span>
+                  <span>{product.id}</span>
+                </div>
+                <div className={styles.drawerRow}>
+                  <span>Модель</span>
+                  <span>{product.name}</span>
+                </div>
+                {product.warranty && (
+                  <div className={styles.drawerRow}>
+                    <span>Гарантия</span>
+                    <span>{product.warranty}</span>
+                  </div>
+                )}
+                {product.category?.name && (
+                  <div className={styles.drawerRow}>
+                    <span>Категория</span>
+                    <span>{product.category.name}</span>
+                  </div>
+                )}
+                {product.subcategory?.name && (
+                  <div className={styles.drawerRow}>
+                    <span>Подкатегория</span>
+                    <span>{product.subcategory.name}</span>
+                  </div>
+                )}
+                {product.color && (
+                  <div className={styles.drawerRow}>
+                    <span>Цвет</span>
+                    <span>{product.color}</span>
+                  </div>
+                )}
+                {product.country && (
+                  <div className={styles.drawerRow}>
+                    <span>Страна</span>
+                    <span>{product.country}</span>
+                  </div>
+                )}
+                {product.style && (
+                  <div className={styles.drawerRow}>
+                    <span>Стиль</span>
+                    <span>{product.style}</span>
+                  </div>
+                )}
+                {product.configuration && (
+                  <div className={styles.drawerRow}>
+                    <span>Конфигурация</span>
+                    <span>{product.configuration}</span>
+                  </div>
+                )}
+                {product.filler && (
+                  <div className={styles.drawerRow}>
+                    <span>Наполнитель</span>
+                    <span>{product.filler}</span>
+                  </div>
+                )}
+                {product.legs && (
+                  <div className={styles.drawerRow}>
+                    <span>Ножки</span>
+                    <span>{product.legs}</span>
+                  </div>
+                )}
+                {product.frame && (
+                  <div className={styles.drawerRow}>
+                    <span>Каркас</span>
+                    <span>{product.frame}</span>
+                  </div>
+                )}
+                {product.mechanism !== undefined && (
+                  <div className={styles.drawerRow}>
+                    <span>Механизм трансформации</span>
+                    <span>{product.mechanism ? "Да" : "Нет"}</span>
+                  </div>
+                )}
               </div>
-              
+
               {/* Размеры */}
               {dimensions && dimensions.length > 0 && (
                 <div className={styles.drawerSection}>
                   <h3>Размеры</h3>
                   {dimensions.map((dim, idx) => (
                     <div key={idx} className={styles.drawerRow}>
-                      <span>{dim.width}x{dim.length}{dim.height ? `x${dim.height}` : ''}{dim.depth ? `x${dim.depth}` : ''} мм</span>
+                      <span>
+                        {dim.width}x{dim.length}
+                        {dim.height ? `x${dim.height}` : ""}
+                        {dim.depth ? `x${dim.depth}` : ""} мм
+                      </span>
                       <span>{dim.price} BYN</span>
                     </div>
                   ))}
                 </div>
               )}
-              
+
               {/* Материалы */}
               {product.materials && product.materials.length > 0 && (
                 <div className={styles.drawerSection}>
@@ -560,12 +671,15 @@ export default function ProductDetail({
                   {product.materials.map((mat, idx) => (
                     <div key={idx} className={styles.drawerRow}>
                       <span>{mat.name}</span>
-                      <span>{mat.type}{mat.color ? `, ${mat.color}` : ''}</span>
+                      <span>
+                        {mat.type}
+                        {mat.color ? `, ${mat.color}` : ""}
+                      </span>
                     </div>
                   ))}
                 </div>
               )}
-              
+
               {/* Особенности */}
               {product.features && product.features.length > 0 && (
                 <div className={styles.drawerSection}>
@@ -578,29 +692,47 @@ export default function ProductDetail({
                   ))}
                 </div>
               )}
-              
+
               {/* Доставка */}
               {product.delivery && (
                 <div className={styles.drawerSection}>
                   <h3>Доставка</h3>
-                  <div className={styles.drawerRow}><span>Доступность</span><span>{product.delivery.available ? 'Доступна' : 'Недоступна'}</span></div>
-                  <div className={styles.drawerRow}><span>Стоимость</span><span>{product.delivery.cost}</span></div>
-                  <div className={styles.drawerRow}><span>Сроки</span><span>{product.delivery.time}</span></div>
+                  <div className={styles.drawerRow}>
+                    <span>Доступность</span>
+                    <span>
+                      {product.delivery.available ? "Доступна" : "Недоступна"}
+                    </span>
+                  </div>
+                  <div className={styles.drawerRow}>
+                    <span>Стоимость</span>
+                    <span>{product.delivery.cost}</span>
+                  </div>
+                  <div className={styles.drawerRow}>
+                    <span>Сроки</span>
+                    <span>{product.delivery.time}</span>
+                  </div>
                 </div>
               )}
-              
+
               {/* Рассрочка и кредит */}
-              {product.installmentPlans && product.installmentPlans.length > 0 && (
-                <div className={styles.drawerSection}>
-                  <h3>Рассрочка и кредит</h3>
-                  {product.installmentPlans.map((plan, idx) => (
-                    <div key={idx} className={styles.drawerRow}>
-                      <span>{plan.bank}</span>
-                      <span>Рассрочка: {plan.installment.durationMonths} мес, {plan.installment.interest}, {plan.installment.additionalFees} | Кредит: {plan.credit.durationMonths} мес, {plan.credit.interest}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {product.installmentPlans &&
+                product.installmentPlans.length > 0 && (
+                  <div className={styles.drawerSection}>
+                    <h3>Рассрочка и кредит</h3>
+                    {product.installmentPlans.map((plan, idx) => (
+                      <div key={idx} className={styles.drawerRow}>
+                        <span>{plan.bank}</span>
+                        <span>
+                          Рассрочка: {plan.installment.durationMonths} мес,{" "}
+                          {plan.installment.interest},{" "}
+                          {plan.installment.additionalFees} | Кредит:{" "}
+                          {plan.credit.durationMonths} мес,{" "}
+                          {plan.credit.interest}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
         </div>

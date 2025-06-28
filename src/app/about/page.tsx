@@ -6,9 +6,9 @@ import styles from "./AboutPage.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "О компании Dilavia | Производство дизайнерской мебели",
+  title: "О компании Dilavia - мебельная фабрика в Беларуси",
   description:
-    "Узнайте больше о мебельной фабрике Dilavia. Наша миссия, ценности и технологии производства. Качественная мебель из экологичных материалов.",
+    "Производство мебели в Беларуси. Экологически чистые материалы, европейские поставщики, контроль качества на каждом этапе. Узнайте больше о Dilavia",
   openGraph: {
     title: "О компании Dilavia",
     description:

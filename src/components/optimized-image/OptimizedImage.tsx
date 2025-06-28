@@ -85,9 +85,9 @@ export function OptimizedImage({
 
   // Определяем стили для поддержания пропорций
   const imageStyle = {
-    width: width ? `100%` : 'auto',
-    height: height ? `${height}px` : 'auto',
-    objectFit: 'cover' as const,
+    width: width ? `100%` : "auto",
+    height: height ? `${height}px` : "auto",
+    objectFit: "cover" as const,
   };
 
   if (hasError) {

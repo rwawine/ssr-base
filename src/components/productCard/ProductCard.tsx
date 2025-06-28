@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Product, Dimension, AdditionalOption } from "@/types/product";
 import { useCart } from "@/hooks/CartContext";
 import { formatPrice } from "@/lib/utils";
 import { OptimizedImage } from "@/components/optimized-image/OptimizedImage";
+import { ProductSchema } from "@/components/schema";
 import ProductOptions from "./ProductOptions";
 import styles from "./ProductCard.module.css";
 
@@ -140,6 +141,13 @@ export function ProductCard({ product, priority }: ProductCardProps) {
 
   return (
     <div className={styles.card}>
+      {/* Schema.org микроразметка для продукта */}
+      <ProductSchema
+        product={product}
+        selectedDimension={selectedDimension}
+        additionalOptionsPrice={additionalOptionsPrice}
+      />
+
       <Link href={`/catalog/${slug}`} className={styles.imageLink}>
         <div className={styles.imageWrapper}>
           <OptimizedImage

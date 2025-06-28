@@ -1,27 +1,29 @@
-import React from "react";
-import { promises as fs } from "fs";
-import path from "path";
-import { Product } from "@/types/product";
-import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { Product } from "@/types/product";
 import ProductDetail from "./ProductDetail";
+import {
+  generateProductMetadata,
+  generateProductStructuredData,
+} from "@/lib/seo-utils";
 
 async function getProductsData() {
-  const filePath = path.join(process.cwd(), "src", "data", "data.json");
-  const fileContents = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(fileContents);
+  const data = await import("@/data/data.json");
+  return data.default;
 }
 
-type Params = Promise<{ productId: string }>;
+interface Params {
+  productId: string;
+}
 
 export async function generateMetadata({
   params,
 }: {
-  params: Params;
+  params: Promise<Params>;
 }): Promise<Metadata> {
   const { productId: slug } = await params;
   const productsData = await getProductsData();
-  const products: Product[] = productsData[0].products;
+  const products = productsData[0].products as unknown as Product[];
   const product = products.find((p) => p.slug === slug);
 
   if (!product) {
@@ -31,41 +33,18 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: product.seo?.title || `${product.name} | Dilavia`,
-    description:
-      product.seo?.metaDescription ||
-      product.description ||
-      `Купить ${product.name} в интернет-магазине Dilavia. Доставка по всей Беларуси.`,
-    keywords:
-      product.seo?.keywords ||
-      `${product.name}, мебель, ${product.category?.name || ""}, купить`,
-    openGraph: {
-      title: product.seo?.title || product.name,
-      description: product.seo?.metaDescription || product.description,
-      url: `https://dilavia.by/catalog/${product.slug}`,
-      type: "website",
-      images:
-        product.images?.map((img) => ({ url: img, alt: product.name })) || [],
-      locale: "ru_RU",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: product.seo?.title || product.name,
-      description: product.seo?.metaDescription || product.description,
-      images: product.images?.[0] || [],
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-  };
+  // Используем новую утилиту для генерации оптимизированных метаданных
+  return generateProductMetadata(product);
 }
 
-export default async function ProductPage({ params }: { params: Params }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
   const { productId: slug } = await params;
   const productsData = await getProductsData();
-  const products: Product[] = productsData[0].products;
+  const products = productsData[0].products as unknown as Product[];
   const product = products.find((p) => p.slug === slug);
 
   if (!product) {
@@ -79,36 +58,8 @@ export default async function ProductPage({ params }: { params: Params }) {
     )
     .slice(0, 4);
 
-  // Структурированные данные для SEO
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description,
-    image: product.images,
-    category: product.category?.name,
-    brand: {
-      "@type": "Brand",
-      name: "Dilavia",
-    },
-    offers: {
-      "@type": "Offer",
-      price: product.price?.current,
-      priceCurrency: "BYN",
-      availability: "https://schema.org/InStock",
-      url: `https://dilavia.by/catalog/${product.slug}`,
-      seller: {
-        "@type": "Organization",
-        name: "Dilavia",
-      },
-    },
-    additionalProperty:
-      product.dimensions?.map((dim) => ({
-        "@type": "PropertyValue",
-        name: `Размер ${dim.width}x${dim.length}`,
-        value: `${dim.price} BYN`,
-      })) || [],
-  };
+  // Используем новую утилиту для генерации структурированных данных
+  const structuredData = generateProductStructuredData(product);
 
   return (
     <>

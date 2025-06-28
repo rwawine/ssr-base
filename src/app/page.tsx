@@ -12,27 +12,30 @@ import { Product } from "@/types/product";
 import { generateMetadata } from "@/lib/metadata";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = generateMetadata();
+export const metadata: Metadata = generateMetadata({
+  title:
+    "Купить мебель в Минске недорого - диваны, кровати, кресла от производителя Dilavia",
+  description:
+    "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров. Доставка, гарантия, лучшие цены!",
+  openGraph: {
+    title: "Главная | Dilavia — Мебель для вашего дома",
+    description:
+      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
+    url: "https://dilavia.by/",
+  },
+  twitter: {
+    title: "Главная | Dilavia — Мебель для вашего дома",
+    description:
+      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
+  },
+});
 
 export default async function Home() {
   const slides = await fetchHeroSlides();
   const products: Product[] = productsData[0].products as unknown as Product[];
 
-  // Получаем критические изображения для предзагрузки только если есть данные
-  const criticalImages =
-    slides.length > 0
-      ? slides
-          .slice(0, 2)
-          .map((slide) => {
-            const imageUrl = slide.image[0]?.url || "";
-            return imageUrl;
-          })
-          .filter(Boolean)
-      : [];
-
   return (
     <main className={styles.container}>
-
       <Script
         id="website-schema"
         type="application/ld+json"
