@@ -5,25 +5,18 @@ import styles from "./Delivery.module.css";
 import Accordion from "@/components/faq/Accordion";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { FAQSchema } from "@/components/schema";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Доставка мебели по Беларуси - условия, сроки, стоимость | Dilavia",
-  description:
-    "Бесплатная доставка мебели по Минску и всей Беларуси. Срок изготовления 2-4 недели, гарантия 18 месяцев, возможность возврата в течение 14 дней",
-  openGraph: {
-    title: "Доставка и оплата | Dilavia",
+export const metadata: Metadata = generatePageMetadata(
+  {
+    title: "Доставка мебели по Беларуси | Dilavia",
     description:
-      "Условия доставки и оплаты мебели в интернет-магазине Dilavia. Быстрая и удобная доставка по всей Беларуси. Способы оплаты и сроки.",
-    url: "https://dilavia.by/delivery",
-    type: "website",
+      "Доставка мебели по всей Беларуси. Бесплатная доставка в Минске. Сроки, условия, стоимость доставки.",
+    keywords:
+      "доставка мебели, доставка по Беларуси, бесплатная доставка, сроки доставки, условия доставки",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Доставка и оплата | Dilavia",
-    description:
-      "Условия доставки и оплаты мебели в интернет-магазине Dilavia. Быстрая и удобная доставка по всей Беларуси. Способы оплаты и сроки.",
-  },
-};
+  "/delivery",
+);
 
 const faqItems = [
   {

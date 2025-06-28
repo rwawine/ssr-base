@@ -22,35 +22,17 @@ export function SliderSlide({
       className={`${styles.slide} ${isActive ? styles.slideActive : styles.slideHidden}`}
       data-slide-index={index}
     >
-      {/* Используем OptimizedImage для первого слайда (LCP) */}
-      {index === 0 ? (
-        <OptimizedImage
-          src={slide.image[0].url}
-          alt={slide.title}
-          width={1440}
-          height={600}
-          className={styles.backgroundImage}
-          priority={true}
-          quality={90}
-          sizes="100vw"
-        />
-      ) : (
-        <div
-          className={styles.backgroundImage}
-          style={{
-            backgroundImage: `url(${createOptimizedImageUrl(
-              slide.image[0].url,
-              {
-                width: 1440,
-                height: 600,
-                quality: 85,
-              },
-            )})`,
-          }}
-          role="img"
-          aria-label={slide.title}
-        />
-      )}
+      {/* Используем OptimizedImage для всех слайдов для консистентности */}
+      <OptimizedImage
+        src={slide.image[0].url}
+        alt={slide.title}
+        width={1440}
+        height={600}
+        className={styles.backgroundImage}
+        priority={isLCP}
+        quality={isLCP ? 90 : 85}
+        sizes="100vw"
+      />
 
       <div className={styles.content}>
         <h2 className={styles.title}>{slide.title}</h2>

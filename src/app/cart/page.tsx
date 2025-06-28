@@ -9,6 +9,7 @@ import { CartItem } from "@/types/cart";
 import { useRouter } from "next/navigation";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import CheckoutForm from "./CheckoutForm";
+import { SeoHead } from "@/components/seo/SeoHead";
 
 export default function CartPage() {
   const {
@@ -163,9 +164,46 @@ export default function CartPage() {
   const totalWithDiscount = Math.round((totalPrice || 0) * (1 - discount));
   const totalItemsCount = items.length + fabricItems.length;
 
+  // SEO данные для корзины
+  const seo = {
+    title: "Корзина — Dilavia",
+    description:
+      "Ваша корзина в интернет-магазине Dilavia. Здесь вы можете оформить заказ на мебель и ткани.",
+    canonical: "https://dilavia.by/cart",
+  };
+
+  // Пример структурированных данных для корзины (ItemList)
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Корзина",
+      itemListElement: items.map((item, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "Product",
+          name: item.product.name,
+          image: item.product.images?.[0],
+          offers: {
+            "@type": "Offer",
+            price: item.product.price?.current,
+            priceCurrency: "BYN",
+            availability: "https://schema.org/InStock",
+          },
+        },
+      })),
+    },
+  ];
+
   if (!isHydrated) {
     return (
       <div className={styles.container}>
+        <SeoHead fallbackSeo={seo} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <Breadcrumbs
           items={[
             { label: "Главная", href: "https://dilavia.by/" },
@@ -182,6 +220,11 @@ export default function CartPage() {
   if (orderSubmitted) {
     return (
       <div className={styles.container}>
+        <SeoHead fallbackSeo={seo} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <Breadcrumbs
           items={[
             { label: "Главная", href: "https://dilavia.by/" },
@@ -313,6 +356,11 @@ export default function CartPage() {
   if (totalItemsCount === 0) {
     return (
       <div className={styles.container}>
+        <SeoHead fallbackSeo={seo} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <Breadcrumbs
           items={[
             { label: "Главная", href: "https://dilavia.by/" },
@@ -337,6 +385,11 @@ export default function CartPage() {
 
   return (
     <div className={styles.container}>
+      <SeoHead fallbackSeo={seo} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Breadcrumbs
         items={[
           { label: "Главная", href: "https://dilavia.by/" },

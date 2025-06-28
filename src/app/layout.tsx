@@ -5,7 +5,8 @@ import { Footer } from "@/components/footer/Footer";
 import { CartProvider } from "@/hooks/CartContext";
 import { FavoritesProvider } from "@/hooks/FavoritesContext";
 import { defaultMetadata } from "@/lib/metadata";
-import { OrganizationSchema, WebSiteSchema } from "@/components/schema";
+import { GlobalSchema } from "@/components/schema/GlobalSchema";
+import { SeoProvider } from "@/components/seo/SeoProvider";
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
+        {/* Скрипты аналитики */}
         <script
           async
           src="https://script.click-chat.ru/chat.js?wid=2806a4e5-3f63-4afe-b6a3-d09e0d4f08b4"
@@ -52,7 +54,6 @@ export default function RootLayout({
             />
           </div>
         </noscript>
-        {/* /Yandex.Metrika counter */}
 
         {/* Yandex.Metrika counter #2 */}
         <script
@@ -82,18 +83,18 @@ export default function RootLayout({
             />
           </div>
         </noscript>
-        {/* /Yandex.Metrika counter #2 */}
 
-        {/* Schema.org микроразметка */}
-        <OrganizationSchema />
-        <WebSiteSchema />
+        {/* Глобальные структурированные данные Schema.org */}
+        <GlobalSchema />
       </head>
       <body>
         <CartProvider>
           <FavoritesProvider>
-            <Header />
-            {children}
-            <Footer />
+            <SeoProvider>
+              <Header />
+              {children}
+              <Footer />
+            </SeoProvider>
           </FavoritesProvider>
         </CartProvider>
       </body>

@@ -14,11 +14,11 @@ import { Product, Dimension, AdditionalOption } from "@/types/product";
 import { useCart } from "@/hooks/CartContext";
 import { useFavorites } from "@/hooks/FavoritesContext";
 import { ProductCard } from "@/components/productCard/ProductCard";
-import ProductOptions from "@/components/productCard/ProductOptions";
 import { ProductSchema } from "@/components/schema";
 import styles from "./ProductDetail.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import productCardStyles from "@/components/productCard/ProductCard.module.css";
+import { SeoHead } from "@/components/seo/SeoHead";
 
 interface ProductDetailProps {
   product: Product;
@@ -228,6 +228,15 @@ export default function ProductDetail({
 
   return (
     <div className={styles.container}>
+      <SeoHead
+        fallbackSeo={{
+          title: product.name,
+          description:
+            product.description || `Купить ${product.name} по выгодной цене`,
+          canonical: `/catalog/${product.id}`,
+        }}
+      />
+
       {/* Schema.org микроразметка для продукта */}
       <ProductSchema
         product={product}
@@ -273,6 +282,7 @@ export default function ProductDetail({
                     className={styles.mainSwiperSlide}
                     alt={`${product.name} - фото ${index + 1}`}
                     loading={index === 0 ? "eager" : "lazy"}
+                    suppressHydrationWarning
                   />
                 </SwiperSlide>
               ))}
@@ -427,6 +437,7 @@ export default function ProductDetail({
               aria-label={
                 inFavorites ? "Удалить из избранного" : "Добавить в избранное"
               }
+              suppressHydrationWarning
             >
               <FavoriteIcon isActive={inFavorites} />
             </button>
@@ -510,42 +521,44 @@ export default function ProductDetail({
           >
             Характеристики и описание
           </button>
-          {!inCart ? (
-            <button
-              className={styles.addToCartButton}
-              onClick={handleCartButtonClick}
-            >
-              В корзину
-            </button>
-          ) : (
-            <div className={productCardStyles.inCartActions}>
+          <div suppressHydrationWarning>
+            {!inCart ? (
               <button
-                className={productCardStyles.inCartButton}
-                onClick={() => router.push("/cart")}
+                className={styles.addToCartButton}
+                onClick={handleCartButtonClick}
               >
-                В корзине {cartQuantity} шт.
+                В корзину
               </button>
-              <div className={productCardStyles.cartCounter}>
+            ) : (
+              <div className={productCardStyles.inCartActions}>
                 <button
-                  className={productCardStyles.counterBtn}
-                  onClick={handleDecrease}
-                  aria-label="Уменьшить количество"
+                  className={productCardStyles.inCartButton}
+                  onClick={() => router.push("/cart")}
                 >
-                  −
+                  В корзине {cartQuantity} шт.
                 </button>
-                <span className={productCardStyles.counterValue}>
-                  {cartQuantity}
-                </span>
-                <button
-                  className={productCardStyles.counterBtn}
-                  onClick={handleIncrease}
-                  aria-label="Увеличить количество"
-                >
-                  +
-                </button>
+                <div className={productCardStyles.cartCounter}>
+                  <button
+                    className={productCardStyles.counterBtn}
+                    onClick={handleDecrease}
+                    aria-label="Уменьшить количество"
+                  >
+                    −
+                  </button>
+                  <span className={productCardStyles.counterValue}>
+                    {cartQuantity}
+                  </span>
+                  <button
+                    className={productCardStyles.counterBtn}
+                    onClick={handleIncrease}
+                    aria-label="Увеличить количество"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

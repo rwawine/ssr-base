@@ -3,25 +3,18 @@ import { Metadata } from "next";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import Reviews from "@/components/reviews/Reviews";
 import styles from "./ReviewsPage.module.css";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Отзывы | Dilavia",
-  description:
-    "Отзывы покупателей о мебели и сервисе интернет-магазина Dilavia. Читайте реальные мнения клиентов и делитесь своим опытом.",
-  openGraph: {
+export const metadata: Metadata = generatePageMetadata(
+  {
     title: "Отзывы | Dilavia",
     description:
       "Отзывы покупателей о мебели и сервисе интернет-магазина Dilavia. Читайте реальные мнения клиентов и делитесь своим опытом.",
-    url: "https://dilavia.by/reviews",
-    type: "website",
+    keywords:
+      "отзывы Dilavia, отзывы о мебели, мнения покупателей, отзывы клиентов",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Отзывы | Dilavia",
-    description:
-      "Отзывы покупателей о мебели и сервисе интернет-магазина Dilavia. Читайте реальные мнения клиентов и делитесь своим опытом.",
-  },
-};
+  "/reviews",
+);
 
 export default function ReviewsPage() {
   return (

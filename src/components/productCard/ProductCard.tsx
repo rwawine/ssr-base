@@ -63,12 +63,44 @@ export function ProductCard({ product, priority }: ProductCardProps) {
     setIsHydrated(true);
   }, []);
 
+  // Надёжная обработка изображений для production
+  /**
+   * Возвращает корректный путь к главному изображению товара.
+   * - Если путь относительный, добавляет '/'
+   * - Если путь пустой или невалидный, возвращает заглушку
+   * - Для production-готовых проектов можно расширить проверку (например, на https://)
+   */
+  const getMainImage = (images: string[] | undefined): string => {
+    if (
+      Array.isArray(images) &&
+      images.length > 0 &&
+      typeof images[0] === "string" &&
+      images[0]
+    ) {
+      const src = images[0];
+      if (src.startsWith("http://") || src.startsWith("https://")) return src;
+      if (src.startsWith("/")) return src;
+      return "/" + src;
+    }
+    return "/images/no-image.png";
+  };
+
   const name = product?.name || "Без названия";
-  const images = product?.images?.length
-    ? product.images.slice(0, 1)
-    : ["/images/no-image.png"];
+  const mainImage = getMainImage(product?.images);
   const slug = product?.slug || "";
   const isBestseller = (product?.popularity || 0) > 4.5;
+
+  // Логирование для диагностики (можно убрать в production)
+  useEffect(() => {
+    if (!mainImage || mainImage === "/images/no-image.png") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[ProductCard] Product image missing or invalid:",
+        product.name,
+        product.images,
+      );
+    }
+  }, [mainImage, product]);
 
   const basePrice = selectedDimension?.price ?? product.price?.current ?? 0;
   const additionalOptionsPrice = selectedAdditionalOptions.reduce(
@@ -151,12 +183,11 @@ export function ProductCard({ product, priority }: ProductCardProps) {
       <Link href={`/catalog/${slug}`} className={styles.imageLink}>
         <div className={styles.imageWrapper}>
           <OptimizedImage
-            src={images[0]}
+            src={mainImage}
             alt={`${name} - фото 1`}
             width={400}
             height={300}
             className={styles.image}
-            priority={priority}
             quality={80}
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
@@ -189,7 +220,7 @@ export function ProductCard({ product, priority }: ProductCardProps) {
           />
         )}
 
-        <div className={styles.actions}>
+        <div className={styles.actions} suppressHydrationWarning>
           {!inCart ? (
             <button
               className={styles.addToCartButton}

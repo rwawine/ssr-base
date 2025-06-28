@@ -64,13 +64,76 @@ export const defaultMetadata: Metadata = {
     canonical: siteConfig.url,
   },
   metadataBase: new URL(siteConfig.url),
+  verification: {
+    google: "your-google-verification-code",
+    yandex: "your-yandex-verification-code",
+  },
 };
 
+/**
+ * Генерирует метаданные с переопределениями
+ * @param overrides - переопределения для базовых метаданных
+ * @returns объект метаданных
+ */
 export function generateMetadata(overrides: Partial<Metadata> = {}): Metadata {
   return {
     ...defaultMetadata,
     ...overrides,
   };
+}
+
+/**
+ * Генерирует метаданные для страницы с динамическим canonical
+ * @param seoData - SEO данные страницы
+ * @param path - путь страницы
+ * @returns объект метаданных
+ */
+export function generatePageMetadata(
+  seoData: {
+    title?: string;
+    description?: string;
+    keywords?: string;
+    ogImage?: string;
+    ogType?: "website" | "article";
+    noindex?: boolean;
+  },
+  path: string = "/",
+): Metadata {
+  const canonical = path === "/" ? siteConfig.url : `${siteConfig.url}${path}`;
+
+  return generateMetadata({
+    title: seoData.title,
+    description: seoData.description,
+    keywords: seoData.keywords,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      url: canonical,
+      title: seoData.title,
+      description: seoData.description,
+      type: seoData.ogType || "website",
+      images: seoData.ogImage
+        ? [
+            {
+              url: seoData.ogImage,
+              width: 1200,
+              height: 630,
+              alt: seoData.title || siteConfig.name,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      title: seoData.title,
+      description: seoData.description,
+      images: seoData.ogImage ? [seoData.ogImage] : undefined,
+    },
+    robots: {
+      index: !seoData.noindex,
+      follow: !seoData.noindex,
+    },
+  });
 }
 
 export { siteConfig };

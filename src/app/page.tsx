@@ -9,26 +9,22 @@ import CopirateBlock from "@/components/copirateBlock/CopirateBlock";
 import { fetchHeroSlides } from "@/utils/fetchHeroSlides";
 import productsData from "@/data/data.json";
 import { Product } from "@/types/product";
-import { generateMetadata } from "@/lib/metadata";
+import { generatePageMetadata } from "@/lib/metadata";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = generateMetadata({
-  title:
-    "Купить мебель в Минске недорого - диваны, кровати, кресла от производителя Dilavia",
-  description:
-    "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров. Доставка, гарантия, лучшие цены!",
-  openGraph: {
-    title: "Главная | Dilavia — Мебель для вашего дома",
+export const metadata: Metadata = generatePageMetadata(
+  {
+    title:
+      "Купить мебель в Минске недорого - диваны, кровати, кресла от производителя Dilavia",
     description:
-      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
-    url: "https://dilavia.by/",
+      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров. Доставка, гарантия, лучшие цены!",
+    keywords:
+      "мебель Минск, купить мебель, диваны, кровати, кресла, производитель мебели, доставка по Беларуси",
+    ogImage:
+      "/images/medium_u7661199629_A_luxurious_living_room_interior_with_a_stylish_o_ac81bca1_328c_4d9d_a0fd_4508eaa2de6c_0_fe6545f98e.png",
   },
-  twitter: {
-    title: "Главная | Dilavia — Мебель для вашего дома",
-    description:
-      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
-  },
-});
+  "/",
+);
 
 export default async function Home() {
   const slides = await fetchHeroSlides();

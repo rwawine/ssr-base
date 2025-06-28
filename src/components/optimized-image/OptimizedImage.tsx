@@ -1,14 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import {
-  optimizeImageData,
-  createOptimizedImageUrl,
-  createLazyLoadingAttributes,
-} from "@/lib/image-utils";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useState, useEffect } from "react";
 import styles from "./OptimizedImage.module.css";
+
+const FALLBACK_SRC = "/images/no-image.png";
 
 interface OptimizedImageProps {
   src: string;
@@ -39,83 +35,48 @@ export function OptimizedImage({
   onLoad,
   onError,
 }: OptimizedImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const { ref, isIntersecting } = useIntersectionObserver({
-    threshold: 0.1,
-    rootMargin: "50px",
-  });
+  // Показываем только картинку или fallback, никаких плейсхолдеров
+  const [imgSrc, setImgSrc] = useState(src || FALLBACK_SRC);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  const handleLoad = () => {
-    setIsLoaded(true);
-    onLoad?.();
-  };
+  useEffect(() => {
+    setIsHydrated(true);
+    setImgSrc(src || FALLBACK_SRC);
+  }, [src]);
 
   const handleError = () => {
-    setHasError(true);
+    if (imgSrc !== FALLBACK_SRC) {
+      setImgSrc(FALLBACK_SRC);
+    }
     onError?.();
   };
 
-  // Если изображение не в области видимости и не приоритетное, не загружаем
-  if (!isIntersecting && !priority) {
-    return (
-      <div
-        ref={ref as React.Ref<HTMLDivElement>}
-        className={`${styles.placeholder} ${className}`}
-        style={{ width, height }}
-      >
-        <div className={styles.loading} />
-      </div>
-    );
-  }
+  // Формируем className статично, без динамических операций
+  const containerClassName = className
+    ? `${styles.container} ${className}`.trim()
+    : styles.container;
 
-  // Оптимизируем URL изображения
-  const optimizedSrc = createOptimizedImageUrl(src, {
-    width,
-    height,
-    quality,
-    format: "auto",
-  });
-
-  // Создаем атрибуты для lazy loading
-  const lazyAttributes = createLazyLoadingAttributes(optimizedSrc, alt, {
-    loading: priority ? "eager" : "lazy",
-    sizes,
-  });
-
-  // Определяем стили для поддержания пропорций
-  const imageStyle = {
-    width: width ? `100%` : "auto",
-    height: height ? `${height}px` : "auto",
-    objectFit: "cover" as const,
-  };
-
-  if (hasError) {
-    return (
-      <div className={`${styles.error} ${className}`} style={{ width, height }}>
-        <div className={styles.errorContent}>
-          <span>Ошибка загрузки</span>
-        </div>
-      </div>
-    );
-  }
+  // Стабилизируем sizes для предотвращения гидратации
+  const stableSizes =
+    sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw";
 
   return (
-    <div
-      ref={ref as React.Ref<HTMLDivElement>}
-      className={`${styles.container} ${className} ${isLoaded ? styles.loaded : ""}`}
-    >
+    <div className={containerClassName} suppressHydrationWarning>
       <Image
-        {...lazyAttributes}
+        src={imgSrc}
+        alt={alt}
         width={width || 400}
         height={height || 300}
         className={styles.image}
-        style={imageStyle}
         priority={priority}
         placeholder={placeholder}
         blurDataURL={blurDataURL}
-        onLoad={handleLoad}
+        sizes={stableSizes}
+        quality={quality}
+        onLoad={onLoad}
         onError={handleError}
+        unoptimized={imgSrc.startsWith("http")}
+        suppressHydrationWarning
       />
     </div>
   );

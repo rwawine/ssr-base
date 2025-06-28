@@ -10,25 +10,70 @@ import FilterToggle from "@/components/catalog/FilterToggle";
 import { Product } from "@/types/product";
 import styles from "./page.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import { SeoHead } from "@/components/seo/SeoHead";
 
 interface CatalogClientProps {
   initialProducts: Product[];
   filteredProducts: Product[];
   currentFilters: FilterState;
+  initialSort: "new" | "cheap" | "expensive";
 }
 
 export default function CatalogClient({
   initialProducts,
   filteredProducts,
   currentFilters,
+  initialSort,
 }: CatalogClientProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const [sort, setSort] = useState<"new" | "cheap" | "expensive">("new");
+  const [sort, setSort] = useState<"new" | "cheap" | "expensive">(initialSort);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Устанавливаем isHydrated в true после монтирования
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Определение мобильного устройства
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const checkMobile = () => setIsMobile(window.innerWidth <= 801);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [isHydrated]);
+
+  // Инициализация сортировки из URL или sessionStorage
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlSort = urlParams.get("sort");
+
+    if (
+      urlSort &&
+      (urlSort === "new" || urlSort === "cheap" || urlSort === "expensive")
+    ) {
+      sessionStorage.setItem("catalogSort", urlSort);
+      setSort(urlSort as "new" | "cheap" | "expensive");
+    } else {
+      const savedSort = sessionStorage.getItem("catalogSort");
+      if (
+        savedSort &&
+        (savedSort === "new" ||
+          savedSort === "cheap" ||
+          savedSort === "expensive")
+      ) {
+        setSort(savedSort as "new" | "cheap" | "expensive");
+      }
+    }
+  }, [isHydrated]);
 
   // Закрытие дропдауна по клику вне
   useEffect(() => {
@@ -41,13 +86,6 @@ export default function CatalogClient({
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [sortDropdownOpen]);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 801);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const sortOptions = [
     { value: "new", label: "по новизне" },
@@ -69,10 +107,9 @@ export default function CatalogClient({
         params.append("subcategory", sub),
       );
     }
-    // Сортировка
-    if (newFilters.sortBy && newFilters.sortBy !== "name") {
-      params.set("sort", newFilters.sortBy);
-    }
+    // Сортировка (всегда добавляем)
+    const sortToUse = sort || sessionStorage.getItem("catalogSort") || "new";
+    params.set("sort", sortToUse);
     // Цена
     if (newFilters.priceRange) {
       params.set("minPrice", newFilters.priceRange[0].toString());
@@ -85,7 +122,11 @@ export default function CatalogClient({
 
   // Кнопка «Сбросить фильтр»
   const handleResetFilters = () => {
-    router.push(pathname); // Просто перезагружаем страницу без параметров
+    // При сбросе фильтров возвращаем только сортировку
+    const params = new URLSearchParams();
+    const sortToUse = sort || sessionStorage.getItem("catalogSort") || "new";
+    params.set("sort", sortToUse);
+    router.push(`${pathname}?${params.toString()}`);
     setFiltersOpen(false);
   };
 
@@ -99,15 +140,8 @@ export default function CatalogClient({
     return false;
   }).length;
 
-  // Сортировка товаров
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sort === "cheap")
-      return (a.price?.current || 0) - (b.price?.current || 0);
-    if (sort === "expensive")
-      return (b.price?.current || 0) - (a.price?.current || 0);
-    // По новизне (id по убыванию, если id — число)
-    return (Number(b.id) || 0) - (Number(a.id) || 0);
-  });
+  // sortedProducts больше не сортируем на клиенте, используем filteredProducts
+  const sortedProducts = filteredProducts;
 
   // Структурированные данные для SEO
   const structuredData = {
@@ -135,8 +169,30 @@ export default function CatalogClient({
     })),
   };
 
+  const handleSortChange = (newSort: string) => {
+    if (!isHydrated) return;
+
+    // Проверяем, что newSort является валидным значением
+    if (newSort === "new" || newSort === "cheap" || newSort === "expensive") {
+      setSort(newSort as "new" | "cheap" | "expensive");
+      sessionStorage.setItem("catalogSort", newSort);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("sort", newSort);
+      window.history.pushState({}, "", url.toString());
+    }
+  };
+
   return (
     <>
+      <SeoHead
+        fallbackSeo={{
+          title: "Каталог мебели - купить в Минске | Dilavia",
+          description: `Широкий ассортимент качественной мебели. Найдено товаров: ${filteredProducts.length}. Доставка по всей Беларуси. Гарантия качества.`,
+          canonical: "/catalog",
+        }}
+      />
+
       {/* Структурированные данные для SEO */}
       <script
         type="application/ld+json"
@@ -168,7 +224,7 @@ export default function CatalogClient({
 
         {/* Сортировка */}
         <div className={styles.sortRow}>
-          <span className={styles.sortLabel + " " + styles.sortDesktop}>
+          <span className={`${styles.sortLabel} ${styles.sortDesktop}`}>
             Отсортировать товары:
           </span>
           {!isMobile && (
@@ -179,7 +235,7 @@ export default function CatalogClient({
                   className={
                     sort === opt.value ? styles.sortActive : styles.sortBtn
                   }
-                  onClick={() => setSort(opt.value as any)}
+                  onClick={() => handleSortChange(opt.value as any)}
                 >
                   {opt.label}
                 </button>
@@ -191,7 +247,7 @@ export default function CatalogClient({
               <select
                 className={styles.sortMobileSelect}
                 value={sort}
-                onChange={(e) => setSort(e.target.value as any)}
+                onChange={(e) => handleSortChange(e.target.value as any)}
                 aria-label="Сортировка товаров"
               >
                 {sortOptions.map((opt) => (

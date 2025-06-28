@@ -4,34 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./AboutPage.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "О компании Dilavia - мебельная фабрика в Беларуси",
-  description:
-    "Производство мебели в Беларуси. Экологически чистые материалы, европейские поставщики, контроль качества на каждом этапе. Узнайте больше о Dilavia",
-  openGraph: {
-    title: "О компании Dilavia",
+export const metadata: Metadata = generatePageMetadata(
+  {
+    title: "О компании Dilavia - мебельная фабрика в Беларуси",
     description:
-      "Современная дизайнерская мебель от производителя. Контроль качества, европейские материалы и собственное производство в Нижнем Новгороде.",
-    url: "https://dilavia.by/about", // Replace with actual URL
-    type: "website",
-    images: [
-      {
-        url: "/images/Sofa/Straight_sofa/Medyson/1.png", // Replace with a relevant banner image
-        width: 1200,
-        height: 630,
-        alt: "Современный диван от Dilavia",
-      },
-    ],
+      "Производство мебели в Беларуси. Экологически чистые материалы, европейские поставщики, контроль качества на каждом этапе. Узнайте больше о Dilavia",
+    keywords:
+      "мебельная фабрика, производство мебели, Dilavia, Беларусь, качественная мебель, европейские материалы",
+    ogImage: "/images/Sofa/Straight_sofa/Medyson/1.png",
+    ogType: "article",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "О компании «Dilavia»",
-    description:
-      "Современная дизайнерская мебель от производителя. Контроль качества, европейские материалы и собственное производство в Нижнем Новгороде.",
-    images: ["/images/Sofa/Straight_sofa/Medyson/1.png"], // Replace with a relevant banner image
-  },
-};
+  "/about",
+);
 
 export default function AboutPage() {
   return (

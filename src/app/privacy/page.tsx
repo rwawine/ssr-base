@@ -2,24 +2,18 @@ import React from "react";
 import { Metadata } from "next";
 import styles from "./PrivacyPage.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Политика конфиденциальности | Dilavia",
-  description:
-    "Политика конфиденциальности компании Dilavia. Узнайте, как мы собираем, используем и защищаем ваши персональные данные.",
-  openGraph: {
-    title: "Политика конфиденциальности Dilavia",
+export const metadata: Metadata = generatePageMetadata(
+  {
+    title: "Политика конфиденциальности | Dilavia",
     description:
-      "Информация о том, как мы обрабатываем и защищаем ваши персональные данные в соответствии с законодательством.",
-    url: "https://dilavia.by/privacy",
-    type: "website",
+      "Политика конфиденциальности интернет-магазина Dilavia. Как мы обрабатываем и защищаем ваши персональные данные.",
+    keywords: "политика конфиденциальности, персональные данные, защита данных",
+    noindex: true, // Страница не должна индексироваться
   },
-  twitter: {
-    card: "summary",
-    title: "Политика конфиденциальности Dilavia",
-    description: "Информация о защите персональных данных",
-  },
-};
+  "/privacy",
+);
 
 export default function PrivacyPage() {
   return (

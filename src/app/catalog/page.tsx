@@ -3,7 +3,7 @@ import CatalogClient from "./CatalogClient";
 import { Product } from "@/types/product";
 import { Metadata } from "next";
 import { FilterState } from "@/components/catalog/CatalogFilters";
-import { generateCategoryMetadata } from "@/lib/seo-utils";
+import { generatePageMetadata } from "@/lib/metadata";
 
 /**
  * Получить все товары из локального файла данных.
@@ -155,9 +155,21 @@ export async function generateMetadata({
       (p) => p.category?.code === categoryName,
     );
     if (categoryProduct?.category?.name) {
-      return generateCategoryMetadata(
-        categoryProduct.category.name,
-        filteredProducts.length,
+      return generatePageMetadata(
+        {
+          title: `${categoryProduct.category.name} - купить в Минске | Dilavia`,
+          description: `Купить ${categoryProduct.category.name.toLowerCase()} в интернет-магазине Dilavia. ${filteredProducts.length} товаров в наличии. Доставка по всей Беларуси. Гарантия качества.`,
+          keywords: [
+            categoryProduct.category.name.toLowerCase(),
+            `купить ${categoryProduct.category.name.toLowerCase()}`,
+            `${categoryProduct.category.name.toLowerCase()} Минск`,
+            "мебель",
+            "интернет-магазин мебели",
+            "Dilavia",
+            "Беларусь",
+          ].join(", "),
+        },
+        `/catalog?category=${categoryName}`,
       );
     }
   }
@@ -170,33 +182,36 @@ export async function generateMetadata({
       (p) => p.subcategory?.code === subcategoryName,
     );
     if (subcategoryProduct?.subcategory?.name) {
-      return generateCategoryMetadata(
-        subcategoryProduct.subcategory.name,
-        filteredProducts.length,
+      return generatePageMetadata(
+        {
+          title: `${subcategoryProduct.subcategory.name} - купить в Минске | Dilavia`,
+          description: `Купить ${subcategoryProduct.subcategory.name.toLowerCase()} в интернет-магазине Dilavia. ${filteredProducts.length} товаров в наличии. Доставка по всей Беларуси. Гарантия качества.`,
+          keywords: [
+            subcategoryProduct.subcategory.name.toLowerCase(),
+            `купить ${subcategoryProduct.subcategory.name.toLowerCase()}`,
+            `${subcategoryProduct.subcategory.name.toLowerCase()} Минск`,
+            "мебель",
+            "интернет-магазин мебели",
+            "Dilavia",
+            "Беларусь",
+          ].join(", "),
+        },
+        `/catalog?subcategory=${subcategoryName}`,
       );
     }
   }
 
   // Дефолтные метаданные для каталога
-  return {
-    title: "Каталог мебели - купить в Минске | Dilavia",
-    description:
-      "Широкий ассортимент качественной мебели: кровати, диваны, кресла и многое другое. Доставка по всей Беларуси. Гарантия качества.",
-    keywords:
-      "каталог мебели, мебель Минск, купить мебель, диваны, кровати, кресла, доставка по Беларуси, Dilavia",
-    openGraph: {
+  return generatePageMetadata(
+    {
       title: "Каталог мебели - купить в Минске | Dilavia",
       description:
-        "Широкий ассортимент качественной мебели для вашего дома с доставкой по всей Беларуси",
-      url: "https://dilavia.by/catalog",
-      type: "website",
-      locale: "ru_RU",
+        "Широкий ассортимент качественной мебели: кровати, диваны, кресла и многое другое. Доставка по всей Беларуси. Гарантия качества.",
+      keywords:
+        "каталог мебели, мебель Минск, купить мебель, диваны, кровати, кресла, доставка по Беларуси, Dilavia",
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
-  };
+    "/catalog",
+  );
 }
 
 /**
@@ -208,8 +223,27 @@ export default async function CatalogPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const allProducts = getProductsFromFile();
-  const filteredProducts = filterProducts(allProducts, resolvedSearchParams);
+  const products = getProductsFromFile();
+  const filteredProducts = filterProducts(products, resolvedSearchParams);
+
+  // Получаем сортировку из searchParams
+  const sortParam =
+    typeof resolvedSearchParams.sort === "string"
+      ? resolvedSearchParams.sort
+      : Array.isArray(resolvedSearchParams.sort)
+        ? resolvedSearchParams.sort[0]
+        : undefined;
+  const sort: "new" | "cheap" | "expensive" =
+    sortParam === "cheap" || sortParam === "expensive" || sortParam === "new"
+      ? sortParam
+      : "new";
+
+  // Сортируем filteredProducts на сервере
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sort === "cheap") return a.price.current - b.price.current;
+    if (sort === "expensive") return b.price.current - a.price.current;
+    return Number(b.id) - Number(a.id); // по новизне
+  });
 
   const currentFilters: FilterState = {
     category: resolvedSearchParams.category
@@ -234,9 +268,10 @@ export default async function CatalogPage({
 
   return (
     <CatalogClient
-      initialProducts={allProducts}
-      filteredProducts={filteredProducts}
+      initialProducts={products}
+      filteredProducts={sortedProducts}
       currentFilters={currentFilters}
+      initialSort={sort}
     />
   );
 }

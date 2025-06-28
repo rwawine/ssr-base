@@ -4,26 +4,18 @@ import Link from "next/link";
 import styles from "./ContactsPage.module.css";
 import ContactForm from "./ContactForm";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title:
-    "Контакты мебельной фабрики Dilavia в Минске - адрес, телефон, карта проезда",
-  description:
-    "Свяжитесь с Dilavia: ☎ +375 33 664-18-30, 📍 ул. Железнодорожная 33А, Минск. Время работы, схема проезда, форма обратной связи",
-  openGraph: {
-    title: "Контакты мебельной фабрики Dilavia в Минске",
+export const metadata: Metadata = generatePageMetadata(
+  {
+    title: "Контакты | Dilavia - свяжитесь с нами",
     description:
-      "Свяжитесь с Dilavia: ☎ +375 33 664-18-30, 📍 ул. Железнодорожная 33А, Минск. Время работы, схема проезда, форма обратной связи",
-    url: "https://dilavia.by/contacts", // Replace with actual URL
-    type: "website",
+      "Свяжитесь с нами для заказа мебели. Телефоны, адрес, email. Консультации и заказы по всей Беларуси.",
+    keywords:
+      "контакты Dilavia, заказать мебель, телефон, адрес, email, консультация",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Контакты | Dilavia",
-    description:
-      "Свяжитесь с мебельной фабрикой Dilavia. Адрес, телефон, email, график работы и форма обратной связи.",
-  },
-};
+  "/contacts",
+);
 
 export default function ContactsPage() {
   return (

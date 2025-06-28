@@ -48,6 +48,8 @@ const Header: React.FC<HeaderProps> = ({
 
   // Определение мобильного устройства
   useEffect(() => {
+    if (!isHydrated) return;
+
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -58,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({
     return () => {
       window.removeEventListener("resize", checkIfMobile);
     };
-  }, []);
+  }, [isHydrated]);
 
   // Примерное содержимое для выпадающего меню навигации
   const navMenuItems = [
@@ -239,14 +241,16 @@ const Header: React.FC<HeaderProps> = ({
                 title="Перейти в избранное"
               >
                 <HeartIcon />
-                {isHydrated && favoritesTotalItems > 0 && (
-                  <span
-                    className={styles.badge}
-                    aria-label={`${favoritesTotalItems} товаров в избранном`}
-                  >
-                    {favoritesTotalItems > 99 ? "99+" : favoritesTotalItems}
-                  </span>
-                )}
+                <span suppressHydrationWarning>
+                  {isHydrated && favoritesTotalItems > 0 && (
+                    <span
+                      className={styles.badge}
+                      aria-label={`${favoritesTotalItems} товаров в избранном`}
+                    >
+                      {favoritesTotalItems > 99 ? "99+" : favoritesTotalItems}
+                    </span>
+                  )}
+                </span>
               </Link>
             </div>
 
@@ -258,14 +262,16 @@ const Header: React.FC<HeaderProps> = ({
                 title="Перейти в корзину"
               >
                 <CartIcon />
-                {isHydrated && cartTotalItems > 0 && (
-                  <span
-                    className={styles.badge}
-                    aria-label={`${cartTotalItems} товаров в корзине`}
-                  >
-                    {cartTotalItems > 99 ? "99+" : cartTotalItems}
-                  </span>
-                )}
+                <span suppressHydrationWarning>
+                  {isHydrated && cartTotalItems > 0 && (
+                    <span
+                      className={styles.badge}
+                      aria-label={`${cartTotalItems} товаров в корзине`}
+                    >
+                      {cartTotalItems > 99 ? "99+" : cartTotalItems}
+                    </span>
+                  )}
+                </span>
               </Link>
             </div>
 

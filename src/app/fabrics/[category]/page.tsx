@@ -3,7 +3,7 @@ import {
   getFabricMaterialBySlug,
   getFabricCollectionsByCategory,
 } from "@/lib/fabric-utils";
-import { generateMetadata as generatePageMetadata } from "@/lib/metadata";
+import { generatePageMetadata } from "@/lib/metadata";
 import { FabricCard } from "@/components/fabric-card/FabricCard";
 import { Breadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
 import type { BreadcrumbItem } from "@/types";
@@ -20,10 +20,14 @@ export async function generateMetadata({
   const material = getFabricMaterialBySlug(category);
   if (!material) return {};
 
-  return generatePageMetadata({
-    title: `Ткани ${material.nameLoc} - Дилавия`,
-    description: `Коллекции тканей ${material.nameLoc} для мебели. Широкий выбор цветов и фактур.`,
-  });
+  return generatePageMetadata(
+    {
+      title: `Ткани ${material.nameLoc} - Дилавия`,
+      description: `Коллекции тканей ${material.nameLoc} для мебели. Широкий выбор цветов и фактур.`,
+      keywords: `ткани ${material.nameLoc.toLowerCase()}, купить ткани, мебельные ткани, Dilavia, Беларусь`,
+    },
+    `/fabrics/${category}`,
+  );
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
