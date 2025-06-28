@@ -296,7 +296,7 @@ export default function CartPage() {
                               item.selectedDimension?.price ||
                               item.product.price?.current
                             ).toLocaleString("ru-RU")
-                          : "Бесплатно"}{" "}
+                          : ""}{" "}
                         {item.product ? "BYN" : ""}
                       </div>
                     </div>
@@ -538,7 +538,7 @@ export default function CartPage() {
                   </span>
                 </div>
                 <div className={styles.cartProductPriceRow}>
-                  <span className={styles.cartProductPrice}>Бесплатно</span>
+                  <span className={styles.cartProductPrice}></span>
                 </div>
                 <div className={styles.cartProductParam}>
                   <span>Тип: </span>

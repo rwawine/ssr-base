@@ -190,13 +190,13 @@ export default function PrivacyPage() {
           </p>
           <div className={styles.contactInfo}>
             <p>
-              <strong>Email:</strong> privacy@dilavia.by
+              <strong>Email:</strong> information@dilavia.by
             </p>
             <p>
-              <strong>Телефон:</strong> +375 (29) 123-45-67
+              <strong>Телефон:</strong> +375 (33) 664-18-30
             </p>
             <p>
-              <strong>Адрес:</strong> Республика Беларусь, г. Минск
+              <strong>Адрес:</strong> БЕЛАРУСЬ, г. Минск, ул. Железнодорожная 33А, оф. 402.
             </p>
           </div>
         </section>

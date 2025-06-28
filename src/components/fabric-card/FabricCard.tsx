@@ -122,7 +122,7 @@ export function FabricCard({
           <Link href={detailsHref}>{collection.nameLoc}</Link>
         </h3>
         <div className={styles.priceRow}>
-          <span className={styles.price}>Бесплатно</span>
+          <span className={styles.price}></span>
         </div>
         <div className={styles.detailsRow}>
           <span className={styles.dimensions}>

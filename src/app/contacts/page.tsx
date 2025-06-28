@@ -45,12 +45,6 @@ export default function ContactsPage() {
               <a href="tel:+375298019271">+375 (29) 801-92-71</a>
             </p>
           </div>
-          <div className={styles.infoBlock}>
-            <h3>Email</h3>
-            <p>
-              <a href="mailto:information@dilavia.by">information@dilavia.by</a>
-            </p>
-          </div>
         </aside>
         <ContactForm />
       </div>
