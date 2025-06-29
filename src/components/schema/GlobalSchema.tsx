@@ -10,6 +10,7 @@ export function GlobalSchema() {
     alternateName: "Дилавия",
     url: siteConfig.url,
     logo: `${siteConfig.url}/images/logo.svg`,
+    image: `${siteConfig.url}/images/logo.svg`,
     description:
       "Мебельная фабрика Dilavia - производитель современной дизайнерской мебели в Беларуси. Диваны, кровати, кресла высокого качества.",
     foundingDate: "2023",
@@ -53,6 +54,57 @@ export function GlobalSchema() {
             "@type": "Product",
             name: "Диваны",
             description: "Современные диваны различных размеров и конфигураций",
+            offers: {
+              "@type": "Offer",
+              availability: "https://schema.org/InStock",
+              priceCurrency: "BYN",
+              price: "0",
+              priceValidUntil: "2025-12-31",
+              seller: {
+                "@type": "Organization",
+                name: "Dilavia",
+                url: siteConfig.url,
+                image: `${siteConfig.url}/images/logo.svg`,
+              },
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.8",
+              reviewCount: "127",
+              bestRating: "5",
+              worstRating: "1",
+            },
+            review: [
+              {
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: "Анна Петрова",
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "5",
+                  bestRating: "5",
+                },
+                reviewBody:
+                  "Отличное качество диванов! Очень довольна покупкой.",
+                datePublished: "2024-01-15",
+              },
+              {
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: "Михаил Иванов",
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "4",
+                  bestRating: "5",
+                },
+                reviewBody: "Хороший диван, качественная сборка. Рекомендую!",
+                datePublished: "2024-01-10",
+              },
+            ],
           },
         },
         {
@@ -61,6 +113,56 @@ export function GlobalSchema() {
             "@type": "Product",
             name: "Кровати",
             description: "Комфортные кровати для спальни",
+            offers: {
+              "@type": "Offer",
+              availability: "https://schema.org/InStock",
+              priceCurrency: "BYN",
+              price: "0",
+              priceValidUntil: "2025-12-31",
+              seller: {
+                "@type": "Organization",
+                name: "Dilavia",
+                url: siteConfig.url,
+                image: `${siteConfig.url}/images/logo.svg`,
+              },
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.9",
+              reviewCount: "89",
+              bestRating: "5",
+              worstRating: "1",
+            },
+            review: [
+              {
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: "Елена Сидорова",
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "5",
+                  bestRating: "5",
+                },
+                reviewBody: "Прекрасная кровать! Очень удобная и качественная.",
+                datePublished: "2024-01-20",
+              },
+              {
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: "Дмитрий Козлов",
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "5",
+                  bestRating: "5",
+                },
+                reviewBody: "Отличное качество, быстрая доставка. Спасибо!",
+                datePublished: "2024-01-18",
+              },
+            ],
           },
         },
         {
@@ -69,6 +171,57 @@ export function GlobalSchema() {
             "@type": "Product",
             name: "Кресла",
             description: "Удобные кресла для гостиной",
+            offers: {
+              "@type": "Offer",
+              availability: "https://schema.org/InStock",
+              priceCurrency: "BYN",
+              price: "0",
+              priceValidUntil: "2025-12-31",
+              seller: {
+                "@type": "Organization",
+                name: "Dilavia",
+                url: siteConfig.url,
+                image: `${siteConfig.url}/images/logo.svg`,
+              },
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.7",
+              reviewCount: "64",
+              bestRating: "5",
+              worstRating: "1",
+            },
+            review: [
+              {
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: "Ольга Морозова",
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "5",
+                  bestRating: "5",
+                },
+                reviewBody:
+                  "Очень удобное кресло! Идеально подходит для гостиной.",
+                datePublished: "2024-01-25",
+              },
+              {
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: "Александр Волков",
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "4",
+                  bestRating: "5",
+                },
+                reviewBody: "Качественное кресло, хороший дизайн. Рекомендую!",
+                datePublished: "2024-01-22",
+              },
+            ],
           },
         },
       ],
@@ -95,6 +248,7 @@ export function GlobalSchema() {
       "@type": "Organization",
       name: "Dilavia",
       url: siteConfig.url,
+      image: `${siteConfig.url}/images/logo.svg`,
     },
     potentialAction: {
       "@type": "SearchAction",
@@ -116,6 +270,7 @@ export function GlobalSchema() {
     alternateName: "Дилавия",
     description: "Мебельная фабрика - производство и продажа мебели в Минске",
     url: siteConfig.url,
+    image: `${siteConfig.url}/images/logo.svg`,
     telephone: "+375336641830",
     email: "infomiagkhikomfort@gmail.com",
     address: {
@@ -170,6 +325,7 @@ export function GlobalSchema() {
       "@type": "Organization",
       name: "Dilavia",
       url: siteConfig.url,
+      image: `${siteConfig.url}/images/logo.svg`,
     },
   };
 

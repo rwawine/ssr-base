@@ -284,7 +284,10 @@ export function generateProductStructuredData(product: Product) {
     "@type": "Product",
     name,
     description,
-    image: images,
+    image:
+      images && images.length > 0
+        ? images
+        : ["https://dilavia.by/images/logo.svg"],
     category: category?.name,
     brand: {
       "@type": "Brand",
@@ -308,6 +311,40 @@ export function generateProductStructuredData(product: Product) {
         value: 5,
         unitCode: "DAY",
       },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: 0,
+          currency: "BYN",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            value: 1,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            value: 3,
+            unitCode: "DAY",
+          },
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "BY",
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 14,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+        returnPolicyCountry: "BY",
+      },
     },
     additionalProperty: [
       ...(materials?.map((material) => ({
@@ -325,6 +362,8 @@ export function generateProductStructuredData(product: Product) {
       "@type": "AggregateRating",
       ratingValue: product.popularity || 4.5,
       reviewCount: Math.floor((product.popularity || 4.5) * 10),
+      bestRating: 5,
+      worstRating: 1,
     },
   };
 }
@@ -434,6 +473,46 @@ export function generateProductSchema(product: {
       availability: product.availability
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
+      url: `https://dilavia.by/catalog/${product.slug}`,
+      seller: {
+        "@type": "Organization",
+        name: "Dilavia",
+        url: "https://dilavia.by",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: 0,
+          currency: "BYN",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            value: 1,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            value: 3,
+            unitCode: "DAY",
+          },
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "BY",
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 14,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+        returnPolicyCountry: "BY",
+      },
     },
     url: `https://dilavia.by/catalog/${product.slug}`,
   };

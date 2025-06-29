@@ -82,6 +82,7 @@ export default async function FabricDetailLayout({
         "@type": "Organization",
         name: "ООО МЯГКИЙ КОМФОРТ",
         url: "https://dilavia.by",
+        image: "https://dilavia.by/images/logo.svg",
       },
     },
     additionalProperty: [

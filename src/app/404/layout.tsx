@@ -61,11 +61,14 @@ export default function NotFoundLayout({
       author: {
         "@type": "Organization",
         name: "ООО МЯГКИЙ КОМФОРТ",
+        url: "https://dilavia.by",
+        image: "https://dilavia.by/images/logo.svg",
       },
       publisher: {
         "@type": "Organization",
         name: "Dilavia",
         url: "https://dilavia.by",
+        image: "https://dilavia.by/images/logo.svg",
       },
     },
   };
