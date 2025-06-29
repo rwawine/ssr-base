@@ -210,8 +210,8 @@ export function ProductCard({ product, priority }: ProductCardProps) {
           <link itemProp="availability" href="http://schema.org/InStock" />
           <div className={styles.price}>
             <span className={styles.currentPrice}>
-              {formatPrice(currentPrice)}{" "}
-              <span className={styles.currency}>руб.</span>
+              от {formatPrice(currentPrice)}{" "}
+              <span className={styles.currency}></span>
             </span>
           </div>
         </div>

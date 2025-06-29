@@ -4,12 +4,7 @@
  * Форматирует цену в белорусских рублях
  */
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat("ru-BY", {
-    style: "currency",
-    currency: "BYN",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
+  return `${price.toLocaleString("ru-BY")} BYN`;
 }
 
 /**

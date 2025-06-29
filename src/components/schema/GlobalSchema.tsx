@@ -6,6 +6,7 @@ export function GlobalSchema() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${siteConfig.url}#organization`,
     name: "Dilavia",
     alternateName: "Дилавия",
     url: siteConfig.url,
@@ -240,15 +241,13 @@ export function GlobalSchema() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${siteConfig.url}#website`,
     name: "Dilavia - Мебельная фабрика",
     url: siteConfig.url,
     description:
       "Мебельная фабрика Dilavia - производитель современной дизайнерской мебели в Беларуси. Диваны, кровати, кресла высокого качества.",
     publisher: {
-      "@type": "Organization",
-      name: "Dilavia",
-      url: siteConfig.url,
-      image: `${siteConfig.url}/images/logo.svg`,
+      "@id": `${siteConfig.url}#organization`,
     },
     potentialAction: {
       "@type": "SearchAction",
@@ -266,6 +265,7 @@ export function GlobalSchema() {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": `${siteConfig.url}#localbusiness`,
     name: "Dilavia",
     alternateName: "Дилавия",
     description: "Мебельная фабрика - производство и продажа мебели в Минске",
@@ -273,6 +273,8 @@ export function GlobalSchema() {
     image: `${siteConfig.url}/images/logo.svg`,
     telephone: "+375336641830",
     email: "infomiagkhikomfort@gmail.com",
+    priceRange: "$$",
+    openingHours: "Mo-Fr 09:00-18:00",
     address: {
       "@type": "PostalAddress",
       streetAddress: "ул. Железнодорожная, д. 33А, оф. 402",
@@ -285,12 +287,11 @@ export function GlobalSchema() {
       latitude: 53.902284,
       longitude: 27.561831,
     },
-    openingHours: "Mo-Fr 09:00-18:00",
-    priceRange: "$$",
     areaServed: {
       "@type": "Country",
       name: "Belarus",
     },
+    hasMap: "https://maps.google.com/?q=53.902284,27.561831",
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Каталог мебели",
@@ -301,14 +302,13 @@ export function GlobalSchema() {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${siteConfig.url}#webpage`,
     name: "Dilavia - Мебельная фабрика в Минске",
     description:
       "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров от мебельной фабрики Dilavia.",
     url: siteConfig.url,
     isPartOf: {
-      "@type": "WebSite",
-      name: "Dilavia - Мебельная фабрика",
-      url: siteConfig.url,
+      "@id": `${siteConfig.url}#website`,
     },
     breadcrumb: {
       "@type": "BreadcrumbList",
@@ -322,10 +322,7 @@ export function GlobalSchema() {
       ],
     },
     mainEntity: {
-      "@type": "Organization",
-      name: "Dilavia",
-      url: siteConfig.url,
-      image: `${siteConfig.url}/images/logo.svg`,
+      "@id": `${siteConfig.url}#organization`,
     },
   };
 
