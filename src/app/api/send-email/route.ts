@@ -25,6 +25,7 @@ interface ContactFormData {
   type: "contact_form";
   name: string;
   email: string;
+  phone?: string;
   topic: string;
   message: string;
 }
@@ -218,6 +219,7 @@ export async function POST(request: NextRequest) {
             <h3 style="color: #28a745; margin-top: 0;">Данные клиента:</h3>
             <p><strong>Имя:</strong> ${contactFormData.name}</p>
             <p><strong>Email:</strong> ${contactFormData.email}</p>
+            ${contactFormData.phone ? `<p><strong>Телефон:</strong> ${contactFormData.phone}</p>` : ""}
             <p><strong>Тема обращения:</strong> ${contactFormData.topic}</p>
           </div>
 
@@ -240,6 +242,7 @@ export async function POST(request: NextRequest) {
         Данные клиента:
         Имя: ${contactFormData.name}
         Email: ${contactFormData.email}
+        ${contactFormData.phone ? `Телефон: ${contactFormData.phone}` : ""}
         Тема обращения: ${contactFormData.topic}
         
         Сообщение:

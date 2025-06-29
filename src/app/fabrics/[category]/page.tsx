@@ -1,33 +1,14 @@
-import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import {
   getFabricMaterialBySlug,
   getFabricCollectionsByCategory,
 } from "@/lib/fabric-utils";
-import { generatePageMetadata } from "@/lib/metadata";
 import { FabricCard } from "@/components/fabric-card/FabricCard";
 import { Breadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
-import type { BreadcrumbItem } from "@/types";
 import styles from "./page.module.css";
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
-}
-
-export async function generateMetadata({
-  params,
-}: CategoryPageProps): Promise<Metadata> {
-  const { category } = await params;
-  const material = getFabricMaterialBySlug(category);
-  if (!material) return {};
-
-  return generatePageMetadata(
-    {
-      title: `Ткани ${material.nameLoc} - Дилавия`,
-      description: `Коллекции тканей ${material.nameLoc} для мебели. Широкий выбор цветов и фактур.`,
-      keywords: `ткани ${material.nameLoc.toLowerCase()}, купить ткани, мебельные ткани, Dilavia, Беларусь`,
-    },
-    `/fabrics/${category}`,
-  );
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
@@ -35,28 +16,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const material = getFabricMaterialBySlug(category);
 
   if (!material) {
-    return (
-      <div className={styles.container}>
-        <h1>Категория не найдена</h1>
-      </div>
-    );
+    notFound();
   }
 
   const collectionsData = getFabricCollectionsByCategory(category);
 
   // Формируем хлебные крошки
-  const breadcrumbItems: BreadcrumbItem[] = [
+  const breadcrumbItems = [
     {
-      label: "Главная",
-      href: "/",
+      name: "Главная",
+      url: "/",
     },
     {
-      label: "Ткани",
-      href: "/fabrics",
+      name: "Ткани",
+      url: "/fabrics",
     },
     {
-      label: material.nameLoc,
-      isActive: true,
+      name: material.nameLoc,
+      url: `/fabrics/${category}`,
     },
   ];
 

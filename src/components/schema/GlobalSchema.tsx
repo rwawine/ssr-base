@@ -142,6 +142,37 @@ export function GlobalSchema() {
     },
   };
 
+  // Схема главной страницы
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Dilavia - Мебельная фабрика в Минске",
+    description:
+      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров от мебельной фабрики Dilavia.",
+    url: siteConfig.url,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Dilavia - Мебельная фабрика",
+      url: siteConfig.url,
+    },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Главная",
+          item: siteConfig.url,
+        },
+      ],
+    },
+    mainEntity: {
+      "@type": "Organization",
+      name: "Dilavia",
+      url: siteConfig.url,
+    },
+  };
+
   return (
     <>
       <script
@@ -160,6 +191,12 @@ export function GlobalSchema() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(localBusinessSchema, null, 2),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema, null, 2),
         }}
       />
     </>

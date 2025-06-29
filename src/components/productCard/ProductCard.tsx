@@ -7,7 +7,6 @@ import { Product, Dimension, AdditionalOption } from "@/types/product";
 import { useCart } from "@/hooks/CartContext";
 import { formatPrice } from "@/lib/utils";
 import { OptimizedImage } from "@/components/optimized-image/OptimizedImage";
-import { ProductSchema } from "@/components/schema";
 import ProductOptions from "./ProductOptions";
 import styles from "./ProductCard.module.css";
 
@@ -172,16 +171,19 @@ export function ProductCard({ product, priority }: ProductCardProps) {
     : "";
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} itemScope itemType="http://schema.org/Product">
       {/* Schema.org микроразметка для продукта */}
-      <ProductSchema
-        product={product}
-        selectedDimension={selectedDimension}
-        additionalOptionsPrice={additionalOptionsPrice}
+      <meta itemProp="name" content={name} />
+      <meta
+        itemProp="description"
+        content={
+          product.description || `Купить ${name} в интернет-магазине Dilavia`
+        }
       />
+      <link itemProp="url" href={`https://dilavia.by/catalog/${slug}`} />
 
       <Link href={`/catalog/${slug}`} className={styles.imageLink}>
-        <div className={styles.imageWrapper}>
+        <div className={styles.imageWrapper} itemProp="image">
           <OptimizedImage
             src={mainImage}
             alt={`${name} - фото 1`}
@@ -197,11 +199,21 @@ export function ProductCard({ product, priority }: ProductCardProps) {
 
       <div className={styles.cardContent}>
         <h3 className={styles.title}>
-          <Link href={`/catalog/${slug}`}>{name}</Link>
+          <Link href={`/catalog/${slug}`} itemProp="url">
+            {name}
+          </Link>
         </h3>
 
-        <div className={styles.priceRow}>
-          <span className={styles.price}>от {formatPrice(currentPrice)}</span>
+        <div itemProp="offers" itemScope itemType="http://schema.org/Offer">
+          <meta itemProp="price" content={currentPrice.toString()} />
+          <meta itemProp="priceCurrency" content="BYN" />
+          <link itemProp="availability" href="http://schema.org/InStock" />
+          <div className={styles.price}>
+            <span className={styles.currentPrice}>
+              {formatPrice(currentPrice)}{" "}
+              <span className={styles.currency}>руб.</span>
+            </span>
+          </div>
         </div>
 
         <div className={styles.detailsRow}>

@@ -14,7 +14,6 @@ import { Product, Dimension, AdditionalOption } from "@/types/product";
 import { useCart } from "@/hooks/CartContext";
 import { useFavorites } from "@/hooks/FavoritesContext";
 import { ProductCard } from "@/components/productCard/ProductCard";
-import { ProductSchema } from "@/components/schema";
 import styles from "./ProductDetail.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import productCardStyles from "@/components/productCard/ProductCard.module.css";
@@ -178,25 +177,25 @@ export default function ProductDetail({
   ].filter((spec) => spec.value !== "");
 
   const breadcrumbs = [
-    { label: "Главная", href: "/" },
-    { label: "Каталог", href: "/catalog" },
+    { name: "Главная", url: "/" },
+    { name: "Каталог", url: "/catalog" },
     ...(product.category
       ? [
           {
-            label: product.category.name,
-            href: `/catalog?category=${product.category.code}`,
+            name: product.category.name,
+            url: `/catalog?category=${product.category.code}`,
           },
         ]
       : []),
     ...(product.subcategory
       ? [
           {
-            label: product.subcategory.name,
-            href: `/catalog?category=${product.category?.code}&subcategory=${product.subcategory.code}`,
+            name: product.subcategory.name,
+            url: `/catalog?category=${product.category?.code}&subcategory=${product.subcategory.code}`,
           },
         ]
       : []),
-    { label: product.name },
+    { name: product.name, url: `/catalog/${product.slug}` },
   ];
 
   // Функции для кастомной навигации
@@ -227,14 +226,7 @@ export default function ProductDetail({
 
   return (
     <div className={styles.container}>
-      {/* Schema.org микроразметка для продукта */}
-      <ProductSchema
-        product={product}
-        selectedDimension={selectedDimension}
-        additionalOptionsPrice={additionalOptionsPrice}
-      />
-
-      <Breadcrumbs items={breadcrumbs} className={styles.breadcrumbs} />
+      <Breadcrumbs items={breadcrumbs} />
 
       <div className={styles.productPage}>
         <div className={styles.gallery}>

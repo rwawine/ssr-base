@@ -5,21 +5,12 @@ import { useCart } from "@/hooks/CartContext";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { AdditionalOption } from "@/types/product";
-import { CartItem } from "@/types/cart";
+import { CartItem, FabricCartItem } from "@/types/cart";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import CheckoutForm from "./CheckoutForm";
 
 export default function CartPage() {
-  const {
-    items,
-    fabricItems,
-    totalPrice,
-    removeFromCart,
-    updateQuantity,
-    removeFabricFromCart,
-    updateFabricQuantity,
-    clearCart,
-  } = useCart();
+  const [isMounted, setIsMounted] = useState(false);
   const [promo, setPromo] = useState("");
   const [promoError, setPromoError] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
@@ -34,6 +25,13 @@ export default function CartPage() {
   const [isHydrated, setIsHydrated] = useState(false);
   const formRef = React.useRef<any>(null);
   const clearTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Always call useCart at the top level
+  const cart = useCart();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Проверка гидратации для предотвращения несоответствия SSR/CSR
   useEffect(() => {
@@ -62,6 +60,16 @@ export default function CartPage() {
       };
     }
   }, [loading]);
+
+  // Only access cart data after client-side mounting to prevent hydration issues
+  const items: CartItem[] = isMounted ? cart.items : [];
+  const fabricItems: FabricCartItem[] = isMounted ? cart.fabricItems : [];
+  const totalPrice: number = isMounted ? cart.totalPrice || 0 : 0;
+  const removeFromCart = isMounted ? cart.removeFromCart : () => {};
+  const updateQuantity = isMounted ? cart.updateQuantity : () => {};
+  const removeFabricFromCart = isMounted ? cart.removeFabricFromCart : () => {};
+  const updateFabricQuantity = isMounted ? cart.updateFabricQuantity : () => {};
+  const clearCart = isMounted ? cart.clearCart : () => {};
 
   const handleQuantityChange = (
     productId: string,
@@ -167,8 +175,8 @@ export default function CartPage() {
       <div className={styles.container}>
         <Breadcrumbs
           items={[
-            { label: "Главная", href: "https://dilavia.by/" },
-            { label: "Корзина" },
+            { name: "Главная", url: "https://dilavia.by/" },
+            { name: "Корзина", url: "https://dilavia.by/cart" },
           ]}
         />
         <div className={styles.emptyCartModern}>
@@ -183,8 +191,8 @@ export default function CartPage() {
       <div className={styles.container}>
         <Breadcrumbs
           items={[
-            { label: "Главная", href: "https://dilavia.by/" },
-            { label: "Корзина" },
+            { name: "Главная", url: "https://dilavia.by/" },
+            { name: "Корзина", url: "https://dilavia.by/cart" },
           ]}
         />
         <div className={styles.orderSuccess}>
@@ -318,8 +326,8 @@ export default function CartPage() {
       <div className={styles.container}>
         <Breadcrumbs
           items={[
-            { label: "Главная", href: "https://dilavia.by/" },
-            { label: "Корзина" },
+            { name: "Главная", url: "https://dilavia.by/" },
+            { name: "Корзина", url: "https://dilavia.by/cart" },
           ]}
         />
         <div className={styles.emptyCartModern}>

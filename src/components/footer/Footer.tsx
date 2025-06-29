@@ -115,17 +115,31 @@ function InstagramIcon() {
 
 export function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer
+      className={styles.footer}
+      itemScope
+      itemType="http://schema.org/WPFooter"
+    >
+      <meta itemProp="copyrightYear" content="2024" />
+      <meta itemProp="copyrightHolder" content="ООО МЯГКИЙ КОМФОРТ" />
+
       <div className="container">
         <div className={styles.grid}>
           {/* Блок 1: Контактная информация */}
           <div className={styles.column}>
             <h3 className={styles.title}>Свяжитесь с нами</h3>
-            <div className={styles.block}>
+            <div
+              className={styles.block}
+              itemScope
+              itemType="http://schema.org/Organization"
+            >
+              <meta itemProp="name" content="ООО МЯГКИЙ КОМФОРТ" />
+              <link itemProp="url" href="https://dilavia.by" />
+
               <div className={styles.contactItem}>
                 <a href={`mailto:${contactInfo.email}`} className={styles.link}>
                   <EmailIcon />
-                  {contactInfo.email}
+                  <span itemProp="email">{contactInfo.email}</span>
                 </a>
               </div>
 
@@ -136,7 +150,9 @@ export function Footer() {
                   title="Позвонить по номеру МТС"
                 >
                   <PhoneIcon />
-                  {formatPhone(contactInfo.phones.mts)}
+                  <span itemProp="telephone">
+                    {formatPhone(contactInfo.phones.mts)}
+                  </span>
                 </a>
               </div>
 
@@ -147,7 +163,9 @@ export function Footer() {
                   title="Позвонить по номеру A1"
                 >
                   <PhoneIcon />
-                  {formatPhone(contactInfo.phones.a1)}
+                  <span itemProp="telephone">
+                    {formatPhone(contactInfo.phones.a1)}
+                  </span>
                 </a>
               </div>
 
@@ -177,7 +195,27 @@ export function Footer() {
                 </a>
               </div>
 
-              <div className={styles.hours}>{contactInfo.workingHours}</div>
+              <div
+                className={styles.hours}
+                itemProp="openingHours"
+                content="Mo-Su 00:00-23:59"
+              >
+                {contactInfo.workingHours}
+              </div>
+
+              <div
+                itemProp="address"
+                itemScope
+                itemType="https://schema.org/PostalAddress"
+              >
+                <meta
+                  itemProp="streetAddress"
+                  content="УЛ. ЖЕЛЕЗНОДОРОЖНАЯ, ДОМ 33А, ОФ. 402"
+                />
+                <meta itemProp="postalCode" content="220089" />
+                <meta itemProp="addressLocality" content="Минск" />
+                <meta itemProp="addressCountry" content="Беларусь" />
+              </div>
             </div>
           </div>
 

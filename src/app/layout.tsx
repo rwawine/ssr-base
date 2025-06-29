@@ -1,99 +1,89 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
-import { CartProvider } from "@/hooks/CartContext";
-import { FavoritesProvider } from "@/hooks/FavoritesContext";
-import { defaultMetadata } from "@/lib/metadata";
+import { ClientProviders } from "@/components/ClientProviders";
 import { GlobalSchema } from "@/components/schema/GlobalSchema";
 
-export const metadata: Metadata = defaultMetadata;
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: {
+    default: "Dilavia - Мебельная фабрика в Минске",
+    template: "%s | Dilavia",
+  },
+  description:
+    "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров от мебельной фабрики Dilavia.",
+  keywords:
+    "мебель, диваны, кровати, кресла, мебельная фабрика, Минск, Беларусь, Dilavia",
+  authors: [{ name: "Dilavia" }],
+  creator: "Dilavia",
+  publisher: "Dilavia",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://dilavia.by"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: "https://dilavia.by",
+    siteName: "Dilavia",
+    title: "Dilavia - Мебельная фабрика в Минске",
+    description:
+      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
+    images: [
+      {
+        url: "https://dilavia.by/images/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Dilavia - Мебельная фабрика",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dilavia - Мебельная фабрика в Минске",
+    description:
+      "Купить мебель в Минске и по всей Беларуси. Большой выбор диванов, кроватей, кресел и аксессуаров.",
+    images: ["https://dilavia.by/images/logo.svg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "your-google-verification-code",
+    yandex: "your-yandex-verification-code",
+  },
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ru">
-      <head>
-        {/* Скрипты аналитики */}
-        <script
-          async
-          src="https://script.click-chat.ru/chat.js?wid=2806a4e5-3f63-4afe-b6a3-d09e0d4f08b4"
-        />
-
-        {/* Yandex.Metrika counter */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-              m[i].l=1*new Date();
-              for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-              k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-              (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-              ym(102656171, "init", {
-                   clickmap:true,
-                   trackLinks:true,
-                   accurateTrackBounce:true,
-                   webvisor:true,
-                   ecommerce:"dataLayer"
-              });
-            `,
-          }}
-        />
-        <noscript>
-          <div>
-            <img
-              src="https://mc.yandex.ru/watch/102656171"
-              style={{ position: "absolute", left: "-9999px" }}
-              alt=""
-            />
-          </div>
-        </noscript>
-
-        {/* Yandex.Metrika counter #2 */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-              m[i].l=1*new Date();
-              for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-              k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-              (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-              ym(103105597, "init", {
-                   clickmap:true,
-                   trackLinks:true,
-                   accurateTrackBounce:true
-              });
-            `,
-          }}
-        />
-        <noscript>
-          <div>
-            <img
-              src="https://mc.yandex.ru/watch/103105597"
-              style={{ position: "absolute", left: "-9999px" }}
-              alt=""
-            />
-          </div>
-        </noscript>
-
-        {/* Глобальные структурированные данные Schema.org */}
+      <body className={inter.className}>
         <GlobalSchema />
-      </head>
-      <body>
-        <CartProvider>
-          <FavoritesProvider>
-            <Header />
-            {children}
-            <Footer />
-          </FavoritesProvider>
-        </CartProvider>
+        <ClientProviders>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </ClientProviders>
       </body>
     </html>
   );

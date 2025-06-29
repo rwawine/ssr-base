@@ -362,3 +362,261 @@ export function generateCategoryMetadata(
     },
   };
 }
+
+/**
+ * Генерирует метаданные для страницы
+ * @param pageData Объект с данными страницы
+ * @returns Объект метаданных для Next.js
+ */
+export function generatePageMetadata(pageData: {
+  title: string;
+  description: string;
+  url: string;
+  imageUrl?: string;
+  type?: string;
+  locale?: string;
+}): Metadata {
+  return {
+    title: pageData.title,
+    description: pageData.description,
+    openGraph: {
+      title: pageData.title,
+      description: pageData.description,
+      url: pageData.url,
+      siteName: "Dilavia",
+      images: pageData.imageUrl
+        ? [{ url: pageData.imageUrl, width: 1200, height: 630 }]
+        : [
+            {
+              url: "https://dilavia.by/images/logo.svg",
+              width: 1200,
+              height: 630,
+            },
+          ],
+      locale: pageData.locale || "ru_RU",
+      type: (pageData.type as "website") || "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageData.title,
+      description: pageData.description,
+      images: pageData.imageUrl
+        ? [pageData.imageUrl]
+        : ["https://dilavia.by/images/logo.svg"],
+    },
+  };
+}
+
+/**
+ * Генерирует схему Product для страницы товара
+ * @param product Объект с данными товара
+ * @returns Объект схемы Product
+ */
+export function generateProductSchema(product: {
+  name: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  currency: string;
+  availability: boolean;
+  slug: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.imageUrl,
+    description: product.description,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: product.currency,
+      price: product.price,
+      availability: product.availability
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+    url: `https://dilavia.by/catalog/${product.slug}`,
+  };
+}
+
+/**
+ * Генерирует схему WebPage для информационных страниц
+ * @param pageData Объект с данными страницы
+ * @returns Объект схемы WebPage
+ */
+export function generateWebPageSchema(pageData: {
+  name: string;
+  description: string;
+  url: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: pageData.name,
+    description: pageData.description,
+    url: pageData.url,
+  };
+}
+
+/**
+ * Генерирует схему ItemList для каталогов и списков
+ * @param listData Объект с данными списка
+ * @returns Объект схемы ItemList
+ */
+export function generateItemListSchema(listData: {
+  name: string;
+  description: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: listData.name,
+    description: listData.description,
+  };
+}
+
+/**
+ * Генерирует схему FAQPage для страниц с вопросами и ответами
+ * @param faqData Массив вопросов и ответов
+ * @returns Объект схемы FAQPage
+ */
+export function generateFAQSchema(
+  faqData: Array<{
+    question: string;
+    answer: string;
+  }>,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqData.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+/**
+ * Генерирует схему Review для отзывов
+ * @param reviewData Объект с данными отзыва
+ * @returns Объект схемы Review
+ */
+export function generateReviewSchema(reviewData: {
+  name: string;
+  author: string;
+  reviewBody: string;
+  ratingValue: number;
+  datePublished: string;
+  itemReviewed?: {
+    name: string;
+    type: "Product" | "Organization" | "Service";
+  };
+}) {
+  const schema: any = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    name: reviewData.name,
+    author: {
+      "@type": "Person",
+      name: reviewData.author,
+    },
+    reviewBody: reviewData.reviewBody,
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: reviewData.ratingValue,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    datePublished: reviewData.datePublished,
+  };
+
+  if (reviewData.itemReviewed) {
+    schema.itemReviewed = {
+      "@type": reviewData.itemReviewed.type,
+      name: reviewData.itemReviewed.name,
+    };
+  }
+
+  return schema;
+}
+
+/**
+ * Генерирует схему AggregateRating для рейтингов
+ * @param ratingData Объект с данными рейтинга
+ * @returns Объект схемы AggregateRating
+ */
+export function generateAggregateRatingSchema(ratingData: {
+  ratingValue: number;
+  reviewCount: number;
+  bestRating?: number;
+  worstRating?: number;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AggregateRating",
+    ratingValue: ratingData.ratingValue,
+    reviewCount: ratingData.reviewCount,
+    bestRating: ratingData.bestRating || 5,
+    worstRating: ratingData.worstRating || 1,
+  };
+}
+
+/**
+ * Генерирует схему Organization для компании
+ * @param orgData Объект с данными организации
+ * @returns Объект схемы Organization
+ */
+export function generateOrganizationSchema(orgData: {
+  name: string;
+  url: string;
+  logo?: string;
+  address?: {
+    streetAddress: string;
+    addressLocality: string;
+    addressRegion: string;
+    postalCode: string;
+    addressCountry: string;
+  };
+  contactPoint?: {
+    telephone: string;
+    email: string;
+    contactType: string;
+  };
+}) {
+  const schema: any = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: orgData.name,
+    url: orgData.url,
+  };
+
+  if (orgData.logo) {
+    schema.logo = orgData.logo;
+  }
+
+  if (orgData.address) {
+    schema.address = {
+      "@type": "PostalAddress",
+      streetAddress: orgData.address.streetAddress,
+      addressLocality: orgData.address.addressLocality,
+      addressRegion: orgData.address.addressRegion,
+      postalCode: orgData.address.postalCode,
+      addressCountry: orgData.address.addressCountry,
+    };
+  }
+
+  if (orgData.contactPoint) {
+    schema.contactPoint = {
+      "@type": "ContactPoint",
+      telephone: orgData.contactPoint.telephone,
+      email: orgData.contactPoint.email,
+      contactType: orgData.contactPoint.contactType,
+    };
+  }
+
+  return schema;
+}

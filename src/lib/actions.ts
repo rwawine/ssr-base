@@ -13,64 +13,80 @@ import {
 const action = createSafeActionClient();
 
 // Экшен для отправки контактной формы
-export const submitContactForm = action(
-  contactFormSchema,
-  async ({ parsedInput }) => {
-    try {
-      // Здесь будет логика отправки формы
-      console.log("Contact form submitted:", parsedInput);
+export const submitContactForm = action(contactFormSchema, async (data) => {
+  try {
+    // Отправляем данные на API для отправки email
+    const response = await fetch("/api/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: "contact_form",
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        topic: data.topic || "Общий вопрос",
+        message: data.message,
+      }),
+    });
 
-      // Имитация отправки
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    const result = await response.json();
 
-      return {
-        success: true,
-        message:
-          "Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.",
-      };
-    } catch (error) {
+    if (!response.ok) {
       return {
         success: false,
-        error: "Произошла ошибка при отправке сообщения. Попробуйте позже.",
+        error:
+          result.error ||
+          "Произошла ошибка при отправке сообщения. Попробуйте позже.",
       };
     }
-  },
-);
+
+    return {
+      success: true,
+      message:
+        "Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.",
+    };
+  } catch (error) {
+    console.error("Error submitting contact form:", error);
+    return {
+      success: false,
+      error: "Произошла ошибка при отправке сообщения. Попробуйте позже.",
+    };
+  }
+});
 
 // Экшен для оформления заказа
-export const submitCheckoutForm = action(
-  checkoutFormSchema,
-  async ({ parsedInput }) => {
-    try {
-      // Здесь будет логика оформления заказа
-      console.log("Checkout form submitted:", parsedInput);
+export const submitCheckoutForm = action(checkoutFormSchema, async (data) => {
+  try {
+    // Здесь будет логика оформления заказа
+    console.log("Checkout form submitted:", data);
 
-      // Имитация обработки заказа
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Имитация обработки заказа
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      return {
-        success: true,
-        message:
-          "Заказ успешно оформлен! Номер заказа: #" +
-          Math.random().toString(36).substr(2, 9).toUpperCase(),
-        data: {
-          orderId: Math.random().toString(36).substr(2, 9).toUpperCase(),
-        },
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: "Произошла ошибка при оформлении заказа. Попробуйте позже.",
-      };
-    }
-  },
-);
+    return {
+      success: true,
+      message:
+        "Заказ успешно оформлен! Номер заказа: #" +
+        Math.random().toString(36).substr(2, 9).toUpperCase(),
+      data: {
+        orderId: Math.random().toString(36).substr(2, 9).toUpperCase(),
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "Произошла ошибка при оформлении заказа. Попробуйте позже.",
+    };
+  }
+});
 
 // Экшен для добавления отзыва
-export const submitReview = action(reviewSchema, async ({ parsedInput }) => {
+export const submitReview = action(reviewSchema, async (data) => {
   try {
     // Здесь будет логика сохранения отзыва
-    console.log("Review submitted:", parsedInput);
+    console.log("Review submitted:", data);
 
     // Имитация сохранения
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -95,10 +111,10 @@ export const searchProducts = action(
     page: z.number().min(1).default(1),
     limit: z.number().min(1).max(50).default(12),
   }),
-  async ({ parsedInput }) => {
+  async (data) => {
     try {
       // Здесь будет логика поиска продуктов
-      console.log("Searching products:", parsedInput);
+      console.log("Searching products:", data);
 
       // Имитация поиска
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -108,8 +124,8 @@ export const searchProducts = action(
         data: {
           products: [],
           total: 0,
-          page: parsedInput.page,
-          limit: parsedInput.limit,
+          page: data.page,
+          limit: data.limit,
         },
       };
     } catch (error) {
@@ -128,10 +144,10 @@ export const addToCart = action(
     quantity: z.number().min(1).default(1),
     variantId: z.string().optional(),
   }),
-  async ({ parsedInput }) => {
+  async (data) => {
     try {
       // Здесь будет логика добавления в корзину
-      console.log("Adding to cart:", parsedInput);
+      console.log("Adding to cart:", data);
 
       return {
         success: true,
@@ -151,10 +167,10 @@ export const addToFavorites = action(
   z.object({
     productId: z.string().min(1),
   }),
-  async ({ parsedInput }) => {
+  async (data) => {
     try {
       // Здесь будет логика добавления в избранное
-      console.log("Adding to favorites:", parsedInput);
+      console.log("Adding to favorites:", data);
 
       return {
         success: true,

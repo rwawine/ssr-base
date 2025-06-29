@@ -1,8 +1,7 @@
 .container {
   max-width: 1660px;
   margin: 0 auto;
-  padding: 40px 0;
-  margin-top: 100px;
+  margin-top: 110px;
 }
 
 .breadcrumbs {
@@ -24,6 +23,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
+  margin-top: 1rem;
   align-items: start;
 }
 

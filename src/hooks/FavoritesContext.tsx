@@ -129,9 +129,7 @@ function favoritesReducer(
 }
 
 // Создание контекста
-const FavoritesContext = createContext<FavoritesContextType | undefined>(
-  undefined,
-);
+const FavoritesContext = createContext<FavoritesContextType | null>(null);
 
 // Провайдер контекста
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
@@ -142,27 +140,36 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [savedFavorites] = useLocalStorage(FAVORITES_STORAGE_KEY, initialState);
 
   useEffect(() => {
-    if (savedFavorites && Object.keys(savedFavorites).length > 0) {
-      // Фильтруем невалидные записи тканей при загрузке
-      const validFavorites = {
-        ...savedFavorites,
-        fabricItems: (savedFavorites.fabricItems || []).filter(
-          (item) =>
-            item.fabric.categorySlug &&
-            item.fabric.collectionSlug &&
-            item.fabric.categorySlug !== "undefined" &&
-            item.fabric.collectionSlug !== "undefined",
-        ),
-      };
-      dispatch({ type: "LOAD_FAVORITES", payload: validFavorites });
+    try {
+      if (savedFavorites && Object.keys(savedFavorites).length > 0) {
+        // Фильтруем невалидные записи тканей при загрузке
+        const validFavorites = {
+          ...savedFavorites,
+          fabricItems: (savedFavorites.fabricItems || []).filter(
+            (item) =>
+              item.fabric.categorySlug &&
+              item.fabric.collectionSlug &&
+              item.fabric.categorySlug !== "undefined" &&
+              item.fabric.collectionSlug !== "undefined",
+          ),
+        };
+        dispatch({ type: "LOAD_FAVORITES", payload: validFavorites });
+      }
+    } catch (error) {
+      console.error("Error loading favorites from localStorage:", error);
+    } finally {
+      setIsHydrated(true);
     }
-    setIsHydrated(true);
   }, [savedFavorites]);
 
   // Сохранение избранного в localStorage
   useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(state));
+    if (isHydrated && typeof window !== "undefined") {
+      try {
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(state));
+      } catch (error) {
+        console.error("Error saving favorites to localStorage:", error);
+      }
     }
   }, [state, isHydrated]);
 
@@ -256,10 +263,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 // Хук для использования контекста избранного
 export function useFavorites(): FavoritesContextType {
   const context = useContext(FavoritesContext);
-  if (context === undefined) {
-    throw new Error(
-      "useFavorites должен использоваться внутри FavoritesProvider",
-    );
+  if (context === null) {
+    throw new Error("useFavorites must be used within a FavoritesProvider");
   }
   return context;
 }

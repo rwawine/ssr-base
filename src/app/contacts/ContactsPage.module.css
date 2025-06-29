@@ -39,7 +39,7 @@
 }
 
 .contactInfo {
-    flex: 1;
+    width: 100%;
 }
 
 .infoBlock {
@@ -124,9 +124,34 @@
     padding-right: 2.5rem;
 }
 
+.select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+}
+
 .formGroup input:focus,
 .formGroup textarea:focus,
 .formGroup select:focus {
+    outline: none;
+    border-color: #555;
+    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
+}
+
+.select:focus {
     outline: none;
     border-color: #555;
     box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
@@ -139,9 +164,18 @@
     border-color: #dc2626;
 }
 
+.select.inputError {
+    border-color: #dc2626;
+}
+
 .formGroup input.inputError:focus,
 .formGroup textarea.inputError:focus,
 .formGroup select.inputError:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.select.inputError:focus {
     border-color: #dc2626;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }

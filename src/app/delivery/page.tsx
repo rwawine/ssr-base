@@ -1,22 +1,8 @@
 import React from "react";
-import { Metadata } from "next";
 import Link from "next/link";
 import styles from "./Delivery.module.css";
 import Accordion from "@/components/faq/Accordion";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import { FAQSchema } from "@/components/schema";
-import { generatePageMetadata } from "@/lib/metadata";
-
-export const metadata: Metadata = generatePageMetadata(
-  {
-    title: "Доставка мебели по Беларуси | Dilavia",
-    description:
-      "Доставка мебели по всей Беларуси. Бесплатная доставка в Минске. Сроки, условия, стоимость доставки.",
-    keywords:
-      "доставка мебели, доставка по Беларуси, бесплатная доставка, сроки доставки, условия доставки",
-  },
-  "/delivery",
-);
 
 const faqItems = [
   {
@@ -49,22 +35,18 @@ const faqItems = [
 export default function DeliveryPage() {
   return (
     <main className={styles.container}>
-      <FAQSchema
-        items={faqItems.map(({ title, content }) => ({
-          question: title,
-          answer: content,
-        }))}
-      />
       <Breadcrumbs
         items={[
-          { label: "Главная", href: "https://dilavia.by/" },
-          { label: "Покупателю" },
+          { name: "Главная", url: "https://dilavia.by/" },
+          { name: "Покупателю", url: "https://dilavia.by/delivery" },
         ]}
-        className={styles.breadcrumbs}
       />
       <h1 className={styles.mainTitle}>Покупателю</h1>
       <h2 className={styles.sectionTitle}>Часто задаваемые вопросы</h2>
-      <Accordion items={faqItems} />
+
+      <div>
+        <Accordion items={faqItems} />
+      </div>
     </main>
   );
 }

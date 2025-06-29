@@ -53,8 +53,12 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    try {
+      window.addEventListener("storage", handleStorageChange);
+      return () => window.removeEventListener("storage", handleStorageChange);
+    } catch (error) {
+      console.error("Error setting up storage event listener:", error);
+    }
   }, [key, isClient]);
 
   return [storedValue, setValue] as const;

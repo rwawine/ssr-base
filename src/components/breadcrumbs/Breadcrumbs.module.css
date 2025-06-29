@@ -6,6 +6,8 @@
   color: #aaa;
   padding: 16px 0;
   gap: 0 4px;
+  justify-content: center;
+  align-items: center;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: thin;
@@ -16,6 +18,14 @@
   align-items: center;
   gap: 0 4px;
   white-space: nowrap;
+}
+.breadcrumbs ol {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.breadcrumbs__link {
+  margin-right: 6px;
 }
 .breadcrumbs a {
   color: #888;

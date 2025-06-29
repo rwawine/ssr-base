@@ -183,20 +183,21 @@ export default function CatalogClient({
       {/* Хлебные крошки */}
       <Breadcrumbs
         items={[
-          { label: "Главная", href: "https://dilavia.by/" },
-          { label: "Каталог", href: "https://dilavia.by/catalog" },
+          { name: "Главная", url: "https://dilavia.by/" },
+          { name: "Каталог", url: "https://dilavia.by/catalog" },
           ...(categoryName
             ? [
                 {
-                  label: categoryName,
-                  href: `https://dilavia.by/catalog?category=${currentFilters.category?.[0] || ""}`,
+                  name: categoryName,
+                  url: `https://dilavia.by/catalog?category=${currentFilters.category?.[0] || ""}`,
                 },
               ]
             : []),
           ...(subcategoryName
             ? [
                 {
-                  label: subcategoryName,
+                  name: subcategoryName,
+                  url: `https://dilavia.by/catalog?category=${currentFilters.category?.[0] || ""}&subcategory=${currentFilters.subcategory?.[0] || ""}`,
                 },
               ]
             : []),
@@ -216,49 +217,51 @@ export default function CatalogClient({
             Найдено товаров: {filteredProducts.length}
           </p>
         </div>
+      </div>
+
+      {/* Сортировка */}
+      <div className={styles.sortContainer}>
+        <div className={styles.sortRow}>
+          <span className={`${styles.sortLabel} ${styles.sortDesktop}`}>
+            Отсортировать товары:
+          </span>
+          {!isMobile && (
+            <div className={styles.sortDesktop}>
+              {sortOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  className={
+                    sort === opt.value ? styles.sortActive : styles.sortBtn
+                  }
+                  onClick={() => handleSortChange(opt.value as any)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+          {isMobile && (
+            <div className={styles.sortMobile}>
+              <select
+                className={styles.sortMobileSelect}
+                value={sort}
+                onChange={(e) => handleSortChange(e.target.value as any)}
+                aria-label="Сортировка товаров"
+              >
+                {sortOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
         <FilterToggle
           onToggle={toggleFilters}
           isOpen={filtersOpen}
           activeFiltersCount={activeFiltersCount}
         />
-      </div>
-
-      {/* Сортировка */}
-      <div className={styles.sortRow}>
-        <span className={`${styles.sortLabel} ${styles.sortDesktop}`}>
-          Отсортировать товары:
-        </span>
-        {!isMobile && (
-          <div className={styles.sortDesktop}>
-            {sortOptions.map((opt) => (
-              <button
-                key={opt.value}
-                className={
-                  sort === opt.value ? styles.sortActive : styles.sortBtn
-                }
-                onClick={() => handleSortChange(opt.value as any)}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        )}
-        {isMobile && (
-          <div className={styles.sortMobile}>
-            <select
-              className={styles.sortMobileSelect}
-              value={sort}
-              onChange={(e) => handleSortChange(e.target.value as any)}
-              aria-label="Сортировка товаров"
-            >
-              {sortOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
       </div>
 
       <div className={styles.catalogContent}>
@@ -288,11 +291,9 @@ export default function CatalogClient({
           ) : (
             <div className={styles.productsGrid}>
               {sortedProducts.map((product, idx) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  priority={idx === 0}
-                />
+                <div key={product.id}>
+                  <ProductCard product={product} priority={idx === 0} />
+                </div>
               ))}
             </div>
           )}

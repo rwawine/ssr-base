@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/lib/metadata";
 
-// Убираем дублирующиеся метаданные - они будут в page.tsx
 export const metadata: Metadata = {
-  title: "Корзина покупок - Dilavia",
-  description: "Товары в корзине покупок мебельной фабрики Dilavia.",
+  title: "Отзывы - Dilavia",
+  description: "Читайте отзывы клиентов о мебели от мебельной фабрики Dilavia.",
   openGraph: {
-    title: "Корзина покупок - Dilavia",
-    description: "Товары в корзине покупок мебельной фабрики Dilavia.",
-    url: "https://dilavia.by/cart",
+    title: "Отзывы - Dilavia",
+    description:
+      "Читайте отзывы клиентов о мебели от мебельной фабрики Dilavia.",
+    url: "https://dilavia.by/reviews",
     siteName: "Dilavia",
     images: [
       { url: "https://dilavia.by/images/logo.svg", width: 1200, height: 630 },
@@ -18,18 +18,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function CartLayout({
+export default async function ReviewsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Генерируем структурированные данные только для корзины
+  // Генерируем структурированные данные только для страницы отзывов
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Корзина покупок",
-    description: "Товары в корзине покупок",
-    url: "https://dilavia.by/cart",
+    name: "Отзывы",
+    description: "Отзывы клиентов о мебели от Dilavia.",
+    url: "https://dilavia.by/reviews",
     breadcrumb: {
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -42,15 +42,16 @@ export default async function CartLayout({
         {
           "@type": "ListItem",
           position: 2,
-          name: "Корзина",
-          item: "https://dilavia.by/cart",
+          name: "Отзывы",
+          item: "https://dilavia.by/reviews",
         },
       ],
     },
     mainEntity: {
       "@type": "ItemList",
-      name: "Корзина покупок",
-      description: "Товары в корзине покупок",
+      name: "Отзывы клиентов",
+      description: "Коллекция отзывов клиентов о мебели от Dilavia",
+      numberOfItems: 50,
     },
   };
 

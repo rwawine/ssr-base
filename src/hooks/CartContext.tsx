@@ -366,7 +366,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 // Создание контекста
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextType | null>(null);
 
 // Провайдер контекста
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -377,16 +377,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [savedCart] = useLocalStorage(CART_STORAGE_KEY, initialState);
 
   useEffect(() => {
-    if (savedCart && Object.keys(savedCart).length > 0) {
-      dispatch({ type: "LOAD_CART", payload: savedCart });
+    try {
+      if (savedCart && Object.keys(savedCart).length > 0) {
+        dispatch({ type: "LOAD_CART", payload: savedCart });
+      }
+    } catch (error) {
+      console.error("Error loading cart from localStorage:", error);
+    } finally {
+      setIsHydrated(true);
     }
-    setIsHydrated(true);
   }, [savedCart]);
 
   // Сохранение корзины в localStorage
   useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+    if (isHydrated && typeof window !== "undefined") {
+      try {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+      } catch (error) {
+        console.error("Error saving cart to localStorage:", error);
+      }
     }
   }, [state, isHydrated]);
 
@@ -552,7 +561,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 // Хук для использования контекста корзины
 export function useCart(): CartContextType {
   const context = useContext(CartContext);
-  if (context === undefined) {
+  if (context === null) {
     throw new Error("useCart must be used within a CartProvider");
   }
   return context;

@@ -4,12 +4,10 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 import { useCart } from "@/hooks/CartContext";
 import { useFavorites } from "@/hooks/FavoritesContext";
-import HeartIcon from "@/components/header/icons/HeartIcon";
-import CartIcon from "@/components/header/icons/CartIcon";
 import { Breadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
 import type { FabricCollection, FabricVariant } from "@/types/fabric";
-import type { BreadcrumbItem } from "@/types";
 import styles from "./page.module.css";
+import { getFabricMaterialBySlug } from "@/lib/fabric-utils";
 
 interface FabricDetailClientProps {
   collection: FabricCollection;
@@ -26,7 +24,9 @@ export function FabricDetailClient({
   currentVariant,
   params,
 }: FabricDetailClientProps) {
-  const [selectedVariantId, setSelectedVariantId] = useState(params.variantId);
+  const [selectedVariantId, setSelectedVariantId] = useState(
+    currentVariant.id.toString(),
+  );
   const [quantity, setQuantity] = useState(1);
   const { addFabricToCart, fabricItems } = useCart();
   const {
@@ -44,46 +44,34 @@ export function FabricDetailClient({
     );
   }, [selectedVariantId, collection.variants, currentVariant]);
 
-  // Формируем хлебные крошки
-  const breadcrumbItems: BreadcrumbItem[] = useMemo(() => {
-    // Проверяем, что все необходимые параметры существуют
-    if (!params.category || !params.collection) {
-      return [
-        {
-          label: "Главная",
-          href: "/",
-        },
-        {
-          label: "Ткани",
-          href: "/fabrics",
-        },
-      ];
-    }
+  // Получаем название категории
+  const material = getFabricMaterialBySlug(params.category);
+  const categoryName = material?.nameLoc || params.category;
 
-    return [
+  // Формируем хлебные крошки
+  const breadcrumbItems = useMemo(
+    () => [
+      { name: "Главная", url: "https://dilavia.by/" },
+      { name: "Ткани", url: "https://dilavia.by/fabrics" },
       {
-        label: "Главная",
-        href: "/",
+        name: categoryName,
+        url: `https://dilavia.by/fabrics/${params.category}`,
       },
       {
-        label: "Ткани",
-        href: "/fabrics",
+        name: collection.nameLoc,
+        url: `https://dilavia.by/fabrics/${params.category}/${params.collection}/${currentVariant.color.name}`,
       },
-      {
-        label: collection.nameLoc,
-        href: `/fabrics/${params.category}`,
-      },
-      {
-        label: selectedVariant.color.name,
-        isActive: true,
-      },
-    ];
-  }, [
-    collection.nameLoc,
-    params.category,
-    params.collection,
-    selectedVariant.color.name,
-  ]);
+      { name: selectedVariant.color.name, url: "" },
+    ],
+    [
+      categoryName,
+      params.category,
+      params.collection,
+      collection.nameLoc,
+      currentVariant.color.name,
+      selectedVariant.color.name,
+    ],
+  );
 
   const fabricKey = `fabric-${params.category}-${params.collection}-${selectedVariant.id}`;
   const isInFavorites = isFabricInFavorites(fabricKey);

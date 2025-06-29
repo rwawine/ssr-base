@@ -1,75 +1,66 @@
 import React from "react";
 import Link from "next/link";
-import { BreadcrumbItem } from "@/types";
 import styles from "./Breadcrumbs.module.css";
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
-  className?: string;
 }
 
-/* Удаляю компонент BreadcrumbsJsonLd, чтобы избежать ошибки гидратации */
-/* const BreadcrumbsJsonLd: React.FC<{ items: BreadcrumbItem[] }> = ({
-  items,
-}) => {
-  if (!items || items.length === 0) return null;
-  const itemListElement = items.map((item, idx) => {
-    const obj: any = {
-      "@type": "ListItem",
-      position: idx + 1,
-      name: item.label,
-    };
-    // Только если есть href и это не последний элемент
-    if (item.href && idx !== items.length - 1) {
-      obj.item = item.href;
-    }
-    return obj;
-  });
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement,
-        }),
-      }}
-    />
-  );
-}; */
-
-export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
+export function Breadcrumbs({ items }: BreadcrumbsProps) {
   if (!items || items.length === 0) {
     return null;
   }
 
+  // Генерируем структурированные данные для хлебных крошек
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+
   return (
-    <nav
-      className={`${styles.breadcrumbs} ${className || ""}`}
-      aria-label="Хлебные крошки"
-    >
-      {/* Удаляю вызов BreadcrumbsJsonLd */}
-      {/* <BreadcrumbsJsonLd items={items} /> */}
-      <ol className={styles.list}>
-        {items.map((item, index) => (
-          <li key={index} className={styles.item}>
-            {item.isActive || !item.href ? (
-              <span className={styles.current}>{item.label}</span>
-            ) : (
-              <Link href={item.href} className={styles.link}>
-                {item.label}
-              </Link>
-            )}
-            {index < items.length - 1 && (
-              <span className={styles.separator} aria-hidden="true">
-                /
-              </span>
-            )}
-          </li>
-        ))}
-      </ol>
-    </nav>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
+        <ol className={styles.breadcrumbs__list}>
+          {items.map((item, index) => (
+            <li key={index} className={styles.breadcrumbs__item}>
+              {index === items.length - 1 ? (
+                <span
+                  className={styles.breadcrumbs__current}
+                  aria-current="page"
+                >
+                  {item.name}
+                </span>
+              ) : (
+                <>
+                  <Link
+                    href={item.url || "/"}
+                    className={styles.breadcrumbs__link}
+                  >
+                    {item.name}
+                  </Link>
+                  <span className={styles.breadcrumbs__separator}>/</span>
+                </>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </>
   );
 }
 
