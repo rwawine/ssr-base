@@ -249,8 +249,7 @@ export default function ProductDetail({
           },
         },
       },
-      on: {
-      },
+      on: {},
     });
     return () => {
       NativeFancybox.unbind("[data-fancybox=gallery]");

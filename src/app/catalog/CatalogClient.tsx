@@ -178,41 +178,75 @@ export default function CatalogClient({
     }
   };
 
+  // --- Новая строгая логика для хлебных крошек и заголовка ---
+  const selectedCategories = currentFilters.category || [];
+  const selectedSubcategories = currentFilters.subcategory || [];
+
+  const isSingleCategory = selectedCategories.length === 1;
+  const isSingleSubcategory = selectedSubcategories.length === 1;
+  const isMultiCategory = selectedCategories.length > 1;
+  const isMultiSubcategory = selectedSubcategories.length > 1;
+
+  let breadcrumbsItems = [
+    { name: "Главная", url: "https://dilavia.by/" },
+    { name: "Каталог", url: "https://dilavia.by/catalog" },
+  ];
+  let catalogTitle = "Каталог товаров";
+
+  if (isSingleCategory && isMultiSubcategory) {
+    // Одна категория и несколько подкатегорий этой категории
+    breadcrumbsItems = [
+      { name: "Главная", url: "https://dilavia.by/" },
+      { name: "Каталог", url: "https://dilavia.by/catalog" },
+      {
+        name: categoryName || selectedCategories[0],
+        url: `https://dilavia.by/catalog?category=${selectedCategories[0]}`,
+      },
+    ];
+    catalogTitle = categoryName || selectedCategories[0];
+  } else if (isMultiCategory || (isMultiSubcategory && !isSingleCategory)) {
+    // Несколько категорий или подкатегорий из разных категорий — только каталог
+    breadcrumbsItems = [
+      { name: "Главная", url: "https://dilavia.by/" },
+      { name: "Каталог", url: "https://dilavia.by/catalog" },
+    ];
+    catalogTitle = "Каталог товаров";
+  } else if (isSingleCategory && isSingleSubcategory) {
+    // Одна категория и одна подкатегория
+    breadcrumbsItems = [
+      { name: "Главная", url: "https://dilavia.by/" },
+      { name: "Каталог", url: "https://dilavia.by/catalog" },
+      {
+        name: categoryName || selectedCategories[0],
+        url: `https://dilavia.by/catalog?category=${selectedCategories[0]}`,
+      },
+      {
+        name: subcategoryName || selectedSubcategories[0],
+        url: `https://dilavia.by/catalog?category=${selectedCategories[0]}&subcategory=${selectedSubcategories[0]}`,
+      },
+    ];
+    catalogTitle = `${subcategoryName || selectedSubcategories[0]} - ${categoryName || selectedCategories[0]}`;
+  } else if (isSingleCategory) {
+    // Только одна категория
+    breadcrumbsItems = [
+      { name: "Главная", url: "https://dilavia.by/" },
+      { name: "Каталог", url: "https://dilavia.by/catalog" },
+      {
+        name: categoryName || selectedCategories[0],
+        url: `https://dilavia.by/catalog?category=${selectedCategories[0]}`,
+      },
+    ];
+    catalogTitle = categoryName || selectedCategories[0];
+  }
+
   return (
     <div className={styles.container}>
       {/* Хлебные крошки */}
-      <Breadcrumbs
-        items={[
-          { name: "Главная", url: "https://dilavia.by/" },
-          { name: "Каталог", url: "https://dilavia.by/catalog" },
-          ...(categoryName
-            ? [
-                {
-                  name: categoryName,
-                  url: `https://dilavia.by/catalog?category=${currentFilters.category?.[0] || ""}`,
-                },
-              ]
-            : []),
-          ...(subcategoryName
-            ? [
-                {
-                  name: subcategoryName,
-                  url: `https://dilavia.by/catalog?category=${currentFilters.category?.[0] || ""}&subcategory=${currentFilters.subcategory?.[0] || ""}`,
-                },
-              ]
-            : []),
-        ]}
-      />
+      <Breadcrumbs items={breadcrumbsItems} />
       {/* Заголовок и кнопка фильтров */}
       <div className={styles.catalogHeader}>
         <div className={styles.catalogTitle}>
-          <h1>
-            {subcategoryName
-              ? `${subcategoryName} - ${categoryName || "Каталог"}`
-              : categoryName
-                ? categoryName
-                : "Каталог товаров"}
-          </h1>
+          <h1>{catalogTitle}</h1>
           <p className={styles.catalogSubtitle}>
             Найдено товаров: {filteredProducts.length}
           </p>
