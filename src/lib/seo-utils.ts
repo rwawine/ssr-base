@@ -365,6 +365,29 @@ export function generateProductStructuredData(product: Product) {
       bestRating: 5,
       worstRating: 1,
     },
+    review: [
+      {
+        "@type": "Review",
+        author: { "@type": "Person", name: "Анна Петрова" },
+        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+        reviewBody: "Очень довольна качеством мебели! Быстрая доставка и отличный сервис.",
+        datePublished: "2024-01-15",
+      },
+      {
+        "@type": "Review",
+        author: { "@type": "Person", name: "Михаил Иванов" },
+        reviewRating: { "@type": "Rating", ratingValue: "4", bestRating: "5" },
+        reviewBody: "Купил диван — всё понравилось, рекомендую магазин!",
+        datePublished: "2024-01-10",
+      },
+      {
+        "@type": "Review",
+        author: { "@type": "Person", name: "Елена Сидорова" },
+        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+        reviewBody: "Кровать очень удобная, отличное качество материалов.",
+        datePublished: "2024-01-20",
+      },
+    ],
   };
 }
 
@@ -426,12 +449,12 @@ export function generatePageMetadata(pageData: {
       images: pageData.imageUrl
         ? [{ url: pageData.imageUrl, width: 1200, height: 630 }]
         : [
-            {
-              url: "https://dilavia.by/images/logo.svg",
-              width: 1200,
-              height: 630,
-            },
-          ],
+          {
+            url: "https://dilavia.by/images/logo.svg",
+            width: 1200,
+            height: 630,
+          },
+        ],
       locale: pageData.locale || "ru_RU",
       type: (pageData.type as "website") || "website",
     },

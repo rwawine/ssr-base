@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Product } from "@/types/product";
-import { generateProductMetadata } from "@/lib/seo-utils";
+import { generateProductMetadata, generateProductStructuredData } from "@/lib/seo-utils";
 import { generatePageMetadata } from "@/lib/metadata";
 
 async function getProductsData() {
@@ -63,12 +63,12 @@ export async function generateMetadata({
         product.images && product.images.length > 0
           ? [{ url: product.images[0], width: 800, height: 600 }]
           : [
-              {
-                url: "https://dilavia.by/images/logo.svg",
-                width: 1200,
-                height: 630,
-              },
-            ],
+            {
+              url: "https://dilavia.by/images/logo.svg",
+              width: 1200,
+              height: 630,
+            },
+          ],
       locale: "ru_RU",
       type: "website",
     },
@@ -119,7 +119,7 @@ export default async function ProductLayout({
   }
 
   // Генерируем структурированные данные только для товара
-  const structuredData = generateProductMetadata(product);
+  const structuredData = generateProductStructuredData(product);
 
   return (
     <>
