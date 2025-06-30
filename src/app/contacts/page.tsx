@@ -4,8 +4,30 @@ import { ContactForm } from "@/components/contact-form/ContactForm";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 export default function ContactsPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: "https://dilavia.by/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Контакты",
+        item: "https://dilavia.by/contacts",
+      },
+    ],
+  };
   return (
     <div className={styles.pageContainer}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Breadcrumbs
         items={[
           { name: "Главная", url: "https://dilavia.by/" },

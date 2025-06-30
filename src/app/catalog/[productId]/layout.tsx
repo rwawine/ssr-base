@@ -1,6 +1,9 @@
 import { Metadata } from "next";
 import { Product } from "@/types/product";
-import { generateProductMetadata, generateProductStructuredData } from "@/lib/seo-utils";
+import {
+  generateProductMetadata,
+  generateProductStructuredData,
+} from "@/lib/seo-utils";
 import { generatePageMetadata } from "@/lib/metadata";
 
 async function getProductsData() {
@@ -63,12 +66,12 @@ export async function generateMetadata({
         product.images && product.images.length > 0
           ? [{ url: product.images[0], width: 800, height: 600 }]
           : [
-            {
-              url: "https://dilavia.by/images/logo.svg",
-              width: 1200,
-              height: 630,
-            },
-          ],
+              {
+                url: "https://dilavia.by/images/logo.svg",
+                width: 1200,
+                height: 630,
+              },
+            ],
       locale: "ru_RU",
       type: "website",
     },
@@ -118,11 +121,52 @@ export default async function ProductLayout({
     return children;
   }
 
+  // Преобразуем изображения к абсолютным URL
+  function toAbsoluteImages(product: Product): Product {
+    const abs = (url: string) =>
+      url.startsWith("http") ? url : `https://dilavia.by${url}`;
+    return {
+      ...product,
+      images: product.images?.map(abs) || [],
+    };
+  }
+  const absProduct = toAbsoluteImages(product);
+
+  // Генерируем BreadcrumbList
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: "https://dilavia.by/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Каталог",
+        item: "https://dilavia.by/catalog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: absProduct.name,
+        item: `https://dilavia.by/catalog/${absProduct.slug}`,
+      },
+    ],
+  };
+
   // Генерируем структурированные данные только для товара
-  const structuredData = generateProductStructuredData(product);
+  const structuredData = generateProductStructuredData(absProduct);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

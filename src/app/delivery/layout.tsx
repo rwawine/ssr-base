@@ -24,7 +24,26 @@ export default async function DeliveryLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Генерируем структурированные данные только для страницы доставки
+  // BreadcrumbList
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: "https://dilavia.by/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Доставка",
+        item: "https://dilavia.by/delivery",
+      },
+    ],
+  };
+  // WebPage schema
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -32,35 +51,28 @@ export default async function DeliveryLayout({
     description:
       "Условия доставки мебели по Беларуси от мебельной фабрики Dilavia.",
     url: "https://dilavia.by/delivery",
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Главная",
-          item: "https://dilavia.by",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Доставка",
-          item: "https://dilavia.by/delivery",
-        },
-      ],
-    },
-    mainEntity: {
-      "@type": "Article",
-      name: "Условия доставки",
-      description: "Информация о доставке мебели по Беларуси",
-    },
   };
-
+  // Article schema
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    name: "Условия доставки",
+    description: "Информация о доставке мебели по Беларуси",
+    url: "https://dilavia.by/delivery",
+  };
   return (
     <>
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       {children}
     </>

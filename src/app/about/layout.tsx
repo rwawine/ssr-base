@@ -24,34 +24,39 @@ export default async function AboutLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Генерируем структурированные данные только для страницы "О нас"
+  // BreadcrumbList
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: "https://dilavia.by/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "О нас",
+        item: "https://dilavia.by/about",
+      },
+    ],
+  };
+  // WebPage schema
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: "О нас",
     description: "Информация о мебельной фабрике Dilavia.",
     url: "https://dilavia.by/about",
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Главная",
-          item: "https://dilavia.by",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "О нас",
-          item: "https://dilavia.by/about",
-        },
-      ],
-    },
   };
-
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

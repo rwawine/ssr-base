@@ -5,6 +5,7 @@ import Header from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
 import { ClientProviders } from "@/components/ClientProviders";
 import { GlobalSchema } from "@/components/schema/GlobalSchema";
+import { generateProductStructuredData } from "@/lib/seo-utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -70,14 +71,61 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+async function getPopularProducts() {
+  const data = await import("@/data/data.json");
+  return data.default[0].products.slice(0, 5);
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const popularProducts = await getPopularProducts();
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: "https://dilavia.by/",
+      },
+    ],
+  };
+  function toAbsoluteImages(product: any) {
+    const abs = (url: string) =>
+      url.startsWith("http") ? url : `https://dilavia.by${url}`;
+    return {
+      ...product,
+      images: product.images?.map(abs) || [],
+    };
+  }
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: popularProducts.map((product, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      item: generateProductStructuredData(
+        toAbsoluteImages(
+          product as unknown as import("@/types/product").Product,
+        ),
+      ),
+    })),
+  };
   return (
     <html lang="ru">
       <body className={inter.className}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
         <GlobalSchema />
         <ClientProviders>
           <Header />
