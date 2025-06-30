@@ -14,6 +14,7 @@
     "check-mime": "node scripts/fix-mime-types.js"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.0.5",
     "@splidejs/react-splide": "^0.7.12",
     "@splidejs/splide": "^4.1.4",
     "@types/nodemailer": "^6.4.17",

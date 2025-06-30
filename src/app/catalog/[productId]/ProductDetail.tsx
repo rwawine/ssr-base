@@ -9,6 +9,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/pagination";
+import { Fancybox as NativeFancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 import { Product, Dimension, AdditionalOption } from "@/types/product";
 import { useCart } from "@/hooks/CartContext";
@@ -224,6 +226,38 @@ export default function ProductDetail({
     }
   };
 
+  useEffect(() => {
+    // Кастомный класс для белого фона Fancybox
+    const whiteBgClass = "fancybox-white-bg";
+    NativeFancybox.bind("[data-fancybox=gallery]", {
+      theme: "light",
+      mainClass: whiteBgClass,
+      Carousel: {
+        Thumbs: false,
+        Toolbar: {
+          display: {
+            left: [],
+            middle: [],
+            right: ["close"],
+          },
+        },
+        Zoomable: {
+          Panzoom: {
+            maxScale: 4,
+            panMode: "mousemove",
+            mouseMoveFactor: 2,
+          },
+        },
+      },
+      on: {
+      },
+    });
+    return () => {
+      NativeFancybox.unbind("[data-fancybox=gallery]");
+      document.body.classList.remove(whiteBgClass);
+    };
+  }, [images]);
+
   return (
     <div className={styles.container}>
       <Breadcrumbs items={breadcrumbs} />
@@ -259,13 +293,21 @@ export default function ProductDetail({
             >
               {images.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <img
-                    src={image}
-                    className={styles.mainSwiperSlide}
-                    alt={`${product.name} - фото ${index + 1}`}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    suppressHydrationWarning
-                  />
+                  <a
+                    data-fancybox="gallery"
+                    href={image}
+                    data-caption={`${product.name} - фото ${index + 1}`}
+                    tabIndex={0}
+                  >
+                    <img
+                      src={image}
+                      className={styles.mainSwiperSlide}
+                      alt={`${product.name} - фото ${index + 1}`}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      suppressHydrationWarning
+                      style={{ cursor: "zoom-in", background: "#fff" }}
+                    />
+                  </a>
                 </SwiperSlide>
               ))}
             </Swiper>

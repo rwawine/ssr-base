@@ -230,3 +230,9 @@ body {
   background-color: #f6f6f6;
   overflow-x: hidden;
 }
+
+/* Fancybox white background override */
+.fancybox-white-bg .fancybox__backdrop {
+  background: #fff !important;
+  opacity: 1 !important;
+}
