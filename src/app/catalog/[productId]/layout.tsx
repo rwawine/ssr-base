@@ -33,13 +33,19 @@ export async function generateMetadata({
     );
   }
 
+  // Используем SEO-ключи из product.seo, если они есть
+  const seo = product.seo || {};
+  const title = seo.title || `${product.name} - купить в Минске | Dilavia`;
+  const description = seo.metaDescription || "";
+  const keywords = Array.isArray(seo.keywords)
+    ? seo.keywords.join(", ")
+    : generateProductKeywords(product).join(", ");
+
   const baseMetadata = generatePageMetadata(
     {
-      title: `${product.name} - купить в Минске | Dilavia`,
-      description:
-        product.description ||
-        `Купите ${product.name} от мебельной фабрики Dilavia с доставкой по Беларуси. Цена от ${product.price?.current} BYN.`,
-      keywords: generateProductKeywords(product).join(", "),
+      title,
+      description,
+      keywords,
     },
     `/catalog/${slug}`,
   );
