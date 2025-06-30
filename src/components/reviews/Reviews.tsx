@@ -203,7 +203,7 @@ export default function Reviews() {
           </button>
         </form>
       </div>
-
+      <iframe src="https://yandex.by/sprav/widget/rating-badge/13269874920?type=rating" width="150" height="50"></iframe>
       <div className={styles.commentsSection}>
         <h2>Отзывы</h2>
         <div className={styles.comments}>

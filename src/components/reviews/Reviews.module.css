@@ -3,6 +3,10 @@
   margin: auto;
   background: transparent;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .container h2 {
@@ -15,6 +19,7 @@
 .formWrapper {
   background: #ffffff;
   padding: 32px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   border-radius: 16px;
