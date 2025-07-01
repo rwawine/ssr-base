@@ -9,7 +9,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/pagination";
-import { Fancybox as NativeFancybox } from "@fancyapps/ui";
+import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 import { Product, Dimension, AdditionalOption } from "@/types/product";
@@ -227,33 +227,41 @@ export default function ProductDetail({
   };
 
   useEffect(() => {
-    // Кастомный класс для белого фона Fancybox
     const whiteBgClass = "fancybox-white-bg";
-    NativeFancybox.bind("[data-fancybox=gallery]", {
+    Fancybox.bind("[data-fancybox=gallery]", {
       theme: "light",
       mainClass: whiteBgClass,
       Carousel: {
-        Thumbs: false,
-        Toolbar: {
-          display: {
-            left: [],
-            middle: [],
-            right: ["close"],
-          },
-        },
-        Zoomable: {
-          Panzoom: {
-            maxScale: 4,
-            panMode: "mousemove",
-            mouseMoveFactor: 2,
-          },
+        Thumbs: {
+          type: "classic",
+          autoStart: true,
         },
       },
-      on: {},
+      Toolbar: {
+        display: {
+          left: [],
+          middle: [],
+          right: ["zoom", "close"],
+        },
+      },
+    } as any);
+
+    document.addEventListener("fancybox:afterShow", () => {
+      document.body.classList.add(whiteBgClass);
     });
-    return () => {
-      NativeFancybox.unbind("[data-fancybox=gallery]");
+    document.addEventListener("fancybox:afterClose", () => {
       document.body.classList.remove(whiteBgClass);
+    });
+
+    return () => {
+      Fancybox.unbind("[data-fancybox=gallery]");
+      document.body.classList.remove(whiteBgClass);
+      document.removeEventListener("fancybox:afterShow", () => {
+        document.body.classList.add(whiteBgClass);
+      });
+      document.removeEventListener("fancybox:afterClose", () => {
+        document.body.classList.remove(whiteBgClass);
+      });
     };
   }, [images]);
 
