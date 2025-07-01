@@ -132,6 +132,7 @@ export default async function RootLayout({
           <main>{children}</main>
           <Footer />
         </ClientProviders>
+        <script async src="https://script.click-chat.ru/chat.js?wid=2806a4e5-3f63-4afe-b6a3-d09e0d4f08b4"></script>
       </body>
     </html>
   );
