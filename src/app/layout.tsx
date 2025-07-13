@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer/Footer";
 import { ClientProviders } from "@/components/ClientProviders";
 import { GlobalSchema } from "@/components/schema/GlobalSchema";
 import { generateProductStructuredData } from "@/lib/seo-utils";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -117,6 +118,22 @@ export default async function RootLayout({
   };
   return (
     <html lang="ru">
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17322570356"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17322570356');
+          `}
+        </Script>
+      </head>
       <body className={inter.className}>
         <script
           type="application/ld+json"
@@ -132,7 +149,10 @@ export default async function RootLayout({
           <main>{children}</main>
           <Footer />
         </ClientProviders>
-        <script async src="https://script.click-chat.ru/chat.js?wid=2806a4e5-3f63-4afe-b6a3-d09e0d4f08b4"></script>
+        <script
+          async
+          src="https://script.click-chat.ru/chat.js?wid=2806a4e5-3f63-4afe-b6a3-d09e0d4f08b4"
+        ></script>
       </body>
     </html>
   );
