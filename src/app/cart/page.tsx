@@ -162,17 +162,15 @@ export default function CartPage() {
     }
 
     setTimeout(() => {
-      const randomId = Math.floor(Math.random() * 9000) + 1000;
-      setOrderId(`#19${randomId}`);
-      setOrderSubmitted(true);
+      clearCart();
+      setPromo("");
+      setPromoApplied(false);
+      setDiscount(0);
+      setPromoError("");
       setLoading(false);
-      clearTimer.current = setTimeout(() => {
-        clearCart();
-        setPromo("");
-        setPromoApplied(false);
-        setDiscount(0);
-        setPromoError("");
-      }, 200);
+      if (typeof window !== "undefined") {
+        window.location.href = "/catalog";
+      }
     }, 450);
   };
 
@@ -199,156 +197,6 @@ export default function CartPage() {
           <h1 className={styles.emptyCartTitle}>Загрузка корзины...</h1>
         </div>
       </div>
-    );
-  }
-
-  if (orderSubmitted) {
-    // Google Analytics conversion tracking for the success page
-    React.useEffect(() => {
-      if (typeof window !== "undefined" && window.gtag) {
-        window.gtag("event", "conversion", {
-          send_to: "AW-17322570356/uHsmCIvMhfAaEPTkhcRA",
-        });
-      }
-    }, []);
-
-    return (
-      <>
-        {/* Event snippet for Добавление в корзину conversion page */}
-        <Script id="google-conversion" strategy="afterInteractive">
-          {`
-            gtag('event', 'conversion', {'send_to': 'AW-17322570356/uHsmCIvMhfAaEPTkhcRA'});
-          `}
-        </Script>
-        <div className={styles.container}>
-          <Breadcrumbs
-            items={[
-              { name: "Главная", url: "https://dilavia.by/" },
-              { name: "Корзина", url: "https://dilavia.by/cart" },
-            ]}
-          />
-          <div className={styles.orderSuccess}>
-            <h1 className={styles.orderSuccessTitle}>Спасибо за заказ!</h1>
-            <div className={styles.orderId}>{orderId}</div>
-            <div className={styles.orderDetails}>
-              <h2 className={styles.orderDetailsTitle}>Состав заказа:</h2>
-              <div className={styles.orderItems}>
-                {orderItems.length > 0 ? (
-                  orderItems.map((item: any, index: number) => (
-                    <div key={index} className={styles.orderItem}>
-                      <div className={styles.orderItemImage}>
-                        <img
-                          src={
-                            item.product?.images?.[0] ||
-                            item.fabric?.variant.image ||
-                            "/public/images/no-image.png"
-                          }
-                          alt={
-                            item.product?.name ||
-                            `${item.fabric?.collection.nameLoc} - ${item.fabric?.variant.color.name}`
-                          }
-                        />
-                      </div>
-                      <div className={styles.orderItemInfo}>
-                        <div className={styles.orderItemName}>
-                          {item.product?.name ||
-                            `${item.fabric?.collection.nameLoc} - ${item.fabric?.variant.color.name}`}
-                          {item.product?.id && (
-                            <span style={{ color: "#888", fontSize: "0.95em" }}>
-                              {" "}
-                              {item.product.id}
-                            </span>
-                          )}
-                        </div>
-                        <div className={styles.orderItemQuantity}>
-                          Количество: {item.quantity}{" "}
-                          {item.product ? "шт." : "м²"}
-                        </div>
-                        {item.selectedDimension && (
-                          <div className={styles.orderItemDimension}>
-                            Размеры: {item.selectedDimension.width}см ×{" "}
-                            {item.selectedDimension.length}см
-                            {item.selectedDimension.height
-                              ? ` × ${item.selectedDimension.height}см`
-                              : ""}
-                          </div>
-                        )}
-                        {item.selectedAdditionalOptions &&
-                          item.selectedAdditionalOptions.length > 0 && (
-                            <div className={styles.orderItemDimension}>
-                              {item.selectedAdditionalOptions.map(
-                                (opt: AdditionalOption) => (
-                                  <span key={opt.name}>
-                                    {opt.name}
-                                    {opt.price
-                                      ? ` (${opt.price} BYN)`
-                                      : ""}{" "}
-                                  </span>
-                                ),
-                              )}
-                            </div>
-                          )}
-                        <div className={styles.orderItemPrice}>
-                          {item.product
-                            ? (
-                                item.selectedDimension?.price ||
-                                item.product.price?.current
-                              ).toLocaleString("ru-RU")
-                            : ""}{" "}
-                          {item.product ? "BYN" : ""}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className={styles.orderEmpty}>Нет товаров</div>
-                )}
-              </div>
-              {orderDiscount > 0 && (
-                <div className={styles.orderTotal}>
-                  <p
-                    className={
-                      styles.orderTotalLabel + styles.orderTotalLabelDiscount
-                    }
-                    style={{ color: "#388e3c" }}
-                  >
-                    Скидка по промокоду:
-                  </p>
-                  <div
-                    className={
-                      styles.orderTotalValue + styles.orderTotalLabelDiscount
-                    }
-                    style={{ color: "#388e3c" }}
-                  >
-                    -{orderDiscountValue.toLocaleString("ru-RU")} BYN
-                  </div>
-                </div>
-              )}
-              <div className={styles.orderTotal}>
-                <div className={styles.orderTotalLabel}>Итого:</div>
-                <div className={styles.orderTotalValue}>
-                  {orderTotal.toLocaleString("ru-RU")} BYN
-                </div>
-              </div>
-            </div>
-            <p className={styles.orderSuccessMessage}>
-              В течении часа с вами свяжется наш менеджер для уточнения деталей
-              заказа.
-            </p>
-            <div className={styles.orderSuccessButtons}>
-              <Link href="/" className={styles.orderSuccessButton}>
-                На главную
-              </Link>
-              <Link
-                href="/catalog"
-                className={styles.orderSuccessButtonSecondary}
-              >
-                В каталог
-              </Link>
-            </div>
-          </div>
-        </div>
-      </>
     );
   }
 
