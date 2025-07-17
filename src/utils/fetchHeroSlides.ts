@@ -19,6 +19,7 @@ export async function fetchHeroSlides(): Promise<Slide[]> {
 
     const response = await fetch(
       "https://admin.dilavia.by/api/slajder-na-glavnoj-straniczes?populate=image",
+      { next: { revalidate: 30 } },
     );
 
     if (!response.ok) {
