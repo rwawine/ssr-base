@@ -4,6 +4,18 @@ import { Product } from "@/types/product";
 import { Metadata } from "next";
 import { FilterState } from "@/components/catalog/CatalogFilters";
 import { generatePageMetadata } from "@/lib/metadata";
+import filterConfigRaw from "@/data/filterConfig.json";
+
+type FilterConfig = {
+  catalog?: {
+    defaultTitle?: string;
+    defaultDescription?: string;
+    categories?: Record<string, { title?: string; description?: string }>;
+    subcategories?: Record<string, { title?: string; description?: string }>;
+  };
+};
+
+const filterConfig = filterConfigRaw as unknown as FilterConfig;
 
 /**
  * Получить все товары из локального файла данных.
@@ -12,6 +24,20 @@ import { generatePageMetadata } from "@/lib/metadata";
 function getProductsFromFile(): Product[] {
   const data = require("@/data/data.json");
   return data[0].products;
+}
+
+/**
+ * Получить название категории из конфигурации
+ */
+function getCategoryTitle(code: string, fallbackName: string): string {
+  return filterConfig?.catalog?.categories?.[code]?.title || fallbackName;
+}
+
+/**
+ * Получить название подкатегории из конфигурации
+ */
+function getSubcategoryTitle(code: string, fallbackName: string): string {
+  return filterConfig?.catalog?.subcategories?.[code]?.title || fallbackName;
 }
 
 /**
@@ -148,55 +174,57 @@ export async function generateMetadata({
 
   // Если есть фильтр по категории, генерируем специфичные метаданные
   if (categoryParam) {
-    const categoryName = Array.isArray(categoryParam)
+    const categoryCode = Array.isArray(categoryParam)
       ? categoryParam[0]
       : categoryParam;
     const categoryProduct = products.find(
-      (p) => p.category?.code === categoryName,
+      (p) => p.category?.code === categoryCode,
     );
     if (categoryProduct?.category?.name) {
+      const categoryTitle = getCategoryTitle(categoryCode, categoryProduct.category.name);
       return generatePageMetadata(
         {
-          title: `${categoryProduct.category.name} - купить в Минске | Dilavia`,
-          description: `Купить ${categoryProduct.category.name.toLowerCase()} в интернет-магазине Dilavia. ${filteredProducts.length} товаров в наличии. Доставка по всей Беларуси. Гарантия качества.`,
+          title: `${categoryTitle} - купить в Минске | Dilavia`,
+          description: `Купить ${categoryTitle.toLowerCase()} в интернет-магазине Dilavia. ${filteredProducts.length} товаров в наличии. Доставка по всей Беларуси. Гарантия качества.`,
           keywords: [
-            categoryProduct.category.name.toLowerCase(),
-            `купить ${categoryProduct.category.name.toLowerCase()}`,
-            `${categoryProduct.category.name.toLowerCase()} Минск`,
+            categoryTitle.toLowerCase(),
+            `купить ${categoryTitle.toLowerCase()}`,
+            `${categoryTitle.toLowerCase()} Минск`,
             "мебель",
             "интернет-магазин мебели",
             "Dilavia",
             "Беларусь",
           ].join(", "),
         },
-        `/catalog?category=${categoryName}`,
+        `/catalog?category=${categoryCode}`,
       );
     }
   }
 
   if (subcategoryParam) {
-    const subcategoryName = Array.isArray(subcategoryParam)
+    const subcategoryCode = Array.isArray(subcategoryParam)
       ? subcategoryParam[0]
       : subcategoryParam;
     const subcategoryProduct = products.find(
-      (p) => p.subcategory?.code === subcategoryName,
+      (p) => p.subcategory?.code === subcategoryCode,
     );
     if (subcategoryProduct?.subcategory?.name) {
+      const subcategoryTitle = getSubcategoryTitle(subcategoryCode, subcategoryProduct.subcategory.name);
       return generatePageMetadata(
         {
-          title: `${subcategoryProduct.subcategory.name} - купить в Минске | Dilavia`,
-          description: `Купить ${subcategoryProduct.subcategory.name.toLowerCase()} в интернет-магазине Dilavia. ${filteredProducts.length} товаров в наличии. Доставка по всей Беларуси. Гарантия качества.`,
+          title: `${subcategoryTitle} - купить в Минске | Dilavia`,
+          description: `Купить ${subcategoryTitle.toLowerCase()} в интернет-магазине Dilavia. ${filteredProducts.length} товаров в наличии. Доставка по всей Беларуси. Гарантия качества.`,
           keywords: [
-            subcategoryProduct.subcategory.name.toLowerCase(),
-            `купить ${subcategoryProduct.subcategory.name.toLowerCase()}`,
-            `${subcategoryProduct.subcategory.name.toLowerCase()} Минск`,
+            subcategoryTitle.toLowerCase(),
+            `купить ${subcategoryTitle.toLowerCase()}`,
+            `${subcategoryTitle.toLowerCase()} Минск`,
             "мебель",
             "интернет-магазин мебели",
             "Dilavia",
             "Беларусь",
           ].join(", "),
         },
-        `/catalog?subcategory=${subcategoryName}`,
+        `/catalog?subcategory=${subcategoryCode}`,
       );
     }
   }
@@ -277,7 +305,10 @@ export default async function CatalogPage({
     const categoryProduct = products.find(
       (p) => p.category?.code === categoryCode,
     );
-    categoryName = categoryProduct?.category?.name;
+    // Используем название из конфигурации вместо названия из данных
+    categoryName = categoryProduct?.category?.name 
+      ? getCategoryTitle(categoryCode, categoryProduct.category.name)
+      : undefined;
   }
 
   if (resolvedSearchParams.subcategory) {
@@ -287,7 +318,10 @@ export default async function CatalogPage({
     const subcategoryProduct = products.find(
       (p) => p.subcategory?.code === subcategoryCode,
     );
-    subcategoryName = subcategoryProduct?.subcategory?.name;
+    // Используем название из конфигурации вместо названия из данных
+    subcategoryName = subcategoryProduct?.subcategory?.name
+      ? getSubcategoryTitle(subcategoryCode, subcategoryProduct.subcategory.name)
+      : undefined;
   }
 
   return (
