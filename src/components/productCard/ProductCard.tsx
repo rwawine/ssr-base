@@ -86,6 +86,9 @@ export function ProductCard({ product, priority }: ProductCardProps) {
 
   const name = product?.name || "Без названия";
   const mainImage = getMainImage(product?.images);
+  const mainImageAbsolute = mainImage.startsWith('http') 
+    ? mainImage 
+    : `https://dilavia.by${mainImage}`;
   const slug = product?.slug || "";
   const isBestseller = (product?.popularity || 0) > 4.5;
 
@@ -180,10 +183,11 @@ export function ProductCard({ product, priority }: ProductCardProps) {
           product.description || `Купить ${name} в интернет-магазине Dilavia`
         }
       />
+      <meta itemProp="image" content={mainImageAbsolute} />
       <link itemProp="url" href={`https://dilavia.by/catalog/${slug}`} />
 
       <Link href={`/catalog/${slug}`} className={styles.imageLink}>
-        <div className={styles.imageWrapper} itemProp="image">
+        <div className={styles.imageWrapper}>
           <OptimizedImage
             src={mainImage}
             alt={`${name} - фото 1`}

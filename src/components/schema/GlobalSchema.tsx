@@ -55,6 +55,7 @@ export function GlobalSchema() {
             "@type": "Product",
             name: "Диваны",
             description: "Современные диваны различных размеров и конфигураций",
+            image: `${siteConfig.url}/images/Sofa/Straight_sofa/Milton/1.png`,
             offers: {
               "@type": "Offer",
               availability: "https://schema.org/InStock",
@@ -114,6 +115,7 @@ export function GlobalSchema() {
             "@type": "Product",
             name: "Кровати",
             description: "Комфортные кровати для спальни",
+            image: `${siteConfig.url}/images/Sofa/Bed/1/1.jpg`,
             offers: {
               "@type": "Offer",
               availability: "https://schema.org/InStock",
@@ -172,6 +174,7 @@ export function GlobalSchema() {
             "@type": "Product",
             name: "Кресла",
             description: "Удобные кресла для гостиной",
+            image: `${siteConfig.url}/images/Sofa/Armchair/Kreslo/1.png`,
             offers: {
               "@type": "Offer",
               availability: "https://schema.org/InStock",
