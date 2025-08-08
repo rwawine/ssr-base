@@ -30,6 +30,16 @@
   margin: 0 0 8px 0;
 }
 
+.catalogDescription {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  text-align: center;
+  color: #4b5563;
+  margin: 8px 0 16px 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .catalogSubtitle {
   font-size: 1rem;
   text-align: center;

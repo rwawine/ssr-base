@@ -10,6 +10,7 @@ import FilterToggle from "@/components/catalog/FilterToggle";
 import { Product } from "@/types/product";
 import styles from "./page.module.css";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import filterConfigRaw from "@/data/filterConfig.json";
 
 interface CatalogClientProps {
   initialProducts: Product[];
@@ -19,6 +20,17 @@ interface CatalogClientProps {
   categoryName?: string;
   subcategoryName?: string;
 }
+
+type FilterConfig = {
+  catalog?: {
+    defaultTitle?: string;
+    defaultDescription?: string;
+    categories?: Record<string, { title?: string; description?: string }>;
+    subcategories?: Record<string, { title?: string; description?: string }>;
+  };
+};
+
+const filterConfig = filterConfigRaw as unknown as FilterConfig;
 
 export default function CatalogClient({
   initialProducts,
@@ -187,56 +199,79 @@ export default function CatalogClient({
   const isMultiCategory = selectedCategories.length > 1;
   const isMultiSubcategory = selectedSubcategories.length > 1;
 
+  // Функции для получения данных из конфигурации
+  const getCategoryData = (code: string) => 
+    filterConfig?.catalog?.categories?.[code];
+  
+  const getSubcategoryData = (code: string) => 
+    filterConfig?.catalog?.subcategories?.[code];
+
   let breadcrumbsItems = [
     { name: "Главная", url: "https://dilavia.by/" },
     { name: "Каталог", url: "https://dilavia.by/catalog" },
   ];
-  let catalogTitle = "Каталог товаров";
+  let catalogTitle = filterConfig?.catalog?.defaultTitle || "Каталог товаров";
+  let catalogDescription = filterConfig?.catalog?.defaultDescription;
 
   if (isSingleCategory && isMultiSubcategory) {
     // Одна категория и несколько подкатегорий этой категории
+    const categoryData = getCategoryData(selectedCategories[0]);
+    const categoryDisplayName = categoryData?.title || categoryName || selectedCategories[0];
+    
     breadcrumbsItems = [
       { name: "Главная", url: "https://dilavia.by/" },
       { name: "Каталог", url: "https://dilavia.by/catalog" },
       {
-        name: categoryName || selectedCategories[0],
+        name: categoryDisplayName,
         url: `https://dilavia.by/catalog?category=${selectedCategories[0]}`,
       },
     ];
-    catalogTitle = categoryName || selectedCategories[0];
+    catalogTitle = categoryDisplayName;
+    catalogDescription = categoryData?.description;
   } else if (isMultiCategory || (isMultiSubcategory && !isSingleCategory)) {
     // Несколько категорий или подкатегорий из разных категорий — только каталог
     breadcrumbsItems = [
       { name: "Главная", url: "https://dilavia.by/" },
       { name: "Каталог", url: "https://dilavia.by/catalog" },
     ];
-    catalogTitle = "Каталог товаров";
+    catalogTitle = filterConfig?.catalog?.defaultTitle || "Каталог товаров";
+    catalogDescription = filterConfig?.catalog?.defaultDescription;
   } else if (isSingleCategory && isSingleSubcategory) {
     // Одна категория и одна подкатегория
+    const categoryData = getCategoryData(selectedCategories[0]);
+    const subcategoryData = getSubcategoryData(selectedSubcategories[0]);
+    const categoryDisplayName = categoryData?.title || categoryName || selectedCategories[0];
+    const subcategoryDisplayName = subcategoryData?.title || subcategoryName || selectedSubcategories[0];
+    
     breadcrumbsItems = [
       { name: "Главная", url: "https://dilavia.by/" },
       { name: "Каталог", url: "https://dilavia.by/catalog" },
       {
-        name: categoryName || selectedCategories[0],
+        name: categoryDisplayName,
         url: `https://dilavia.by/catalog?category=${selectedCategories[0]}`,
       },
       {
-        name: subcategoryName || selectedSubcategories[0],
+        name: subcategoryDisplayName,
         url: `https://dilavia.by/catalog?category=${selectedCategories[0]}&subcategory=${selectedSubcategories[0]}`,
       },
     ];
-    catalogTitle = `${subcategoryName || selectedSubcategories[0]} - ${categoryName || selectedCategories[0]}`;
+    catalogTitle = `${subcategoryDisplayName} - ${categoryDisplayName}`;
+    catalogDescription = subcategoryData?.description || categoryData?.description;
   } else if (isSingleCategory) {
     // Только одна категория
+    const categoryData = getCategoryData(selectedCategories[0]);
+    const categoryDisplayName = categoryData?.title || categoryName || selectedCategories[0];
+    
     breadcrumbsItems = [
       { name: "Главная", url: "https://dilavia.by/" },
       { name: "Каталог", url: "https://dilavia.by/catalog" },
       {
-        name: categoryName || selectedCategories[0],
+        name: categoryDisplayName,
         url: `https://dilavia.by/catalog?category=${selectedCategories[0]}`,
       },
     ];
-    catalogTitle = categoryName || selectedCategories[0];
+    catalogTitle = categoryDisplayName;
+    catalogDescription = categoryData?.description;
   }
 
   return (
@@ -247,6 +282,11 @@ export default function CatalogClient({
       <div className={styles.catalogHeader}>
         <div className={styles.catalogTitle}>
           <h1>{catalogTitle}</h1>
+          {catalogDescription && (
+            <p className={styles.catalogDescription}>
+              {catalogDescription}
+            </p>
+          )}
           <p className={styles.catalogSubtitle}>
             Найдено товаров: {filteredProducts.length}
           </p>

@@ -61,7 +61,7 @@ function filterProducts(
       if (p.subcategory?.code && p.category?.code) {
         subcategoryToCategoryMap.set(p.subcategory.code, p.category.code);
       }
-    });
+    }); 
     const parentCategoriesOfSelectedSubcats = new Set(
       selectedSubcategories.map((sub) => subcategoryToCategoryMap.get(sub)),
     );
